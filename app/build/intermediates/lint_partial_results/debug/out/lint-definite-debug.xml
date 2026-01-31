@@ -2376,25 +2376,9 @@
     <incident
         id="IconLauncherShape"
         severity="warning"
-        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
-        <location
-            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-hdpi/ic_launcher.png"/>
-    </incident>
-
-    <incident
-        id="IconLauncherShape"
-        severity="warning"
         message="Launcher icon used as round icon did not have a circular shape">
         <location
             file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-hdpi/ic_launcher_round.png"/>
-    </incident>
-
-    <incident
-        id="IconLauncherShape"
-        severity="warning"
-        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
-        <location
-            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-mdpi/ic_launcher.png"/>
     </incident>
 
     <incident
@@ -2408,25 +2392,9 @@
     <incident
         id="IconLauncherShape"
         severity="warning"
-        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
-        <location
-            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xhdpi/ic_launcher.png"/>
-    </incident>
-
-    <incident
-        id="IconLauncherShape"
-        severity="warning"
         message="Launcher icon used as round icon did not have a circular shape">
         <location
             file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xhdpi/ic_launcher_round.png"/>
-    </incident>
-
-    <incident
-        id="IconLauncherShape"
-        severity="warning"
-        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
-        <location
-            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxhdpi/ic_launcher.png"/>
     </incident>
 
     <incident
@@ -2440,27 +2408,9 @@
     <incident
         id="IconLauncherShape"
         severity="warning"
-        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
-        <location
-            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxxhdpi/ic_launcher.png"/>
-    </incident>
-
-    <incident
-        id="IconLauncherShape"
-        severity="warning"
         message="Launcher icon used as round icon did not have a circular shape">
         <location
             file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxxhdpi/ic_launcher_round.png"/>
-    </incident>
-
-    <incident
-        id="IconDuplicates"
-        severity="warning"
-        message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
-        <location
-            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xhdpi/ic_launcher_round.png"/>
-        <location
-            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xhdpi/ic_launcher.png"/>
     </incident>
 
     <incident
@@ -2478,16 +2428,6 @@
         severity="warning"
         message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
         <location
-            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-hdpi/ic_launcher_round.png"/>
-        <location
-            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-hdpi/ic_launcher.png"/>
-    </incident>
-
-    <incident
-        id="IconDuplicates"
-        severity="warning"
-        message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
-        <location
             file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxhdpi/ic_launcher_round.png"/>
         <location
             file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxhdpi/ic_launcher.png"/>
@@ -2498,9 +2438,29 @@
         severity="warning"
         message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
         <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xhdpi/ic_launcher_round.png"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xhdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconDuplicates"
+        severity="warning"
+        message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
+        <location
             file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-mdpi/ic_launcher_round.png"/>
         <location
             file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-mdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconDuplicates"
+        severity="warning"
+        message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-hdpi/ic_launcher_round.png"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-hdpi/ic_launcher.png"/>
     </incident>
 
 </incidents>

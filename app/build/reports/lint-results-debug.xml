@@ -1132,66 +1132,6 @@
     <issue
         id="IconLauncherShape"
         severity="Warning"
-        message="Launcher icons should not fill every pixel of their square region; see the design guide for details"
-        category="Usability:Icons"
-        priority="6"
-        summary="The launcher icon shape should use a distinct silhouette"
-        explanation="According to the Android Design Guide (https://material.io/design/iconography/) your launcher icons should &quot;use a distinct silhouette&quot;, a &quot;three-dimensional, front view, with a slight perspective as if viewed from above, so that users perceive some depth.&quot;&#xA;&#xA;The unique silhouette implies that your launcher icon should not be a filled square.">
-        <location
-            file="C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-hdpi\ic_launcher.png"/>
-    </issue>
-
-    <issue
-        id="IconLauncherShape"
-        severity="Warning"
-        message="Launcher icons should not fill every pixel of their square region; see the design guide for details"
-        category="Usability:Icons"
-        priority="6"
-        summary="The launcher icon shape should use a distinct silhouette"
-        explanation="According to the Android Design Guide (https://material.io/design/iconography/) your launcher icons should &quot;use a distinct silhouette&quot;, a &quot;three-dimensional, front view, with a slight perspective as if viewed from above, so that users perceive some depth.&quot;&#xA;&#xA;The unique silhouette implies that your launcher icon should not be a filled square.">
-        <location
-            file="C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-mdpi\ic_launcher.png"/>
-    </issue>
-
-    <issue
-        id="IconLauncherShape"
-        severity="Warning"
-        message="Launcher icons should not fill every pixel of their square region; see the design guide for details"
-        category="Usability:Icons"
-        priority="6"
-        summary="The launcher icon shape should use a distinct silhouette"
-        explanation="According to the Android Design Guide (https://material.io/design/iconography/) your launcher icons should &quot;use a distinct silhouette&quot;, a &quot;three-dimensional, front view, with a slight perspective as if viewed from above, so that users perceive some depth.&quot;&#xA;&#xA;The unique silhouette implies that your launcher icon should not be a filled square.">
-        <location
-            file="C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xhdpi\ic_launcher.png"/>
-    </issue>
-
-    <issue
-        id="IconLauncherShape"
-        severity="Warning"
-        message="Launcher icons should not fill every pixel of their square region; see the design guide for details"
-        category="Usability:Icons"
-        priority="6"
-        summary="The launcher icon shape should use a distinct silhouette"
-        explanation="According to the Android Design Guide (https://material.io/design/iconography/) your launcher icons should &quot;use a distinct silhouette&quot;, a &quot;three-dimensional, front view, with a slight perspective as if viewed from above, so that users perceive some depth.&quot;&#xA;&#xA;The unique silhouette implies that your launcher icon should not be a filled square.">
-        <location
-            file="C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xxhdpi\ic_launcher.png"/>
-    </issue>
-
-    <issue
-        id="IconLauncherShape"
-        severity="Warning"
-        message="Launcher icons should not fill every pixel of their square region; see the design guide for details"
-        category="Usability:Icons"
-        priority="6"
-        summary="The launcher icon shape should use a distinct silhouette"
-        explanation="According to the Android Design Guide (https://material.io/design/iconography/) your launcher icons should &quot;use a distinct silhouette&quot;, a &quot;three-dimensional, front view, with a slight perspective as if viewed from above, so that users perceive some depth.&quot;&#xA;&#xA;The unique silhouette implies that your launcher icon should not be a filled square.">
-        <location
-            file="C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xxxhdpi\ic_launcher.png"/>
-    </issue>
-
-    <issue
-        id="IconLauncherShape"
-        severity="Warning"
         message="Launcher icon used as round icon did not have a circular shape"
         category="Usability:Icons"
         priority="6"

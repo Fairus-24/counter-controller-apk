@@ -367,11 +367,6 @@ C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\strings.xm
    lint.unused-resources.exclude-tests =true.
    ,
 
-C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-hdpi\ic_launcher.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
-C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-mdpi\ic_launcher.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
-C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xhdpi\ic_launcher.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
-C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xxhdpi\ic_launcher.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
-C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xxxhdpi\ic_launcher.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
 C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-hdpi\ic_launcher_round.png: Warning: Launcher icon used as round icon did not have a circular shape [IconLauncherShape]
 C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-mdpi\ic_launcher_round.png: Warning: Launcher icon used as round icon did not have a circular shape [IconLauncherShape]
 C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xhdpi\ic_launcher_round.png: Warning: Launcher icon used as round icon did not have a circular shape [IconLauncherShape]
@@ -829,4 +824,4 @@ C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_count
    There are quickfixes to automatically extract this hardcoded string into a
    resource lookup.
 
-0 errors, 197 warnings
+0 errors, 192 warnings
