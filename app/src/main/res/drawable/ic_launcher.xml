@@ -1,50 +1,14 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="48dp"
-    android:height="48dp"
-    android:viewportWidth="48"
-    android:viewportHeight="48">
-    
-    <!-- Background -->
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Lingkaran biru -->
     <path
-        android:pathData="M4,4h40v40h-40z"
-        android:fillColor="#0d1117"/>
-    
-    <!-- Round corners simulation -->
+        android:pathData="M54,8a46,46 0 1,0 0.1,0z"
+        android:fillColor="#2196F3"/>
+    <!-- Huruf C putih -->
     <path
-        android:pathData="M8,4h32a4,4 0,0 1,4 4v32a4,4 0,0 1,-4 4h-32a4,4 0,0 1,-4 -4v-32a4,4 0,0 1,4 -4z"
-        android:fillColor="#0d1117"/>
-    
-    <!-- Grid pattern (3x3) -->
-    <!-- Row 1 -->
-    <path
-        android:pathData="M9,9h8v8h-8z"
-        android:fillColor="#7c5cff"/>
-    <path
-        android:pathData="M20,9h8v8h-8z"
-        android:fillColor="#7c5cff"/>
-    <path
-        android:pathData="M31,9h8v8h-8z"
-        android:fillColor="#7c5cff"/>
-    
-    <!-- Row 2 -->
-    <path
-        android:pathData="M9,20h8v8h-8z"
-        android:fillColor="#7c5cff"/>
-    <path
-        android:pathData="M20,20h8v8h-8z"
-        android:fillColor="#7c5cff"/>
-    <path
-        android:pathData="M31,20h8v8h-8z"
-        android:fillColor="#7c5cff"/>
-    
-    <!-- Row 3 -->
-    <path
-        android:pathData="M9,31h8v8h-8z"
-        android:fillColor="#7c5cff"/>
-    <path
-        android:pathData="M20,31h8v8h-8z"
-        android:fillColor="#7c5cff"/>
-    <path
-        android:pathData="M31,31h8v8h-8z"
-        android:fillColor="#7c5cff"/>
+        android:pathData="M74,54a20,20 0 1,1-40,0a20,20 0 1,1 40,0z M66,54a12,12 0 1,0-24,0a12,12 0 1,0 24,0z"
+        android:fillColor="#FFFFFF"/>
 </vector>

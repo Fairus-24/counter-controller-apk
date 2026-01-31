@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="app.counter.controller.caba"
-    android:versionCode="1000087"
-    android:versionName="1.00.0087" >
+    android:versionCode="1000090"
+    android:versionName="1.00.0090" >
 
     <uses-sdk
         android:minSdkVersion="21"
