@@ -292,6 +292,28 @@
         <i class="bi bi-exclamation-triangle me-2"></i>
         Auth membutuhkan http/https. Buka via localhost.
       </div>
+      <script>
+        (function() {
+          function isAndroidWebView() {
+            return /Android/.test(navigator.userAgent) && window.Android !== undefined;
+          }
+          document.addEventListener('DOMContentLoaded', function() {
+            var googleBtn = document.getElementById('googleBtn');
+            if (googleBtn && isAndroidWebView()) {
+              googleBtn.disabled = false;
+              googleBtn.classList.remove('disabled');
+              googleBtn.innerText = 'Masuk dengan Google';
+              googleBtn.onclick = function() {
+                if (window.Android && window.Android.loginWithGoogle) {
+                  window.Android.loginWithGoogle();
+                } else {
+                  alert('Fitur login native tidak tersedia.');
+                }
+              };
+            }
+          });
+        })();
+      </script>
 
       <!-- Profile Section (shown when logged in) -->
       <div id="profileSection" class="d-none">
@@ -362,6 +384,7 @@
                 <a href="#" class="link-accent small" id="forgotLink">Lupa password?</a>
               </div>
               <button type="submit" class="btn btn-primary w-100" id="emailLoginBtn">
+
                 <span class="btn-text">Masuk</span>
                 <span class="btn-loading d-none"><span class="spinner-border spinner-border-sm me-2"></span>Memproses...</span>
               </button>
@@ -463,19 +486,44 @@
 
 <script>
 (function() {
-  'use strict';
-
-  // ========== CONSTANTS ==========
-  const SYNC_CFG_KEY = 'counter_sync_cfg';
-  const DEFAULT_CONFIG = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT",
-    appId: "YOUR_APP_ID"
+  // Native auth result handlers for Android bridge
+  window.onNativeGoogleLogin = function(idToken) {
+    showToast('Login Google berhasil!', 'success');
+    setTimeout(() => location.href = HOME_URL, 500);
   };
-  const HOME_URL = 'index.html';
+  window.onNativeEmailLogin = function(success, email, uid, error) {
+    if (success) {
+      showToast('Login email berhasil!', 'success');
+      setTimeout(() => location.href = HOME_URL, 500);
+    } else {
+      showError(error || 'Login email gagal.');
+    }
+  };
+  window.onNativeRegister = function(success, email, uid, error) {
+    if (success) {
+      showToast('Akun berhasil dibuat!', 'success');
+      setTimeout(() => location.href = HOME_URL, 500);
+    } else {
+      showError(error || 'Pendaftaran gagal.');
+    }
+  };
+})();
+// ========== NATIVE BRIDGE HOOKS ==========
+function isAndroidWebView() {
+  return typeof window.Android !== 'undefined';
+}
 
-  // ========== STATE ==========
+// ========== CONSTANTS ==========
+const SYNC_CFG_KEY = 'counter_sync_cfg';
+const DEFAULT_CONFIG = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  appId: "YOUR_APP_ID"
+};
+const HOME_URL = 'index.html';
+
+// ========== STATE ==========
   let authBusy = false;
   let phoneConfirmation = null;
   let recaptchaVerifier = null;
@@ -696,14 +744,9 @@
     } catch (e) {
       const errMsg = handleAuthError(e, providerType);
       showError(errMsg);
-      // Try redirect as fallback
+      // Jangan fallback ke signInWithRedirect di Android/WebView
       if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
-        try {
-          const provider = providerType === 'google'
-            ? new firebase.auth.GoogleAuthProvider()
-            : new firebase.auth.GithubAuthProvider();
-          await firebase.auth().signInWithRedirect(provider);
-        } catch (_) {}
+        showError('Login Google gagal: popup diblokir atau tidak didukung di aplikasi. Silakan login lewat browser.');
       }
     } finally {
       setLoading(btn, false);
@@ -885,15 +928,80 @@
   }
 
   // ========== EVENT LISTENERS ==========
-  googleBtn.addEventListener('click', () => signInWithProvider('google'));
+
+  googleBtn.addEventListener('click', () => {
+    if (isAndroidWebView() && window.Android.loginWithGoogle) {
+      window.Android.loginWithGoogle();
+    } else {
+      signInWithProvider('google');
+    }
+  });
+
   githubBtn.addEventListener('click', () => signInWithProvider('github'));
-  emailLoginForm.addEventListener('submit', signInWithEmail);
-  registerForm.addEventListener('submit', registerWithEmail);
+
+  emailLoginForm.addEventListener('submit', function(e) {
+    if (isAndroidWebView() && window.Android.loginWithEmail) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      window.Android.loginWithEmail(email, password);
+    } else {
+      signInWithEmail(e);
+    }
+  });
+
+  registerForm.addEventListener('submit', function(e) {
+    if (isAndroidWebView() && window.Android.registerWithEmail) {
+      e.preventDefault();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const password2 = document.getElementById('regPassword2').value;
+      window.Android.registerWithEmail(email, password, password2);
+    } else {
+      registerWithEmail(e);
+    }
+  });
+
+  forgotLink.addEventListener('click', function(e) {
+    if (isAndroidWebView() && window.Android.resetPassword) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      window.Android.resetPassword(email);
+    } else {
+      forgotPassword(e);
+    }
+  });
+
   methodEmail.addEventListener('click', () => switchMethod('email'));
   methodPhone.addEventListener('click', () => switchMethod('phone'));
   sendCodeBtn.addEventListener('click', sendPhoneCode);
-  verifyCodeBtn.addEventListener('click', verifyPhoneCode);
-  forgotLink.addEventListener('click', forgotPassword);
+  verifyCodeBtn.addEventListener('click', function() {
+    if (isAndroidWebView() && window.Android.loginWithPhone) {
+      const phone = document.getElementById('phoneNumber').value.trim();
+      const code = document.getElementById('verifyCode').value.trim();
+      window.Android.verifyPhoneOtp(phone, code);
+    } else {
+      verifyPhoneCode();
+    }
+  });
+
+  (function() {
+    // ...existing code...
+    window.onNativeOtpRequested = function(phone) {
+      showToast('OTP terkirim ke ' + phone, 'success');
+      // Optionally, focus OTP input
+      document.getElementById('verifyCode').focus();
+    };
+    window.onNativePhoneLogin = function(success, phone, uid, error) {
+      if (success) {
+        showToast('Login HP berhasil!', 'success');
+        setTimeout(() => location.href = HOME_URL, 500);
+      } else {
+        showError(error || 'Login HP gagal.');
+      }
+    };
+  })();
+
   logoutBtn.addEventListener('click', logout);
   saveConfigBtn.addEventListener('click', saveConfig);
 
@@ -932,7 +1040,6 @@
       }
     }
   })();
-})();
 </script>
 </body>
 </html>

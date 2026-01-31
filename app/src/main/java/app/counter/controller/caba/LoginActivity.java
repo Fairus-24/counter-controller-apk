@@ -61,6 +61,61 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Handle native bridge actions from WebView
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra("google_only", false)) {
+            setContentView(R.layout.activity_login);
+            findViewById(R.id.btnGoogleSignIn).performClick();
+            return;
+        } else if (intent.getBooleanExtra("email_login", false)) {
+            String email = intent.getStringExtra("email");
+            String password = intent.getStringExtra("password");
+            if (email != null && password != null) {
+                signInWithEmail(email, password);
+                return;
+            }
+        } else if (intent.getBooleanExtra("register", false)) {
+            String email = intent.getStringExtra("email");
+            String password = intent.getStringExtra("password");
+            String password2 = intent.getStringExtra("password2");
+            if (email != null && password != null && password2 != null) {
+                if (!password.equals(password2)) {
+                    Toast.makeText(this, "Password konfirmasi tidak cocok.", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    createAccountWithEmail(email, password);
+                }
+                return;
+            }
+        } else if (intent.getBooleanExtra("reset_password", false)) {
+            String email = intent.getStringExtra("email");
+            if (email != null) {
+                resetPassword(email);
+                return;
+            }
+        } else if (intent.getBooleanExtra("phone_otp_request", false)) {
+            String phone = intent.getStringExtra("phone");
+            if (phone != null) {
+                requestPhoneOtpNative(phone);
+                return;
+            }
+        } else if (intent.getBooleanExtra("phone_otp_verify", false)) {
+            String phone = intent.getStringExtra("phone");
+            String code = intent.getStringExtra("otp_code");
+            if (phone != null && code != null) {
+                verifyPhoneOtpNative(phone, code);
+                return;
+            }
+        } else if (intent.getBooleanExtra("phone_login", false)) {
+            String phone = intent.getStringExtra("phone");
+            if (phone != null) {
+                signInWithPhoneNative(phone);
+                return;
+            }
+        }
+
+        setContentView(R.layout.activity_login);
+
         // Set status bar color
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(0xFF0d1117);
@@ -124,11 +179,36 @@ public class LoginActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             Log.d(TAG, "Google sign in success: " + account.getEmail());
-            firebaseAuthWithGoogle(account.getIdToken());
+            if (getIntent().getBooleanExtra("google_only", false)) {
+                Intent result = new Intent();
+                result.putExtra("google_id_token", account.getIdToken());
+                setResult(Activity.RESULT_OK, result);
+                finish();
+            } else {
+                firebaseAuthWithGoogle(account.getIdToken());
+            }
         } catch (ApiException e) {
             Log.w(TAG, "Google sign in failed", e);
             Toast.makeText(this, "Login Google gagal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // Handle reset password from native bridge
+    private void resetPassword(String email) {
+        if (email == null || email.isEmpty()) {
+            Toast.makeText(this, "Masukkan email untuk reset password.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        mAuth.sendPasswordResetEmail(email)
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(this, "Email reset password terkirim!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Gagal mengirim email reset password.", Toast.LENGTH_SHORT).show();
+                }
+                finish();
+            });
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
@@ -179,13 +259,23 @@ public class LoginActivity extends AppCompatActivity {
     private void signInWithEmail(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this, task -> {
+                Intent result = new Intent();
                 if (task.isSuccessful()) {
                     Log.d(TAG, "signInWithEmail:success");
-                    showRewardedAdAndGoToMain();
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    result.putExtra("auth_success", true);
+                    if (user != null) {
+                        result.putExtra("user_email", user.getEmail());
+                        result.putExtra("user_uid", user.getUid());
+                    }
+                    setResult(Activity.RESULT_OK, result);
+                    finish();
                 } else {
                     Log.w(TAG, "signInWithEmail:failure", task.getException());
-                    Toast.makeText(this, "Login gagal: " + task.getException().getMessage(), 
-                        Toast.LENGTH_SHORT).show();
+                    result.putExtra("auth_success", false);
+                    result.putExtra("error_message", task.getException() != null ? task.getException().getMessage() : "Login gagal");
+                    setResult(Activity.RESULT_OK, result);
+                    finish();
                 }
             });
     }
@@ -193,13 +283,23 @@ public class LoginActivity extends AppCompatActivity {
     private void createAccountWithEmail(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this, task -> {
+                Intent result = new Intent();
                 if (task.isSuccessful()) {
                     Log.d(TAG, "createUserWithEmail:success");
-                    showRewardedAdAndGoToMain();
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    result.putExtra("register_success", true);
+                    if (user != null) {
+                        result.putExtra("user_email", user.getEmail());
+                        result.putExtra("user_uid", user.getUid());
+                    }
+                    setResult(Activity.RESULT_OK, result);
+                    finish();
                 } else {
                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                    Toast.makeText(this, "Pendaftaran gagal: " + task.getException().getMessage(), 
-                        Toast.LENGTH_SHORT).show();
+                    result.putExtra("register_success", false);
+                    result.putExtra("error_message", task.getException() != null ? task.getException().getMessage() : "Pendaftaran gagal");
+                    setResult(Activity.RESULT_OK, result);
+                    finish();
                 }
             });
     }
@@ -283,14 +383,87 @@ public class LoginActivity extends AppCompatActivity {
     private void signInWithPhoneCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
             .addOnCompleteListener(this, task -> {
+                Intent result = new Intent();
                 if (task.isSuccessful()) {
                     Log.d(TAG, "signInWithCredential:success");
-                    showRewardedAdAndGoToMain();
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    result.putExtra("phone_login_success", true);
+                    if (user != null) {
+                        result.putExtra("user_phone", user.getPhoneNumber());
+                        result.putExtra("user_uid", user.getUid());
+                    }
+                    setResult(Activity.RESULT_OK, result);
+                    finish();
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.getException());
-                    Toast.makeText(this, "Verifikasi OTP gagal", Toast.LENGTH_SHORT).show();
+                    result.putExtra("phone_login_success", false);
+                    result.putExtra("error_message", task.getException() != null ? task.getException().getMessage() : "Verifikasi OTP gagal");
+                    setResult(Activity.RESULT_OK, result);
+                    finish();
                 }
             });
+    }
+
+    // Native phone login (triggered from WebView)
+    private void signInWithPhoneNative(String phone) {
+        // For backward compatibility, just request OTP
+        requestPhoneOtpNative(phone);
+    }
+
+    // Step 1: Request OTP (send SMS)
+    private void requestPhoneOtpNative(String phone) {
+        if (phone == null || phone.isEmpty()) {
+            Toast.makeText(this, "Masukkan nomor HP", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
+            .setPhoneNumber(phone)
+            .setTimeout(60L, java.util.concurrent.TimeUnit.SECONDS)
+            .setActivity(this)
+            .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                @Override
+                public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
+                    // Auto-retrieval, login immediately
+                    signInWithPhoneCredential(credential);
+                }
+                @Override
+                public void onVerificationFailed(@NonNull FirebaseException e) {
+                    Intent result = new Intent();
+                    result.putExtra("phone_login_success", false);
+                    result.putExtra("error_message", e.getMessage());
+                    setResult(Activity.RESULT_OK, result);
+                    finish();
+                }
+                @Override
+                public void onCodeSent(@NonNull String vId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                    // Save verificationId for next step
+                    getSharedPreferences("otp", MODE_PRIVATE).edit().putString("verificationId", vId).apply();
+                    Intent result = new Intent();
+                    result.putExtra("otp_requested", true);
+                    result.putExtra("phone", phone);
+                    setResult(Activity.RESULT_OK, result);
+                    finish();
+                }
+            })
+            .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+        Toast.makeText(this, "Mengirim OTP...", Toast.LENGTH_SHORT).show();
+    }
+
+    // Step 2: Verify OTP
+    private void verifyPhoneOtpNative(String phone, String code) {
+        String vId = getSharedPreferences("otp", MODE_PRIVATE).getString("verificationId", null);
+        if (vId == null) {
+            Intent result = new Intent();
+            result.putExtra("phone_login_success", false);
+            result.putExtra("error_message", "OTP tidak ditemukan. Silakan minta ulang.");
+            setResult(Activity.RESULT_OK, result);
+            finish();
+            return;
+        }
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(vId, code);
+        signInWithPhoneCredential(credential);
     }
 
     // ==================== REWARDED AD ====================

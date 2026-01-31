@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.webkit.CookieManager;
+import androidx.browser.customtabs.CustomTabsIntent;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -188,16 +189,15 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                
-                // Allow Firebase auth popup URLs
-                if (url.contains("accounts.google.com") ||
-                    url.contains("github.com") ||
-                    url.contains("firebaseapp.com") ||
-                    url.contains("googleapis.com") ||
-                    url.contains("counter-controller")) {
-                    return false; // Load in WebView
+                // Google OAuth URLs - open in Chrome Custom Tabs to avoid disallowed_useragent error
+                if (url.contains("accounts.google.com") || url.contains("github.com/login") || url.contains("github.com/sessions") || url.contains("github.com/oauth")) {
+                    openInCustomTab(url);
+                    return true;
                 }
-                
+                // Firebase auth redirect URLs - allow in WebView
+                if (url.contains("firebaseapp.com") || url.contains("firebase") || url.contains("googleapis.com") || url.contains("gstatic.com") || url.contains("counter-controller")) {
+                    return false;
+                }
                 // External links
                 if (url.startsWith("http://") || url.startsWith("https://")) {
                     if (!url.contains("localhost") && !url.contains("127.0.0.1")) {
@@ -208,6 +208,22 @@ public class WebViewActivity extends AppCompatActivity {
                 }
                 return false;
             }
+    // Open URL in Chrome Custom Tabs (for OAuth - avoid Google block)
+    private void openInCustomTab(String url) {
+        try {
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            builder.setShowTitle(true);
+            builder.setUrlBarHidingEnabled(true);
+            // Set toolbar color to match app theme
+            builder.setToolbarColor(0xFF0d1117);
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.launchUrl(WebViewActivity.this, Uri.parse(url));
+        } catch (Exception e) {
+            // Fallback to normal browser if Custom Tabs not available
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        }
+    }
 
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -290,6 +306,81 @@ public class WebViewActivity extends AppCompatActivity {
 
     // ==================== JavaScript Interface ====================
     public class WebAppInterface {
+                                        // Native Phone OTP request (step 1)
+                                        @JavascriptInterface
+                                        public void requestPhoneOtp(String phone) {
+                                            runOnUiThread(() -> {
+                                                Intent intent = new Intent(WebViewActivity.this, LoginActivity.class);
+                                                intent.putExtra("phone_otp_request", true);
+                                                intent.putExtra("phone", phone);
+                                                startActivity(intent);
+                                            });
+                                        }
+                                        // Native Phone OTP verify (step 2)
+                                        @JavascriptInterface
+                                        public void verifyPhoneOtp(String phone, String code) {
+                                            runOnUiThread(() -> {
+                                                Intent intent = new Intent(WebViewActivity.this, LoginActivity.class);
+                                                intent.putExtra("phone_otp_verify", true);
+                                                intent.putExtra("phone", phone);
+                                                intent.putExtra("otp_code", code);
+                                                startActivity(intent);
+                                            });
+                                        }
+                                // Native Phone Login
+                                @JavascriptInterface
+                                public void loginWithPhone(String phone) {
+                                    runOnUiThread(() -> {
+                                        Intent intent = new Intent(WebViewActivity.this, LoginActivity.class);
+                                        intent.putExtra("phone_login", true);
+                                        intent.putExtra("phone", phone);
+                                        startActivity(intent);
+                                    });
+                                }
+                        // Native Email Login
+                        @JavascriptInterface
+                        public void loginWithEmail(String email, String password) {
+                            runOnUiThread(() -> {
+                                Intent intent = new Intent(WebViewActivity.this, LoginActivity.class);
+                                intent.putExtra("email_login", true);
+                                intent.putExtra("email", email);
+                                intent.putExtra("password", password);
+                                startActivity(intent);
+                            });
+                        }
+
+                        // Native Register
+                        @JavascriptInterface
+                        public void registerWithEmail(String email, String password, String password2) {
+                            runOnUiThread(() -> {
+                                Intent intent = new Intent(WebViewActivity.this, LoginActivity.class);
+                                intent.putExtra("register", true);
+                                intent.putExtra("email", email);
+                                intent.putExtra("password", password);
+                                intent.putExtra("password2", password2);
+                                startActivity(intent);
+                            });
+                        }
+
+                        // Native Reset Password
+                        @JavascriptInterface
+                        public void resetPassword(String email) {
+                            runOnUiThread(() -> {
+                                Intent intent = new Intent(WebViewActivity.this, LoginActivity.class);
+                                intent.putExtra("reset_password", true);
+                                intent.putExtra("email", email);
+                                startActivity(intent);
+                            });
+                        }
+                // Trigger native Google login from JS
+                @JavascriptInterface
+                public void loginWithGoogle() {
+                    runOnUiThread(() -> {
+                        Intent intent = new Intent(WebViewActivity.this, LoginActivity.class);
+                        intent.putExtra("google_only", true);
+                        startActivity(intent);
+                    });
+                }
         @JavascriptInterface
         public void showToast(String message) {
             runOnUiThread(() -> Toast.makeText(WebViewActivity.this, message, Toast.LENGTH_SHORT).show());
@@ -518,6 +609,36 @@ public class WebViewActivity extends AppCompatActivity {
     // ==================== Activity Result ====================
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null) {
+            if (data.hasExtra("otp_requested")) {
+                String phone = data.getStringExtra("phone");
+                webView.evaluateJavascript("window.onNativeOtpRequested && window.onNativeOtpRequested('" + (phone != null ? phone : "") + "')", null);
+            } else if (data.hasExtra("phone_login_success")) {
+                boolean success = data.getBooleanExtra("phone_login_success", false);
+                String phone = data.getStringExtra("user_phone");
+                String uid = data.getStringExtra("user_uid");
+                String error = data.getStringExtra("error_message");
+                webView.evaluateJavascript("window.onNativePhoneLogin && window.onNativePhoneLogin(" + success + ", '" + (phone != null ? phone : "") + "', '" + (uid != null ? uid : "") + "', '" + (error != null ? error : "") + "')", null);
+            } else if (data.hasExtra("google_id_token")) {
+                String idToken = data.getStringExtra("google_id_token");
+                if (idToken != null) {
+                    // Inject result to WebView JS
+                    webView.evaluateJavascript("window.onNativeGoogleLogin && window.onNativeGoogleLogin('" + idToken + "')", null);
+                }
+            } else if (data.hasExtra("auth_success")) {
+                boolean success = data.getBooleanExtra("auth_success", false);
+                String email = data.getStringExtra("user_email");
+                String uid = data.getStringExtra("user_uid");
+                String error = data.getStringExtra("error_message");
+                webView.evaluateJavascript("window.onNativeEmailLogin && window.onNativeEmailLogin(" + success + ", '" + (email != null ? email : "") + "', '" + (uid != null ? uid : "") + "', '" + (error != null ? error : "") + "')", null);
+            } else if (data.hasExtra("register_success")) {
+                boolean success = data.getBooleanExtra("register_success", false);
+                String email = data.getStringExtra("user_email");
+                String uid = data.getStringExtra("user_uid");
+                String error = data.getStringExtra("error_message");
+                webView.evaluateJavascript("window.onNativeRegister && window.onNativeRegister(" + success + ", '" + (email != null ? email : "") + "', '" + (uid != null ? uid : "") + "', '" + (error != null ? error : "") + "')", null);
+            }
+        }
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == FILE_CHOOSER_REQUEST_CODE) {
             if (filePathCallback != null) {
@@ -530,6 +651,29 @@ public class WebViewActivity extends AppCompatActivity {
                 }
                 filePathCallback.onReceiveValue(results);
                 filePathCallback = null;
+            }
+        }
+
+        // Handle auth result from LoginActivity
+        if (data != null) {
+            if (data.hasExtra("google_id_token")) {
+                String idToken = data.getStringExtra("google_id_token");
+                if (idToken != null) {
+                    // Inject result to WebView JS
+                    webView.evaluateJavascript("window.onNativeGoogleLogin && window.onNativeGoogleLogin('" + idToken + "')", null);
+                }
+            } else if (data.hasExtra("auth_success")) {
+                boolean success = data.getBooleanExtra("auth_success", false);
+                String email = data.getStringExtra("user_email");
+                String uid = data.getStringExtra("user_uid");
+                String error = data.getStringExtra("error_message");
+                webView.evaluateJavascript("window.onNativeEmailLogin && window.onNativeEmailLogin(" + success + ", '" + (email != null ? email : "") + "', '" + (uid != null ? uid : "") + "', '" + (error != null ? error : "") + "')", null);
+            } else if (data.hasExtra("register_success")) {
+                boolean success = data.getBooleanExtra("register_success", false);
+                String email = data.getStringExtra("user_email");
+                String uid = data.getStringExtra("user_uid");
+                String error = data.getStringExtra("error_message");
+                webView.evaluateJavascript("window.onNativeRegister && window.onNativeRegister(" + success + ", '" + (email != null ? email : "") + "', '" + (uid != null ? uid : "") + "', '" + (error != null ? error : "") + "')", null);
             }
         }
     }
