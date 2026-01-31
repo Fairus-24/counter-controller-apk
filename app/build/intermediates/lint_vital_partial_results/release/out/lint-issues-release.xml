@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 7.4.2" type="configured_issues">
+    <config id="NewApi" severity="ignore"/>
+    <config id="MissingPermission" severity="ignore"/>
+    <config id="UseAppTint" severity="ignore"/>
+
+</incidents>

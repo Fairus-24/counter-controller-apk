@@ -1,0 +1,333 @@
+package app.counter.controller.caba;
+
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
+
+import java.util.concurrent.TimeUnit;
+
+/**
+ * LoginActivity - Native Firebase Authentication
+ * Supports: Google Sign-In, Email/Password, Phone OTP
+ */
+public class LoginActivity extends AppCompatActivity {
+
+    private static final String TAG = "LoginActivity";
+
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
+    private RewardedAd mRewardedAd;
+
+    private MaterialButton btnGoogleSignIn, btnEmailSignIn, btnPhoneSignIn, btnSkip;
+    private TextView tvVersion;
+
+    private String verificationId;
+    private PhoneAuthProvider.ForceResendingToken resendToken;
+
+    private ActivityResultLauncher<Intent> googleSignInLauncher;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Set status bar color
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(0xFF0d1117);
+        }
+
+        setContentView(R.layout.activity_login);
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
+        // Check if already logged in
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            goToMain();
+            return;
+        }
+
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Setup Google Sign In launcher
+        googleSignInLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+                    handleGoogleSignInResult(task);
+                }
+            });
+
+        initViews();
+        loadRewardedAd();
+    }
+
+    private void initViews() {
+        btnGoogleSignIn = findViewById(R.id.btnGoogleSignIn);
+        btnEmailSignIn = findViewById(R.id.btnEmailSignIn);
+        btnPhoneSignIn = findViewById(R.id.btnPhoneSignIn);
+        btnSkip = findViewById(R.id.btnSkip);
+        tvVersion = findViewById(R.id.tvVersion);
+
+        tvVersion.setText(BuildConfig.VERSION_DISPLAY);
+
+        btnGoogleSignIn.setOnClickListener(v -> signInWithGoogle());
+        btnEmailSignIn.setOnClickListener(v -> showEmailSignInDialog());
+        btnPhoneSignIn.setOnClickListener(v -> showPhoneSignInDialog());
+        btnSkip.setOnClickListener(v -> goToMain());
+    }
+
+    // ==================== GOOGLE SIGN IN ====================
+    private void signInWithGoogle() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        googleSignInLauncher.launch(signInIntent);
+    }
+
+    private void handleGoogleSignInResult(Task<GoogleSignInAccount> task) {
+        try {
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            Log.d(TAG, "Google sign in success: " + account.getEmail());
+            firebaseAuthWithGoogle(account.getIdToken());
+        } catch (ApiException e) {
+            Log.w(TAG, "Google sign in failed", e);
+            Toast.makeText(this, "Login Google gagal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "signInWithCredential:success");
+                    showRewardedAdAndGoToMain();
+                } else {
+                    Log.w(TAG, "signInWithCredential:failure", task.getException());
+                    Toast.makeText(this, "Autentikasi gagal", Toast.LENGTH_SHORT).show();
+                }
+            });
+    }
+
+    // ==================== EMAIL SIGN IN ====================
+    private void showEmailSignInDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_email_login, null);
+        EditText etEmail = dialogView.findViewById(R.id.etEmail);
+        EditText etPassword = dialogView.findViewById(R.id.etPassword);
+
+        new AlertDialog.Builder(this, R.style.AlertDialogDark)
+            .setTitle("Login dengan Email")
+            .setView(dialogView)
+            .setPositiveButton("Login", (dialog, which) -> {
+                String email = etEmail.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+                if (!email.isEmpty() && !password.isEmpty()) {
+                    signInWithEmail(email, password);
+                } else {
+                    Toast.makeText(this, "Email dan password harus diisi", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .setNeutralButton("Daftar Baru", (dialog, which) -> {
+                String email = etEmail.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+                if (!email.isEmpty() && password.length() >= 6) {
+                    createAccountWithEmail(email, password);
+                } else {
+                    Toast.makeText(this, "Password minimal 6 karakter", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .setNegativeButton("Batal", null)
+            .show();
+    }
+
+    private void signInWithEmail(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "signInWithEmail:success");
+                    showRewardedAdAndGoToMain();
+                } else {
+                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                    Toast.makeText(this, "Login gagal: " + task.getException().getMessage(), 
+                        Toast.LENGTH_SHORT).show();
+                }
+            });
+    }
+
+    private void createAccountWithEmail(String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "createUserWithEmail:success");
+                    showRewardedAdAndGoToMain();
+                } else {
+                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                    Toast.makeText(this, "Pendaftaran gagal: " + task.getException().getMessage(), 
+                        Toast.LENGTH_SHORT).show();
+                }
+            });
+    }
+
+    // ==================== PHONE SIGN IN ====================
+    private void showPhoneSignInDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_phone_login, null);
+        EditText etPhone = dialogView.findViewById(R.id.etPhone);
+
+        new AlertDialog.Builder(this, R.style.AlertDialogDark)
+            .setTitle("Login dengan Nomor HP")
+            .setView(dialogView)
+            .setPositiveButton("Kirim OTP", (dialog, which) -> {
+                String phone = etPhone.getText().toString().trim();
+                if (!phone.isEmpty()) {
+                    // Format phone number
+                    if (!phone.startsWith("+")) {
+                        if (phone.startsWith("0")) {
+                            phone = "+62" + phone.substring(1);
+                        } else {
+                            phone = "+62" + phone;
+                        }
+                    }
+                    sendOTP(phone);
+                } else {
+                    Toast.makeText(this, "Masukkan nomor HP", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .setNegativeButton("Batal", null)
+            .show();
+    }
+
+    private void sendOTP(String phoneNumber) {
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
+            .setPhoneNumber(phoneNumber)
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(this)
+            .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                @Override
+                public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
+                    signInWithPhoneCredential(credential);
+                }
+
+                @Override
+                public void onVerificationFailed(@NonNull FirebaseException e) {
+                    Log.w(TAG, "onVerificationFailed", e);
+                    Toast.makeText(LoginActivity.this, "Verifikasi gagal: " + e.getMessage(), 
+                        Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCodeSent(@NonNull String vId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                    verificationId = vId;
+                    resendToken = token;
+                    showOTPDialog();
+                }
+            })
+            .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+        Toast.makeText(this, "Mengirim OTP...", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showOTPDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_otp, null);
+        EditText etOTP = dialogView.findViewById(R.id.etOTP);
+
+        new AlertDialog.Builder(this, R.style.AlertDialogDark)
+            .setTitle("Masukkan Kode OTP")
+            .setView(dialogView)
+            .setPositiveButton("Verifikasi", (dialog, which) -> {
+                String code = etOTP.getText().toString().trim();
+                if (!code.isEmpty() && verificationId != null) {
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+                    signInWithPhoneCredential(credential);
+                }
+            })
+            .setNegativeButton("Batal", null)
+            .show();
+    }
+
+    private void signInWithPhoneCredential(PhoneAuthCredential credential) {
+        mAuth.signInWithCredential(credential)
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "signInWithCredential:success");
+                    showRewardedAdAndGoToMain();
+                } else {
+                    Log.w(TAG, "signInWithCredential:failure", task.getException());
+                    Toast.makeText(this, "Verifikasi OTP gagal", Toast.LENGTH_SHORT).show();
+                }
+            });
+    }
+
+    // ==================== REWARDED AD ====================
+    private void loadRewardedAd() {
+        String adUnitId = getString(R.string.admob_rewarded_id);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        RewardedAd.load(this, adUnitId, adRequest, new RewardedAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull RewardedAd ad) {
+                mRewardedAd = ad;
+            }
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError error) {
+                mRewardedAd = null;
+            }
+        });
+    }
+
+    private void showRewardedAdAndGoToMain() {
+        if (mRewardedAd != null) {
+            mRewardedAd.show(this, rewardItem -> {
+                Log.d(TAG, "User earned reward after login");
+            });
+            // Go to main after ad is dismissed
+            mRewardedAd.setFullScreenContentCallback(new com.google.android.gms.ads.FullScreenContentCallback() {
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    goToMain();
+                }
+            });
+        } else {
+            goToMain();
+        }
+    }
+
+    private void goToMain() {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+}

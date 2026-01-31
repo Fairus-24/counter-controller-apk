@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masuk · Counter Board</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Private Firebase config -->
+  <script src="env.js"></script>
+  <style>
+    :root {
+      --bs-body-bg: #0d1117;
+      --bs-body-color: #e6edf3;
+      --bs-border-color: #30363d;
+      --bs-card-bg: #161b22;
+      --accent: #7c5cff;
+      --accent-hover: #9171ff;
+    }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .auth-container {
+      width: 100%;
+      max-width: 440px;
+    }
+    .auth-card {
+      background: var(--bs-card-bg);
+      border: 1px solid var(--bs-border-color);
+      border-radius: 16px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    }
+    .auth-header {
+      text-align: center;
+      padding: 2rem 2rem 1rem;
+      border-bottom: 1px solid var(--bs-border-color);
+    }
+    .auth-header .logo {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--accent), #22c55e);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+    .auth-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .auth-header p {
+      color: #8b949e;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+    .auth-body {
+      padding: 1.5rem 2rem 2rem;
+    }
+    .nav-pills .nav-link {
+      color: #8b949e;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 0.6rem 1.2rem;
+      transition: all 0.2s ease;
+    }
+    .nav-pills .nav-link:hover {
+      color: #e6edf3;
+      background: rgba(255,255,255,0.05);
+    }
+    .nav-pills .nav-link.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .form-control, .form-select {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--bs-border-color);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: var(--bs-body-color);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-control:focus, .form-select:focus {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124,92,255,0.15);
+      color: var(--bs-body-color);
+    }
+    .form-control::placeholder {
+      color: #6e7681;
+    }
+    .form-label {
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: #8b949e;
+      margin-bottom: 0.4rem;
+    }
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .btn-primary:hover, .btn-primary:focus {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+    .btn-outline-secondary {
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      border-color: var(--bs-border-color);
+      color: #8b949e;
+    }
+    .btn-outline-secondary:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: #8b949e;
+      color: #e6edf3;
+    }
+    .provider-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .provider-btn:hover {
+      transform: translateY(-2px);
+    }
+    .btn-google {
+      background: #fff;
+      color: #3c4043;
+      border: 1px solid #dadce0;
+    }
+    .btn-google:hover {
+      background: #f8f9fa;
+      color: #3c4043;
+      border-color: #c6c9cc;
+    }
+    .btn-github {
+      background: #24292f;
+      color: #fff;
+      border: 1px solid #30363d;
+    }
+    .btn-github:hover {
+      background: #32383f;
+      color: #fff;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.25rem 0;
+      color: #6e7681;
+      font-size: 0.8rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--bs-border-color);
+    }
+    .form-check-input:checked {
+      background-color: var(--accent);
+      border-color: var(--accent);
+    }
+    .link-accent {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .link-accent:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+    .profile-card {
+      text-align: center;
+      padding: 1.5rem;
+    }
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 auto 1rem;
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .method-chips {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .method-chip {
+      flex: 1;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--bs-border-color);
+      background: transparent;
+      color: #8b949e;
+      font-weight: 500;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .method-chip:hover {
+      border-color: #8b949e;
+      color: #e6edf3;
+    }
+    .method-chip.active {
+      background: rgba(124,92,255,0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1100;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #8b949e;
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: #e6edf3;
+    }
+    .spinner-border-sm {
+      width: 1rem;
+      height: 1rem;
+    }
+    .alert {
+      border-radius: 10px;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-container">
+  <a href="index.html" class="back-link">
+    <i class="bi bi-arrow-left"></i> Kembali ke Aplikasi
+  </a>
+
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="logo">
+        <i class="bi bi-grid-3x3-gap-fill"></i>
+      </div>
+      <h1>Counter Board</h1>
+      <p>Kelola counter Anda dengan mudah</p>
+    </div>
+
+    <div class="auth-body">
+      <!-- Alert for errors -->
+      <div class="alert alert-danger d-none" id="alertError" role="alert"></div>
+      <div class="alert alert-warning d-none" id="alertProto" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        Auth membutuhkan http/https. Buka via localhost.
+      </div>
+
+      <!-- Profile Section (shown when logged in) -->
+      <div id="profileSection" class="d-none">
+        <div class="profile-card">
+          <div class="profile-avatar" id="profileAvatar">U</div>
+          <h5 id="profileName" class="mb-1">User</h5>
+          <p id="profileEmail" class="text-muted mb-3">email@example.com</p>
+          <button class="btn btn-outline-secondary w-100" id="logoutBtn">
+            <i class="bi bi-box-arrow-right me-2"></i>Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Auth Forms (shown when logged out) -->
+      <div id="authForms">
+        <!-- Tabs -->
+        <ul class="nav nav-pills nav-fill mb-4" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="loginTab" data-bs-toggle="pill" data-bs-target="#loginPane" type="button" role="tab">Masuk</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="registerTab" data-bs-toggle="pill" data-bs-target="#registerPane" type="button" role="tab">Daftar</button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- Login Pane -->
+          <div class="tab-pane fade show active" id="loginPane" role="tabpanel">
+            <!-- Provider Buttons -->
+            <div class="d-grid gap-2 mb-3">
+              <button class="provider-btn btn-google" id="googleBtn" type="button">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.3-2.3H12v4.4h6.5c-.3 1.7-1.2 3.2-2.6 4.2l3.9 3c2.3-2.1 3.7-5.3 3.7-9.3z"/><path fill="#34A853" d="M12 24c3.3 0 6-1.1 8-3l-3.9-3c-1.1.8-2.6 1.2-4.1 1.2-3.2 0-6-2.2-7-5.1H.9v3.2C2.9 21.4 7.1 24 12 24z"/><path fill="#FBBC05" d="M5 14.1c-.2-.7-.4-1.4-.4-2.1s.1-1.5.4-2.1V6.7H.9C-.1 8.6-.6 10.7-.6 12s.5 3.4 1.5 5.3l4.1-3.2z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3.4.6 4.6 1.8l3.4-3.4C18 1.1 15.2 0 12 0 7.1 0 2.9 2.6.9 6.7l4.1 3.2c1-2.9 3.8-5.2 7-5.2z"/></svg>
+                Masuk dengan Google
+              </button>
+              <button class="provider-btn btn-github" id="githubBtn" type="button">
+                <i class="bi bi-github"></i>
+                Masuk dengan GitHub
+              </button>
+            </div>
+
+            <div class="divider">atau dengan</div>
+
+            <!-- Method Chips -->
+            <div class="method-chips">
+              <button class="method-chip active" id="methodEmail" type="button">
+                <i class="bi bi-envelope me-1"></i> Email
+              </button>
+              <button class="method-chip" id="methodPhone" type="button">
+                <i class="bi bi-phone me-1"></i> Telepon
+              </button>
+            </div>
+
+            <!-- Email Login Form -->
+            <form id="emailLoginForm">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Alamat Email</label>
+                <input type="email" class="form-control" id="loginEmail" placeholder="nama@email.com" required>
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required minlength="6">
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+                  <label class="form-check-label text-muted small" for="rememberMe">Ingat saya</label>
+                </div>
+                <a href="#" class="link-accent small" id="forgotLink">Lupa password?</a>
+              </div>
+              <button type="submit" class="btn btn-primary w-100" id="emailLoginBtn">
+                <span class="btn-text">Masuk</span>
+                <span class="btn-loading d-none"><span class="spinner-border spinner-border-sm me-2"></span>Memproses...</span>
+              </button>
+            </form>
+
+            <!-- Phone Login Form -->
+            <form id="phoneLoginForm" class="d-none">
+              <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Nomor Telepon</label>
+                <input type="tel" class="form-control" id="phoneNumber" placeholder="+62812345678" required>
+              </div>
+              <div id="recaptchaContainer"></div>
+              <button type="button" class="btn btn-outline-secondary w-100 mb-3" id="sendCodeBtn">
+                <span class="btn-text"><i class="bi bi-send me-2"></i>Kirim Kode</span>
+                <span class="btn-loading d-none"><span class="spinner-border spinner-border-sm me-2"></span>Mengirim...</span>
+              </button>
+              <div class="mb-3">
+                <label for="verifyCode" class="form-label">Kode Verifikasi</label>
+                <input type="text" class="form-control" id="verifyCode" placeholder="123456" maxlength="6">
+              </div>
+              <button type="button" class="btn btn-primary w-100" id="verifyCodeBtn">
+                <span class="btn-text">Verifikasi</span>
+                <span class="btn-loading d-none"><span class="spinner-border spinner-border-sm me-2"></span>Memverifikasi...</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Register Pane -->
+          <div class="tab-pane fade" id="registerPane" role="tabpanel">
+            <form id="registerForm">
+              <div class="mb-3">
+                <label for="regEmail" class="form-label">Alamat Email</label>
+                <input type="email" class="form-control" id="regEmail" placeholder="nama@email.com" required>
+              </div>
+              <div class="mb-3">
+                <label for="regPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="regPassword" placeholder="Minimal 6 karakter" required minlength="6">
+              </div>
+              <div class="mb-4">
+                <label for="regPassword2" class="form-label">Konfirmasi Password</label>
+                <input type="password" class="form-control" id="regPassword2" placeholder="Ulangi password" required minlength="6">
+              </div>
+              <button type="submit" class="btn btn-primary w-100" id="registerBtn">
+                <span class="btn-text">Buat Akun</span>
+                <span class="btn-loading d-none"><span class="spinner-border spinner-border-sm me-2"></span>Membuat akun...</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-center text-muted small mt-3">
+    &copy; 2026 Counter Board. Semua hak dilindungi.
+  </p>
+</div>
+
+<!-- Config Modal -->
+<div class="modal fade" id="configModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title"><i class="bi bi-gear me-2"></i>Konfigurasi Firebase</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info small">
+          <i class="bi bi-info-circle me-1"></i>
+          Tempel konfigurasi Firebase JSON dari Firebase Console.
+        </div>
+        <div class="alert alert-danger d-none" id="configError"></div>
+        <textarea class="form-control" id="configInput" rows="6" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","appId":"..."}'></textarea>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="saveConfigBtn">Simpan & Muat Ulang</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container">
+  <div id="toast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="toastBody"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+(function() {
+  'use strict';
+
+  // ========== CONSTANTS ==========
+  const SYNC_CFG_KEY = 'counter_sync_cfg';
+  const DEFAULT_CONFIG = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT",
+    appId: "YOUR_APP_ID"
+  };
+  const HOME_URL = 'index.html';
+
+  // ========== STATE ==========
+  let authBusy = false;
+  let phoneConfirmation = null;
+  let recaptchaVerifier = null;
+
+  // ========== DOM ELEMENTS ==========
+  const $ = id => document.getElementById(id);
+  const alertError = $('alertError');
+  const alertProto = $('alertProto');
+  const profileSection = $('profileSection');
+  const authForms = $('authForms');
+  const profileAvatar = $('profileAvatar');
+  const profileName = $('profileName');
+  const profileEmail = $('profileEmail');
+  const logoutBtn = $('logoutBtn');
+  const googleBtn = $('googleBtn');
+  const githubBtn = $('githubBtn');
+  const methodEmail = $('methodEmail');
+  const methodPhone = $('methodPhone');
+  const emailLoginForm = $('emailLoginForm');
+  const phoneLoginForm = $('phoneLoginForm');
+  const registerForm = $('registerForm');
+  const forgotLink = $('forgotLink');
+  const sendCodeBtn = $('sendCodeBtn');
+  const verifyCodeBtn = $('verifyCodeBtn');
+  const saveConfigBtn = $('saveConfigBtn');
+  const toastEl = $('toast');
+  const toastBody = $('toastBody');
+
+  // ========== UTILITIES ==========
+  function showToast(message, type = 'secondary') {
+    toastEl.className = `toast align-items-center border-0 text-bg-${type}`;
+    toastBody.textContent = message;
+    const toast = bootstrap.Toast.getOrCreateInstance(toastEl);
+    toast.show();
+  }
+
+  function showError(message) {
+    alertError.textContent = message;
+    alertError.classList.remove('d-none');
+    setTimeout(() => alertError.classList.add('d-none'), 5000);
+  }
+
+  function hideError() {
+    alertError.classList.add('d-none');
+  }
+
+  function setLoading(btn, loading) {
+    const text = btn.querySelector('.btn-text');
+    const loader = btn.querySelector('.btn-loading');
+    if (text) text.classList.toggle('d-none', loading);
+    if (loader) loader.classList.toggle('d-none', !loading);
+    btn.disabled = loading;
+  }
+
+  function validateConfig(cfg) {
+    return cfg && typeof cfg === 'object' &&
+      String(cfg.apiKey || '').length > 10 &&
+      String(cfg.authDomain || '').includes('.firebaseapp.com') &&
+      String(cfg.projectId || '').length > 1;
+  }
+
+  function getFirebaseConfig() {
+    if (window.__FIREBASE_CONFIG && validateConfig(window.__FIREBASE_CONFIG)) {
+      return window.__FIREBASE_CONFIG;
+    }
+    try {
+      const stored = localStorage.getItem(SYNC_CFG_KEY);
+      if (stored) {
+        const cfg = JSON.parse(stored);
+        if (validateConfig(cfg)) return cfg;
+      }
+    } catch (_) {}
+    return DEFAULT_CONFIG;
+  }
+
+  function promptConfig(reason) {
+    const errEl = $('configError');
+    if (reason) {
+      errEl.textContent = reason;
+      errEl.classList.remove('d-none');
+    } else {
+      errEl.classList.add('d-none');
+    }
+    const modal = new bootstrap.Modal($('configModal'));
+    modal.show();
+  }
+
+  // ========== FIREBASE INIT ==========
+  function initFirebase() {
+    if (window._fbApp) return true;
+    const cfg = getFirebaseConfig();
+    if (!validateConfig(cfg)) {
+      promptConfig('Konfigurasi Firebase tidak valid. Tempel config JSON yang benar.');
+      return false;
+    }
+    try {
+      window._fbApp = firebase.initializeApp(cfg);
+      firebase.auth().useDeviceLanguage();
+      return true;
+    } catch (e) {
+      showError('Gagal inisialisasi Firebase: ' + e.message);
+      return false;
+    }
+  }
+
+  // ========== AUTH ERROR HANDLER ==========
+  function handleAuthError(e, providerId) {
+    const code = e?.code || '';
+    const msg = e?.message || '';
+    const host = location.host || 'localhost';
+
+    if (msg.includes('API key not valid') || code === 'auth/invalid-api-key') {
+      promptConfig('API key tidak valid. Perbarui konfigurasi Firebase.');
+      return 'API key tidak valid.';
+    }
+
+    const errors = {
+      'auth/operation-not-allowed': `Provider ${providerId || 'OAuth'} belum diaktifkan di Firebase Console.`,
+      'auth/unauthorized-domain': `Domain "${host}" tidak diizinkan. Tambahkan di Firebase Console → Authentication → Settings → Authorized domains.`,
+      'auth/popup-blocked': 'Popup diblokir browser. Coba lagi atau izinkan popup.',
+      'auth/popup-closed-by-user': 'Login dibatalkan.',
+      'auth/account-exists-with-different-credential': 'Email sudah terdaftar dengan metode login lain.',
+      'auth/invalid-email': 'Format email tidak valid.',
+      'auth/wrong-password': 'Password salah.',
+      'auth/user-not-found': 'Akun tidak ditemukan.',
+      'auth/weak-password': 'Password terlalu lemah. Gunakan minimal 6 karakter.',
+      'auth/email-already-in-use': 'Email sudah digunakan akun lain.',
+      'auth/invalid-verification-code': 'Kode verifikasi salah.',
+      'auth/code-expired': 'Kode verifikasi sudah kadaluarsa.',
+    };
+
+    return errors[code] || msg || 'Terjadi kesalahan. Coba lagi.';
+  }
+
+  // ========== AUTH PERSISTENCE ==========
+  async function setAuthPersistence() {
+    try {
+      const persist = $('rememberMe')?.checked
+        ? firebase.auth.Auth.Persistence.LOCAL
+        : firebase.auth.Auth.Persistence.SESSION;
+      await firebase.auth().setPersistence(persist);
+    } catch (_) {}
+  }
+
+  // ========== SYNC USER DATA ==========
+  async function syncUserToCloud() {
+    try {
+      const user = firebase.auth().currentUser;
+      if (!user) return;
+      const db = firebase.firestore();
+      const ref = db.collection('users').doc(user.uid).collection('boards').doc('default');
+      await ref.set({ originId: 'auth-page', ts: Date.now() }, { merge: true });
+    } catch (_) {}
+  }
+
+  // ========== UI UPDATES ==========
+  function updateUI(user) {
+    if (user) {
+      authForms.classList.add('d-none');
+      profileSection.classList.remove('d-none');
+      profileName.textContent = user.displayName || 'User';
+      profileEmail.textContent = user.email || user.phoneNumber || '';
+      const initial = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
+      if (user.photoURL) {
+        profileAvatar.innerHTML = `<img src="${user.photoURL}" alt="Avatar">`;
+      } else {
+        profileAvatar.textContent = initial;
+      }
+    } else {
+      authForms.classList.remove('d-none');
+      profileSection.classList.add('d-none');
+    }
+  }
+
+  function switchMethod(method) {
+    if (method === 'email') {
+      methodEmail.classList.add('active');
+      methodPhone.classList.remove('active');
+      emailLoginForm.classList.remove('d-none');
+      phoneLoginForm.classList.add('d-none');
+    } else {
+      methodPhone.classList.add('active');
+      methodEmail.classList.remove('active');
+      phoneLoginForm.classList.remove('d-none');
+      emailLoginForm.classList.add('d-none');
+    }
+  }
+
+  // ========== AUTH HANDLERS ==========
+  async function signInWithProvider(providerType) {
+    if (authBusy) return;
+    authBusy = true;
+    hideError();
+
+    const btn = providerType === 'google' ? googleBtn : githubBtn;
+    setLoading(btn, true);
+
+    try {
+      if (!initFirebase()) return;
+      await setAuthPersistence();
+
+      const provider = providerType === 'google'
+        ? new firebase.auth.GoogleAuthProvider()
+        : new firebase.auth.GithubAuthProvider();
+
+      if (providerType === 'google') {
+        provider.setCustomParameters({ prompt: 'select_account' });
+      } else {
+        provider.addScope('user:email');
+      }
+
+      const result = await firebase.auth().signInWithPopup(provider);
+      if (result?.user) {
+        await syncUserToCloud();
+        showToast('Login berhasil!', 'success');
+        setTimeout(() => location.href = HOME_URL, 500);
+      }
+    } catch (e) {
+      const errMsg = handleAuthError(e, providerType);
+      showError(errMsg);
+      // Try redirect as fallback
+      if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
+        try {
+          const provider = providerType === 'google'
+            ? new firebase.auth.GoogleAuthProvider()
+            : new firebase.auth.GithubAuthProvider();
+          await firebase.auth().signInWithRedirect(provider);
+        } catch (_) {}
+      }
+    } finally {
+      setLoading(btn, false);
+      authBusy = false;
+    }
+  }
+
+  async function signInWithEmail(e) {
+    e.preventDefault();
+    if (authBusy) return;
+    authBusy = true;
+    hideError();
+
+    const btn = $('emailLoginBtn');
+    setLoading(btn, true);
+
+    const email = $('loginEmail').value.trim();
+    const password = $('loginPassword').value;
+
+    try {
+      if (!initFirebase()) return;
+      await setAuthPersistence();
+      const result = await firebase.auth().signInWithEmailAndPassword(email, password);
+      if (result?.user) {
+        await syncUserToCloud();
+        showToast('Login berhasil!', 'success');
+        setTimeout(() => location.href = HOME_URL, 500);
+      }
+    } catch (e) {
+      showError(handleAuthError(e));
+    } finally {
+      setLoading(btn, false);
+      authBusy = false;
+    }
+  }
+
+  async function registerWithEmail(e) {
+    e.preventDefault();
+    if (authBusy) return;
+
+    const email = $('regEmail').value.trim();
+    const password = $('regPassword').value;
+    const password2 = $('regPassword2').value;
+
+    if (password !== password2) {
+      showError('Password konfirmasi tidak cocok.');
+      return;
+    }
+
+    authBusy = true;
+    hideError();
+
+    const btn = $('registerBtn');
+    setLoading(btn, true);
+
+    try {
+      if (!initFirebase()) return;
+      await setAuthPersistence();
+      const result = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      if (result?.user) {
+        await syncUserToCloud();
+        showToast('Akun berhasil dibuat!', 'success');
+        setTimeout(() => location.href = HOME_URL, 500);
+      }
+    } catch (e) {
+      showError(handleAuthError(e));
+    } finally {
+      setLoading(btn, false);
+      authBusy = false;
+    }
+  }
+
+  async function sendPhoneCode() {
+    if (authBusy) return;
+    authBusy = true;
+    hideError();
+
+    setLoading(sendCodeBtn, true);
+
+    const phone = $('phoneNumber').value.trim();
+    if (!phone) {
+      showError('Masukkan nomor telepon.');
+      setLoading(sendCodeBtn, false);
+      authBusy = false;
+      return;
+    }
+
+    try {
+      if (!initFirebase()) return;
+
+      if (!recaptchaVerifier) {
+        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptchaContainer', { size: 'invisible' });
+        await recaptchaVerifier.render();
+      }
+
+      phoneConfirmation = await firebase.auth().signInWithPhoneNumber(phone, recaptchaVerifier);
+      showToast('Kode verifikasi terkirim!', 'success');
+      $('verifyCode').focus();
+    } catch (e) {
+      showError(handleAuthError(e));
+    } finally {
+      setLoading(sendCodeBtn, false);
+      authBusy = false;
+    }
+  }
+
+  async function verifyPhoneCode() {
+    if (authBusy || !phoneConfirmation) return;
+    authBusy = true;
+    hideError();
+
+    setLoading(verifyCodeBtn, true);
+
+    const code = $('verifyCode').value.trim();
+    if (!code) {
+      showError('Masukkan kode verifikasi.');
+      setLoading(verifyCodeBtn, false);
+      authBusy = false;
+      return;
+    }
+
+    try {
+      const result = await phoneConfirmation.confirm(code);
+      phoneConfirmation = null;
+      if (result?.user) {
+        await syncUserToCloud();
+        showToast('Login berhasil!', 'success');
+        setTimeout(() => location.href = HOME_URL, 500);
+      }
+    } catch (e) {
+      showError(handleAuthError(e));
+    } finally {
+      setLoading(verifyCodeBtn, false);
+      authBusy = false;
+    }
+  }
+
+  async function forgotPassword(e) {
+    e.preventDefault();
+    const email = $('loginEmail').value.trim();
+    if (!email) {
+      showError('Masukkan email untuk reset password.');
+      return;
+    }
+
+    try {
+      if (!initFirebase()) return;
+      await firebase.auth().sendPasswordResetEmail(email);
+      showToast('Email reset password terkirim!', 'success');
+    } catch (e) {
+      showError(handleAuthError(e));
+    }
+  }
+
+  async function logout() {
+    try {
+      await firebase.auth().signOut();
+      showToast('Logout berhasil.', 'secondary');
+    } catch (e) {
+      showError('Gagal logout.');
+    }
+  }
+
+  function saveConfig() {
+    try {
+      const raw = $('configInput').value.trim();
+      const cfg = JSON.parse(raw);
+      if (!validateConfig(cfg)) {
+        $('configError').textContent = 'Config tidak valid. Pastikan ada apiKey, authDomain, dan projectId.';
+        $('configError').classList.remove('d-none');
+        return;
+      }
+      localStorage.setItem(SYNC_CFG_KEY, JSON.stringify(cfg));
+      location.reload();
+    } catch (e) {
+      $('configError').textContent = 'Format JSON tidak valid.';
+      $('configError').classList.remove('d-none');
+    }
+  }
+
+  // ========== EVENT LISTENERS ==========
+  googleBtn.addEventListener('click', () => signInWithProvider('google'));
+  githubBtn.addEventListener('click', () => signInWithProvider('github'));
+  emailLoginForm.addEventListener('submit', signInWithEmail);
+  registerForm.addEventListener('submit', registerWithEmail);
+  methodEmail.addEventListener('click', () => switchMethod('email'));
+  methodPhone.addEventListener('click', () => switchMethod('phone'));
+  sendCodeBtn.addEventListener('click', sendPhoneCode);
+  verifyCodeBtn.addEventListener('click', verifyPhoneCode);
+  forgotLink.addEventListener('click', forgotPassword);
+  logoutBtn.addEventListener('click', logout);
+  saveConfigBtn.addEventListener('click', saveConfig);
+
+  // ========== INIT ==========
+  (async function init() {
+    // Check protocol - localhost is allowed (used by Android app local server)
+    if (location.protocol === 'file:' && !location.host.includes('localhost')) {
+      alertProto.classList.remove('d-none');
+    }
+
+    // Init Firebase
+    if (!initFirebase()) return;
+
+    // Check redirect result
+    try {
+      const result = await firebase.auth().getRedirectResult();
+      if (result?.user) {
+        await syncUserToCloud();
+        showToast('Login berhasil!', 'success');
+        setTimeout(() => location.href = HOME_URL, 500);
+        return;
+      }
+    } catch (_) {}
+
+    // Listen auth state
+    firebase.auth().onAuthStateChanged(user => {
+      updateUI(user);
+    });
+
+    // Probe for invalid API key
+    try {
+      await firebase.auth().fetchSignInMethodsForEmail('test@probe.com');
+    } catch (e) {
+      if (String(e?.message || '').includes('API key not valid')) {
+        promptConfig('API key tidak valid.');
+      }
+    }
+  })();
+})();
+</script>
+</body>
+</html>

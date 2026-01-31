@@ -1,0 +1,4496 @@
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Counter Board - Digital counter dengan fitur tracking, statistik, dan kolaborasi real-time">
+  <meta name="theme-color" content="#7c5cff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Counter Board</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.svg">
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Chart.js for statistics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Face-API.js for face detection -->
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <!-- Private Firebase config -->
+  <script src="env.js"></script>
+  <style>
+    :root {
+      --bs-body-bg: #0d1117;
+      --bs-body-color: #e6edf3;
+      --bs-border-color: #30363d;
+      --bs-card-bg: #161b22;
+      --accent: #7c5cff;
+      --accent-hover: #9171ff;
+      --good: #22c55e;
+      --bad: #fb7185;
+    }
+    [data-bs-theme="light"] {
+      --bs-body-bg: #f6f8fa;
+      --bs-body-color: #1f2328;
+      --bs-border-color: #d0d7de;
+      --bs-card-bg: #ffffff;
+      --accent: #6b4dff;
+      --good: #1a7f37;
+      --bad: #cf222e;
+    }
+    body {
+      min-height: 100vh;
+      padding-bottom: 60px; /* Space for AdMob banner */
+      background: var(--bs-body-bg);
+    }
+    .navbar-brand {
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+    .badge-status {
+      font-size: 0.7rem;
+      padding: 0.35em 0.65em;
+    }
+    .btn-toolbar-action {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      border-radius: 0.5rem;
+    }
+    .counter-card {
+      background: var(--bs-card-bg);
+      border: 1px solid var(--bs-border-color);
+      border-radius: 1rem;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .counter-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .counter-card.dragging {
+      opacity: 0.5;
+    }
+    .counter-card.dragOver {
+      border-color: var(--accent);
+      background: rgba(124,92,255,0.08);
+    }
+    .counter-value {
+      font-size: 3.5rem;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      cursor: pointer;
+      transition: transform 0.1s;
+      line-height: 1.1;
+    }
+    .counter-value:hover {
+      transform: scale(1.02);
+    }
+    .counter-value.seven {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+    }
+    .counter-value.seven svg {
+      width: 28px;
+      height: 48px;
+    }
+    .btn-counter {
+      flex: 1;
+      padding: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border-radius: 0.75rem;
+    }
+    .btn-plus {
+      background: rgba(34,197,94,0.15);
+      border-color: rgba(34,197,94,0.4);
+      color: var(--good);
+    }
+    .btn-plus:hover {
+      background: rgba(34,197,94,0.25);
+      border-color: rgba(34,197,94,0.6);
+      color: var(--good);
+    }
+    .btn-minus {
+      background: rgba(251,113,133,0.15);
+      border-color: rgba(251,113,133,0.4);
+      color: var(--bad);
+    }
+    .btn-minus:hover {
+      background: rgba(251,113,133,0.25);
+      border-color: rgba(251,113,133,0.6);
+      color: var(--bad);
+    }
+    .btn-reset-card {
+      background: rgba(148,163,184,0.1);
+      border-color: rgba(148,163,184,0.3);
+    }
+    .form-control-dark {
+      background: rgba(255,255,255,0.03);
+      border-color: var(--bs-border-color);
+      color: var(--bs-body-color);
+    }
+    .form-control-dark:focus {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124,92,255,0.15);
+      color: var(--bs-body-color);
+    }
+    /* Custom select dropdown styling */
+    .form-select-dark {
+      background-color: #1e2430;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23e6edf3' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 16px 12px;
+      border: 2px solid #30363d;
+      border-radius: 0.5rem;
+      color: #e6edf3;
+      padding: 0.75rem 2.5rem 0.75rem 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 100%;
+    }
+    .form-select-dark:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124,92,255,0.25);
+      outline: none;
+      background-color: #252d3a;
+    }
+    .form-select-dark:hover {
+      border-color: var(--accent);
+      background-color: #252d3a;
+    }
+    .form-select-dark option {
+      background-color: #1e2430;
+      color: #e6edf3;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .form-select-dark option:hover,
+    .form-select-dark option:checked {
+      background-color: #7c5cff;
+      color: #ffffff;
+    }
+    [data-bs-theme="light"] .form-select-dark {
+      background-color: #ffffff;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%231f2328' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+      border-color: #d0d7de;
+      color: #1f2328;
+    }
+    [data-bs-theme="light"] .form-select-dark:focus,
+    [data-bs-theme="light"] .form-select-dark:hover {
+      background-color: #f6f8fa;
+      border-color: var(--accent);
+    }
+    [data-bs-theme="light"] .form-select-dark option {
+      background-color: #ffffff;
+      color: #1f2328;
+    }
+    .hero-section {
+      background: var(--bs-card-bg);
+      border: 1px solid var(--bs-border-color);
+      border-radius: 1rem;
+    }
+    .board-section {
+      background: var(--bs-card-bg);
+      border: 1px solid var(--bs-border-color);
+      border-radius: 1rem;
+    }
+    .addon-bar {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--bs-border-color);
+      border-radius: 0.75rem;
+      font-size: 0.85rem;
+    }
+    .addon-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(148,163,184,0.5);
+    }
+    .addon-dot.on {
+      background: var(--good);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+    }
+    .progress-goal {
+      height: 6px;
+      border-radius: 3px;
+    }
+    .drag-handle {
+      cursor: move;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .drag-handle:hover {
+      opacity: 1;
+    }
+    .select-toggle {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      z-index: 2;
+      display: none;
+    }
+    .select-mode .select-toggle {
+      display: block;
+    }
+    .counter-card.selected {
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 0 2px rgba(124,92,255,0.3), 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .counter-card.selected::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(124,92,255,0.05);
+      border-radius: 1rem;
+      pointer-events: none;
+    }
+    .toast-container {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1100;
+    }
+    @keyframes alarmFlash {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(251,113,133,0); }
+      50% { box-shadow: 0 0 0 8px rgba(251,113,133,0.2); }
+    }
+    .counter-card.alarm {
+      border-color: var(--bad);
+      animation: alarmFlash 0.8s ease-in-out 3;
+    }
+    @keyframes celebratePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+      50% { box-shadow: 0 0 0 8px rgba(34,197,94,0.2); }
+    }
+    .counter-card.celebrate {
+      border-color: var(--good);
+      animation: celebratePulse 0.8s ease-in-out 3;
+    }
+    .view-mode-btn.active {
+      background: rgba(124,92,255,0.15) !important;
+      border-color: rgba(124,92,255,0.4) !important;
+      color: var(--accent) !important;
+    }
+    .grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .row-view {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .col-view {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+    .col-view .counter-card {
+      min-width: 300px;
+      flex-shrink: 0;
+    }
+    .dropdown-menu {
+      background: var(--bs-card-bg);
+      border-color: var(--bs-border-color);
+    }
+    .dropdown-item {
+      color: var(--bs-body-color);
+    }
+    .dropdown-item:hover {
+      background: rgba(124,92,255,0.1);
+      color: var(--accent);
+    }
+    /* Counter Colors */
+    .counter-card[data-color="red"] { border-left: 4px solid #ef4444; }
+    .counter-card[data-color="orange"] { border-left: 4px solid #f97316; }
+    .counter-card[data-color="yellow"] { border-left: 4px solid #eab308; }
+    .counter-card[data-color="green"] { border-left: 4px solid #22c55e; }
+    .counter-card[data-color="blue"] { border-left: 4px solid #3b82f6; }
+    .counter-card[data-color="purple"] { border-left: 4px solid #a855f7; }
+    .counter-card[data-color="pink"] { border-left: 4px solid #ec4899; }
+    /* Category Badge */
+    .category-badge {
+      font-size: 0.65rem;
+      padding: 0.2em 0.5em;
+      border-radius: 0.25rem;
+      background: rgba(124,92,255,0.2);
+      color: var(--accent);
+    }
+    /* Locked Counter */
+    .counter-card.locked .counter-value,
+    .counter-card.locked .btn-counter {
+      filter: blur(8px);
+      pointer-events: none;
+    }
+    .counter-card.locked::after {
+      content: '🔒';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+    }
+    .counter-card.hidden-counter {
+      display: none;
+    }
+    .show-hidden .counter-card.hidden-counter {
+      display: block;
+      opacity: 0.5;
+    }
+    /* History Log */
+    .history-item {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: rgba(255,255,255,0.03);
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .history-item .time {
+      color: var(--accent);
+      font-size: 0.75rem;
+    }
+    /* Keyboard shortcut hints */
+    .kbd {
+      display: inline-block;
+      padding: 0.1em 0.4em;
+      font-size: 0.75rem;
+      font-family: monospace;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--bs-border-color);
+      border-radius: 0.25rem;
+    }
+    /* Active counter indicator */
+    .counter-card.active-counter {
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 0 3px rgba(124,92,255,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg border-bottom">
+  <div class="container-fluid px-3 px-lg-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+      <i class="bi bi-grid-3x3-gap-fill text-primary"></i>
+      Counter Board
+    </a>
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge bg-secondary badge-status" id="viewTag">Mode: Grid</span>
+      <span class="badge bg-success badge-status d-none" id="cloudStatus">Cloud: Offline</span>
+      <button class="btn btn-outline-secondary btn-sm" id="historyBtn" title="Riwayat">
+        <i class="bi bi-clock-history"></i>
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" id="statsBtn" title="Statistik">
+        <i class="bi bi-graph-up"></i>
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" id="accountBtn" title="Login / Akun">
+        <i class="bi bi-person-circle me-1"></i>
+        <span id="accountLabel">Guest</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid px-3 px-lg-4 py-3">
+  <!-- Toolbar -->
+  <div class="toolbar-section d-flex flex-wrap gap-2 mb-3">
+    <button class="btn btn-primary btn-toolbar-action" id="addBox" title="Tambah counter (Ctrl+Enter)">
+      <i class="bi bi-plus-lg me-1"></i> Tambah
+    </button>
+    <button class="btn btn-outline-secondary btn-toolbar-action" id="toggleNotes" title="Tampilkan/sembunyikan catatan">
+      <i class="bi bi-card-text me-1"></i> Catatan
+    </button>
+    <button class="btn btn-outline-secondary btn-toolbar-action" id="toggleTheme" title="Mode terang/gelap">
+      <i class="bi bi-moon-stars me-1"></i> Theme
+    </button>
+    <button class="btn btn-outline-secondary btn-toolbar-action" id="toggleSound" title="Suara on/off">
+      <i class="bi bi-volume-mute me-1"></i> Suara
+    </button>
+    <button class="btn btn-outline-secondary btn-toolbar-action" id="toggleFont" title="Ganti font angka">
+      <i class="bi bi-fonts me-1"></i> Font
+    </button>
+    <button class="btn btn-outline-secondary btn-toolbar-action" id="alarmDur" title="Durasi alarm">
+      <i class="bi bi-bell me-1"></i> Alarm
+    </button>
+    <div class="dropdown">
+      <button class="btn btn-outline-secondary btn-toolbar-action dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        <i class="bi bi-three-dots me-1"></i> Lainnya
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#" id="exportData"><i class="bi bi-download me-2"></i>Export JSON</a></li>
+        <li><a class="dropdown-item" href="#" id="importData"><i class="bi bi-upload me-2"></i>Import JSON</a></li>
+        <li><a class="dropdown-item" href="#" id="shareData"><i class="bi bi-share me-2"></i>Share Link</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#" id="syncBtn"><i class="bi bi-cloud-arrow-up me-2"></i>Sync Firebase</a></li>
+        <li><a class="dropdown-item" href="#" id="collabBtn"><i class="bi bi-people me-2"></i>Kolaborasi</a></li>
+        <li><a class="dropdown-item" href="#" id="batchAction"><i class="bi bi-collection me-2"></i>Batch Action</a></li>
+        <li><a class="dropdown-item" href="#" id="toggleSelect"><i class="bi bi-check2-square me-2"></i>Select Mode</a></li>
+        <li><a class="dropdown-item" href="#" id="shortcutsBtn"><i class="bi bi-keyboard me-2"></i>Keyboard Shortcuts</a></li>
+      </ul>
+    </div>
+    <button class="btn btn-outline-danger btn-toolbar-action ms-auto" id="resetAll" title="Reset semua nilai">
+      <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+    </button>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero-section p-3 mb-3">
+    <div class="row g-3">
+      <div class="col-lg-9">
+        <input type="text" class="form-control form-control-lg form-control-dark fw-bold text-center mb-2" id="bigTitle" placeholder="TULIS JUDUL BESAR DI SINI...">
+        <textarea class="form-control form-control-dark" id="topText" rows="2" placeholder="Tulis deskripsi / catatan..."></textarea>
+      </div>
+      <div class="col-lg-3">
+        <div class="d-grid gap-2 h-100">
+          <button class="btn btn-outline-secondary" id="saveNow">
+            <i class="bi bi-floppy me-1"></i> Save
+          </button>
+          <button class="btn btn-outline-secondary" id="copyTitle">
+            <i class="bi bi-clipboard me-1"></i> Copy Judul
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Board Section -->
+  <div class="board-section p-3" id="board">
+    <!-- Board Header -->
+    <div class="board-header d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 pb-3 border-bottom">
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-outline-secondary view-mode-btn" id="modeRow" title="Row view">
+          <i class="bi bi-list"></i>
+        </button>
+        <button type="button" class="btn btn-outline-secondary view-mode-btn" id="modeCol" title="Column view">
+          <i class="bi bi-layout-three-columns"></i>
+        </button>
+        <button type="button" class="btn btn-outline-secondary view-mode-btn active" id="modeGrid" title="Grid view">
+          <i class="bi bi-grid-3x3"></i>
+        </button>
+      </div>
+      <div class="d-flex gap-2 align-items-center">
+        <div class="d-none gap-2 align-items-center" id="selectTools">
+          <span class="badge bg-primary" id="selectedCount">0 dipilih</span>
+          <button class="btn btn-sm btn-outline-secondary" id="selectAllBtn">Select All</button>
+          <button class="btn btn-sm btn-outline-secondary" id="deselectAllBtn">Deselect</button>
+          <button class="btn btn-sm btn-outline-warning" id="batchSelectedBtn" title="Batch untuk yang dipilih">Batch</button>
+          <button class="btn btn-sm btn-outline-danger" id="deleteSelectedBtn" title="Hapus yang dipilih"><i class="bi bi-trash"></i></button>
+          <button class="btn btn-sm btn-outline-secondary" id="selectOffBtn" title="Matikan select mode"><i class="bi bi-x-lg me-1"></i>Select Off</button>
+        </div>
+        <span class="badge bg-secondary">Autosave</span>
+      </div>
+    </div>
+
+    <!-- Counter Grid -->
+    <div class="counter-grid grid-view" id="counterGrid"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-4 mt-3 border-top">
+    <div class="mb-4">
+      <h6 class="fw-bold mb-2 text-center"><i class="bi bi-lightbulb me-1"></i>Kotak Saran</h6>
+      <p class="text-muted small mb-2 text-center">Punya ide atau saran untuk pengembangan aplikasi?</p>
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="input-group input-group-sm">
+            <input type="text" class="form-control form-control-dark" id="suggestionInput" placeholder="Tulis saran Anda..." maxlength="500">
+            <button class="btn btn-outline-primary" type="button" id="submitSuggestion" title="Kirim ke Telegram">
+              <i class="bi bi-telegram"></i>
+            </button>
+          </div>
+          <div class="mt-2 small text-muted text-center" id="suggestionStatus"></div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <p class="text-muted small mb-1">&copy; 2026 Caba. All rights reserved.</p>
+      <p class="text-muted small mb-0" id="appVersionText">versi 1.00.0001</p>
+    </div>
+  </footer>
+</div>
+
+<!-- Face Verification Modal -->
+<div class="modal fade" id="faceVerifyModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title"><i class="bi bi-person-bounding-box me-2"></i>Verifikasi Wajah</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="alert alert-info small py-2 mb-3 text-start">
+          <i class="bi bi-shield-lock me-1"></i><strong>Privasi Anda Terjamin!</strong>
+          <ul class="mb-0 mt-1 ps-3" style="font-size: 0.8rem;">
+            <li>Verifikasi ini <strong>hanya untuk memastikan Anda adalah manusia asli</strong>, bukan bot.</li>
+            <li>Kami <strong>TIDAK menyimpan, mengambil, atau mengirim</strong> gambar/video wajah Anda.</li>
+            <li>Semua proses verifikasi berjalan <strong>100% lokal di perangkat Anda</strong>.</li>
+            <li><strong>Keamanan data sepenuhnya milik Anda!</strong></li>
+          </ul>
+        </div>
+        <div class="position-relative mb-3" style="max-width: 320px; margin: 0 auto;">
+          <video id="faceVideo" class="w-100 rounded" autoplay playsinline muted style="transform: scaleX(-1); border: 3px solid var(--bs-border-color);"></video>
+          <canvas id="faceCanvas" class="d-none"></canvas>
+          <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center d-none" id="faceOverlay" style="background: rgba(0,0,0,0.7); border-radius: 0.375rem;">
+            <div class="text-center">
+              <div class="spinner-border text-primary mb-2" role="status"></div>
+              <div class="text-white small" id="overlayText">Memverifikasi...</div>
+            </div>
+          </div>
+          <!-- Face guide overlay -->
+          <div class="position-absolute top-50 start-50 translate-middle" style="width: 150px; height: 180px; border: 2px dashed rgba(0,255,204,0.5); border-radius: 50%; pointer-events: none;"></div>
+        </div>
+        <div class="mb-3">
+          <h5 class="text-warning mb-2" id="challengeText">Bersiap...</h5>
+          <p class="small text-muted mb-1" id="faceInstruction">Posisikan wajah Anda di dalam oval</p>
+          <div class="progress" style="height: 8px;" id="challengeProgress">
+            <div class="progress-bar bg-success" id="challengeProgressBar" style="width: 0%;"></div>
+          </div>
+        </div>
+        <div class="alert py-2 d-none" id="faceResult"></div>
+      </div>
+      <div class="modal-footer border-secondary justify-content-center">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="startVerifyBtn">
+          <i class="bi bi-play-fill me-1"></i>Mulai Verifikasi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container">
+  <div id="toast" class="toast align-items-center border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body" id="toastBody"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Number Modal -->
+<div class="modal fade" id="numberModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="modalTitle">Ubah Nilai</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small" id="modalDesc">Masukkan nilai baru.</p>
+        <input type="number" class="form-control form-control-dark" id="modalInput" inputmode="numeric">
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="modalConfirm">Konfirmasi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add-on Modal -->
+<div class="modal fade" id="addonModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="addonTitle">Add-on</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small" id="addonDesc">Atur stopwatch / timer.</p>
+        <div class="btn-group w-100 mb-3" role="group">
+          <button type="button" class="btn btn-outline-secondary" id="addonModeNone">None</button>
+          <button type="button" class="btn btn-outline-secondary" id="addonModeSw">Stopwatch</button>
+          <button type="button" class="btn btn-outline-secondary" id="addonModeTimer">Timer</button>
+        </div>
+        <input type="hidden" id="addonMode" value="none">
+        <div id="addonTimerInputs" class="d-none mb-3">
+          <div class="row g-2">
+            <div class="col">
+              <input type="number" class="form-control form-control-dark text-center" id="addonMin" placeholder="Menit" min="0">
+            </div>
+            <div class="col">
+              <input type="number" class="form-control form-control-dark text-center" id="addonSec" placeholder="Detik" min="0" max="59">
+            </div>
+          </div>
+        </div>
+        <div class="text-center p-3 rounded mb-3" style="background: rgba(255,255,255,0.03); border: 1px solid var(--bs-border-color);">
+          <div class="fs-3 fw-bold font-monospace" id="addonDisplay">—</div>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary flex-fill" id="addonStart">Start</button>
+          <button class="btn btn-outline-secondary flex-fill" id="addonReset">Reset</button>
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="addonDone">Selesai</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sync Modal -->
+<div class="modal fade" id="syncModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Realtime Sync</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small">Masukkan Session ID untuk sinkron antar perangkat.</p>
+        <div class="mb-3">
+          <label class="form-label small">Session ID</label>
+          <input type="text" class="form-control form-control-dark" id="syncSession" placeholder="room123">
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-outline-danger" id="syncDisconnect">Disconnect</button>
+        <button type="button" class="btn btn-primary" id="syncConnect">Connect</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Batch Modal -->
+<div class="modal fade" id="batchModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Batch Action</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small mb-3">Terapkan aksi ke semua counter sekaligus.</p>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold"><i class="bi bi-lightning-charge me-1"></i>Pilih Aksi</label>
+          <select class="form-select form-select-dark" id="batchType">
+            <option value="add">[ + ] Tambah nilai</option>
+            <option value="sub">[ − ] Kurangi nilai</option>
+            <option value="set">[ = ] Set nilai langsung</option>
+            <option value="reset">[ 0 ] Reset ke nol</option>
+            <option value="setGoal">[ ◎ ] Set target/goal</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold"><i class="bi bi-123 me-1"></i>Nilai</label>
+          <input type="number" class="form-control form-control-dark" id="batchValue" placeholder="Masukkan angka..." value="1">
+        </div>
+        <div class="alert alert-secondary small py-2 mb-0" id="batchInfo">
+          <i class="bi bi-info-circle me-1"></i>
+          Aksi akan diterapkan ke <strong id="batchTarget">semua counter</strong> yang ada.
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="batchConfirm">Terapkan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QR Modal -->
+<div class="modal fade" id="qrModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="qrTitle">QR Viewer Link</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-3">
+          <img id="qrImg" class="img-fluid rounded" style="max-width: 200px;" alt="QR Code">
+        </div>
+        <div class="mb-3">
+          <input type="text" class="form-control form-control-dark" id="qrInput" readonly>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="qrRcChk">
+          <label class="form-check-label" for="qrRcChk">
+            <strong>Remote Control</strong> - Tambahkan tombol +/-/reset di viewer
+          </label>
+        </div>
+        <div class="alert alert-secondary small py-2 mb-0">
+          <i class="bi bi-info-circle me-1"></i>
+          <strong>Viewer Mode:</strong> Hanya menampilkan counter secara live.<br>
+          <i class="bi bi-pip me-1"></i>
+          <strong>Picture-in-Picture:</strong> Bisa popup diatas aplikasi lain!
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-outline-primary" id="qrCopy"><i class="bi bi-clipboard me-1"></i>Copy Link</button>
+        <button type="button" class="btn btn-primary" id="qrOpen"><i class="bi bi-box-arrow-up-right me-1"></i>Open Viewer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- History Modal -->
+<div class="modal fade" id="historyModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title"><i class="bi bi-clock-history me-2"></i>Riwayat Aktivitas</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-secondary active" data-filter="all">Semua</button>
+            <button class="btn btn-outline-secondary" data-filter="add">Tambah</button>
+            <button class="btn btn-outline-secondary" data-filter="sub">Kurang</button>
+            <button class="btn btn-outline-secondary" data-filter="reset">Reset</button>
+          </div>
+          <button class="btn btn-sm btn-outline-danger" id="clearHistoryBtn"><i class="bi bi-trash me-1"></i>Hapus Semua</button>
+        </div>
+        <div id="historyList"></div>
+        <div class="text-center text-muted py-4 d-none" id="historyEmpty">
+          <i class="bi bi-inbox fs-1"></i>
+          <p>Belum ada riwayat aktivitas</p>
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button class="btn btn-outline-secondary" id="exportHistoryCsv"><i class="bi bi-filetype-csv me-1"></i>Export CSV</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Statistics Modal -->
+<div class="modal fade" id="statsModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title"><i class="bi bi-graph-up me-2"></i>Statistik</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3 mb-4">
+          <div class="col-md-3 col-6">
+            <div class="text-center p-3 rounded" style="background: rgba(124,92,255,0.1);">
+              <div class="fs-3 fw-bold text-primary" id="statTotalCounters">0</div>
+              <div class="small text-muted">Total Counter</div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="text-center p-3 rounded" style="background: rgba(34,197,94,0.1);">
+              <div class="fs-3 fw-bold text-success" id="statTotalValue">0</div>
+              <div class="small text-muted">Total Nilai</div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="text-center p-3 rounded" style="background: rgba(251,113,133,0.1);">
+              <div class="fs-3 fw-bold text-danger" id="statGoalsReached">0</div>
+              <div class="small text-muted">Target Tercapai</div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="text-center p-3 rounded" style="background: rgba(148,163,184,0.1);">
+              <div class="fs-3 fw-bold" id="statTodayActions">0</div>
+              <div class="small text-muted">Aksi Hari Ini</div>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Grafik Aktivitas (7 Hari Terakhir)</label>
+          <canvas id="activityChart" height="200"></canvas>
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Perbandingan Counter</label>
+          <canvas id="counterChart" height="200"></canvas>
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PIN Lock Modal -->
+<div class="modal fade" id="pinModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="pinModalTitle"><i class="bi bi-lock me-2"></i>Kunci PIN</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="text-muted small" id="pinModalDesc">Masukkan PIN 4 digit</p>
+        <input type="password" class="form-control form-control-dark text-center fs-3 mb-3" id="pinInput" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••">
+        <div id="pinError" class="text-danger small d-none">PIN salah!</div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="pinConfirmBtn">Konfirmasi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Customize Counter Modal -->
+<div class="modal fade" id="customizeModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title"><i class="bi bi-palette me-2"></i>Kustomisasi Counter</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Warna</label>
+          <div class="d-flex gap-2 flex-wrap">
+            <button class="btn btn-sm rounded-circle" data-color="none" style="width:32px;height:32px;background:var(--bs-border-color);">✓</button>
+            <button class="btn btn-sm rounded-circle" data-color="red" style="width:32px;height:32px;background:#ef4444;"></button>
+            <button class="btn btn-sm rounded-circle" data-color="orange" style="width:32px;height:32px;background:#f97316;"></button>
+            <button class="btn btn-sm rounded-circle" data-color="yellow" style="width:32px;height:32px;background:#eab308;"></button>
+            <button class="btn btn-sm rounded-circle" data-color="green" style="width:32px;height:32px;background:#22c55e;"></button>
+            <button class="btn btn-sm rounded-circle" data-color="blue" style="width:32px;height:32px;background:#3b82f6;"></button>
+            <button class="btn btn-sm rounded-circle" data-color="purple" style="width:32px;height:32px;background:#a855f7;"></button>
+            <button class="btn btn-sm rounded-circle" data-color="pink" style="width:32px;height:32px;background:#ec4899;"></button>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Icon</label>
+          <div class="d-flex gap-2 flex-wrap" id="iconPicker">
+            <button class="btn btn-sm btn-outline-secondary" data-icon="">Tanpa</button>
+            <button class="btn btn-sm btn-outline-secondary" data-icon="⭐">⭐</button>
+            <button class="btn btn-sm btn-outline-secondary" data-icon="❤️">❤️</button>
+            <button class="btn btn-sm btn-outline-secondary" data-icon="🔥">🔥</button>
+            <button class="btn btn-sm btn-outline-secondary" data-icon="💰">💰</button>
+            <button class="btn btn-sm btn-outline-secondary" data-icon="📦">📦</button>
+            <button class="btn btn-sm btn-outline-secondary" data-icon="🎯">🎯</button>
+            <button class="btn btn-sm btn-outline-secondary" data-icon="⏰">⏰</button>
+            <button class="btn btn-sm btn-outline-secondary" data-icon="📊">📊</button>
+            <button class="btn btn-sm btn-outline-secondary" data-icon="✅">✅</button>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Kategori</label>
+          <input type="text" class="form-control form-control-dark" id="categoryInput" placeholder="Contoh: Pekerjaan, Pribadi...">
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" id="lockCounterChk">
+          <label class="form-check-label" for="lockCounterChk">
+            <i class="bi bi-lock me-1"></i>Kunci dengan PIN
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="hideCounterChk">
+          <label class="form-check-label" for="hideCounterChk">
+            <i class="bi bi-eye-slash me-1"></i>Sembunyikan counter
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="customizeSaveBtn">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Collaboration Modal -->
+<div class="modal fade" id="collabModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title"><i class="bi bi-people me-2"></i>Kolaborasi Real-time</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info small py-2">
+          <i class="bi bi-info-circle me-1"></i>
+          Bagikan Room ID ke teman untuk mengedit counter bersama secara real-time!
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Room ID</label>
+          <div class="input-group">
+            <input type="text" class="form-control form-control-dark" id="collabRoomId" placeholder="Buat atau masukkan Room ID...">
+            <button class="btn btn-outline-secondary" id="generateRoomBtn" title="Generate Random"><i class="bi bi-dice-5"></i></button>
+          </div>
+        </div>
+        <div class="d-none" id="collabActiveSection">
+          <div class="alert alert-success small py-2 mb-3">
+            <i class="bi bi-broadcast me-1"></i>
+            <strong>Terhubung!</strong> Room: <span id="collabActiveRoom"></span>
+            <button class="btn btn-sm btn-outline-light ms-2" id="copyRoomIdBtn" title="Copy Room ID"><i class="bi bi-clipboard"></i></button>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Pengguna Online</label>
+            <div id="collabUsersList" class="d-flex flex-wrap gap-1"></div>
+            <small class="text-muted mt-2 d-block">
+              <span class="badge bg-warning text-dark">👑 Nama</span> = Pembuat Room
+            </small>
+          </div>
+          <div class="alert alert-warning small py-2">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            <strong>Catatan:</strong> Jika pembuat room keluar, room akan ditutup dan semua koneksi terputus!
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-danger d-none" id="collabLeaveBtn"><i class="bi bi-box-arrow-left me-1"></i>Keluar</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary" id="collabJoinBtn"><i class="bi bi-box-arrow-in-right me-1"></i>Gabung</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Keyboard Shortcuts Modal -->
+<div class="modal fade" id="shortcutsModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bs-card-bg); border-color: var(--bs-border-color);">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title"><i class="bi bi-keyboard me-2"></i>Keyboard Shortcuts</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-sm table-borderless">
+          <tbody>
+            <tr><td><kbd class="kbd">+</kbd> atau <kbd class="kbd">↑</kbd></td><td>Tambah counter aktif</td></tr>
+            <tr><td><kbd class="kbd">-</kbd> atau <kbd class="kbd">↓</kbd></td><td>Kurangi counter aktif</td></tr>
+            <tr><td><kbd class="kbd">R</kbd></td><td>Reset counter aktif</td></tr>
+            <tr><td><kbd class="kbd">N</kbd></td><td>Buat counter baru</td></tr>
+            <tr><td><kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd></td><td>Pilih counter sebelum/sesudah</td></tr>
+            <tr><td><kbd class="kbd">1-9</kbd></td><td>Pilih counter ke-N</td></tr>
+            <tr><td><kbd class="kbd">Ctrl</kbd>+<kbd class="kbd">S</kbd></td><td>Simpan data</td></tr>
+            <tr><td><kbd class="kbd">?</kbd></td><td>Tampilkan shortcut ini</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script>
+(function() {
+  'use strict';
+
+  // ========== CONSTANTS ==========
+  const STORAGE_KEY = 'counter_board_v10_bootstrap';
+  const HISTORY_KEY = 'counter_board_history';
+  const SYNC_CFG_KEY = 'counter_sync_cfg';
+  const SYNC_SESSION_KEY = 'counter_sync_session';
+  const USER_DATA_COLLECTION = 'user_boards';
+  const HISTORY_COLLECTION = 'activity_history';
+  const SUGGESTIONS_COLLECTION = 'suggestions';
+  const COLLAB_COLLECTION = 'collab_rooms';
+  const DEFAULT_CONFIG = {
+    apiKey: "AIzaSyDizcJ5Kus-YuS4w4QdFM3rEyHv_vHUHC4",
+    authDomain: "counter-controller.firebaseapp.com",
+    projectId: "counter-controller",
+    storageBucket: "counter-controller.firebasestorage.app",
+    messagingSenderId: "98155640507",
+    appId: "1:98155640507:web:ee18f7f2be1dcc86691b9e"
+  };
+
+  // ========== ANDROID BRIDGE ==========
+  // Check if running inside Android WebView
+  const isAndroidApp = typeof Android !== 'undefined';
+  
+  // Helper functions to call Android interface
+  function notifyAndroidTargetReached(counterName) {
+    if (isAndroidApp && Android.onTargetReached) {
+      try {
+        Android.onTargetReached(counterName || 'Counter');
+      } catch (e) {
+        console.log('Android bridge error:', e);
+      }
+    }
+  }
+  
+  function notifyAndroidUserLogin() {
+    if (isAndroidApp && Android.onUserLogin) {
+      try {
+        Android.onUserLogin();
+      } catch (e) {
+        console.log('Android bridge error:', e);
+      }
+    }
+  }
+  
+  function showAndroidToast(message) {
+    if (isAndroidApp && Android.showToast) {
+      try {
+        Android.showToast(message);
+      } catch (e) {
+        console.log('Android bridge error:', e);
+      }
+    }
+  }
+  
+  function getAndroidAppVersion() {
+    if (isAndroidApp && Android.getAppVersion) {
+      try {
+        return Android.getAppVersion();
+      } catch (e) {
+        console.log('Android bridge error:', e);
+        return null;
+      }
+    }
+    return null;
+  }
+  
+  function updateAppVersionDisplay() {
+    const versionEl = document.getElementById('appVersionText');
+    if (versionEl) {
+      const androidVersion = getAndroidAppVersion();
+      if (androidVersion) {
+        versionEl.textContent = androidVersion;
+      }
+    }
+  }
+
+  // ========== STATE ==========
+  const state = {
+    viewMode: 'grid',
+    notesVisible: true,
+    bigTitle: '',
+    topText: '',
+    theme: 'dark',
+    soundOn: false,
+    fontMode: 'modern',
+    alarmRingSec: 15,
+    selectedIds: [],
+    cards: [],
+    activeCardIndex: 0,
+    showHiddenCounters: false
+  };
+
+  // Activity history
+  let activityHistory = [];
+
+  let selectMode = false;
+  let activeAddonCardId = null;
+  let syncState = { connected: false, sessionId: '', docRef: null };
+  let currentUser = null; // Track Firebase auth user
+  const clientId = uid();
+  let lastCloudPushTs = 0;
+
+  // ========== DOM ELEMENTS ==========
+  const $ = id => document.getElementById(id);
+  const counterGrid = $('counterGrid');
+  const board = $('board');
+  const viewTag = $('viewTag');
+  const cloudStatus = $('cloudStatus');
+  const toastEl = $('toast');
+  const toastBody = $('toastBody');
+
+  // Buttons
+  const addBtn = $('addBox');
+  const resetAllBtn = $('resetAll');
+  const toggleNotesBtn = $('toggleNotes');
+  const toggleThemeBtn = $('toggleTheme');
+  const toggleSoundBtn = $('toggleSound');
+  const toggleFontBtn = $('toggleFont');
+  const alarmDurBtn = $('alarmDur');
+  const exportDataBtn = $('exportData');
+  const importDataBtn = $('importData');
+  const shareDataBtn = $('shareData');
+  const syncBtn = $('syncBtn');
+  const toggleSelectBtn = $('toggleSelect');
+  const batchActionBtn = $('batchAction');
+  const saveNowBtn = $('saveNow');
+  const copyTitleBtn = $('copyTitle');
+  const accountBtn = $('accountBtn');
+
+  // View mode buttons
+  const modeRowBtn = $('modeRow');
+  const modeColBtn = $('modeCol');
+  const modeGridBtn = $('modeGrid');
+
+  // Inputs
+  const bigTitle = $('bigTitle');
+  const topText = $('topText');
+
+  // Modals
+  const numberModal = new bootstrap.Modal($('numberModal'));
+  const addonModal = new bootstrap.Modal($('addonModal'));
+  const syncModal = new bootstrap.Modal($('syncModal'));
+  const batchModal = new bootstrap.Modal($('batchModal'));
+  const qrModal = new bootstrap.Modal($('qrModal'));
+
+  // ========== UTILITIES ==========
+  function uid() {
+    return 'c_' + Math.random().toString(16).slice(2) + '_' + Date.now().toString(16);
+  }
+
+  function showToast(msg, type = 'secondary') {
+    toastEl.className = `toast align-items-center border-0 text-bg-${type}`;
+    toastBody.textContent = msg;
+    const toast = bootstrap.Toast.getOrCreateInstance(toastEl);
+    toast.show();
+  }
+
+  function clampInt(v, min, max, def) {
+    const n = Number(v);
+    if (!Number.isFinite(n)) return def;
+    return Math.max(min, Math.min(max, Math.trunc(n)));
+  }
+
+  function fmtTimeMs(ms) {
+    ms = Math.max(0, Math.trunc(ms));
+    const totalSec = Math.floor(ms / 1000);
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    const tenths = Math.floor((ms % 1000) / 100);
+    return String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0') + '.' + tenths;
+  }
+
+  function fmtTimeSec(s) {
+    s = Math.max(0, Math.trunc(s));
+    const min = Math.floor(s / 60);
+    const sec = s % 60;
+    return String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+  }
+
+  function getCard(id) {
+    return state.cards.find(c => c.id === id);
+  }
+
+  // ========== SEVEN SEGMENT RENDERER ==========
+  function renderSevenDigits(str) {
+    const segsFor = {
+      '0': ['a','b','c','d','e','f'], '1': ['b','c'], '2': ['a','b','g','e','d'],
+      '3': ['a','b','g','c','d'], '4': ['f','g','b','c'], '5': ['a','f','g','c','d'],
+      '6': ['a','f','g','e','c','d'], '7': ['a','b','c'], '8': ['a','b','c','d','e','f','g'],
+      '9': ['a','b','c','d','f','g']
+    };
+    const segRects = {
+      a: { x:4, y:2, w:16, h:4 }, b: { x:20, y:6, w:4, h:16 }, c: { x:20, y:22, w:4, h:16 },
+      d: { x:4, y:36, w:16, h:4 }, e: { x:0, y:22, w:4, h:16 }, f: { x:0, y:6, w:4, h:16 },
+      g: { x:4, y:19, w:16, h:4 }
+    };
+    let out = '';
+    for (const ch of str) {
+      const active = segsFor[ch] || [];
+      let svg = `<svg viewBox="0 0 24 40" fill="currentColor">`;
+      for (const id of ['a','b','c','d','e','f','g']) {
+        const r = segRects[id];
+        const op = active.includes(id) ? '0.95' : '0.14';
+        svg += `<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="2" opacity="${op}"/>`;
+      }
+      svg += `</svg>`;
+      out += svg;
+    }
+    return out;
+  }
+
+  // ========== SOUND ==========
+  let audioCtx = null;
+  function beep(freq = 800, duration = 80, volume = 0.08) {
+    if (!state.soundOn) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.value = volume;
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start();
+      setTimeout(() => { osc.stop(); osc.disconnect(); gain.disconnect(); }, duration);
+    } catch (_) {}
+  }
+
+  // ========== STORAGE ==========
+  function saveToLocalStorage() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
+  }
+  
+  function hardSave() {
+    state.bigTitle = bigTitle.value || '';
+    state.topText = topText.value || '';
+    // Always save to localStorage (for offline backup)
+    saveToLocalStorage();
+    // If user is logged in, also save to Firebase
+    if (currentUser && window._fbApp) {
+      saveToUserCloud();
+    }
+    return true;
+  }
+
+  // Save user data to Firebase
+  async function saveToUserCloud() {
+    if (!currentUser || !window._fbApp) return;
+    try {
+      const db = firebase.firestore();
+      await db.collection(USER_DATA_COLLECTION).doc(currentUser.uid).set({
+        state: state,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        userEmail: currentUser.email || '',
+        userName: currentUser.displayName || ''
+      }, { merge: true });
+    } catch (e) {
+      console.error('Error saving to cloud:', e);
+    }
+  }
+
+  // Load user data from Firebase
+  async function loadFromUserCloud() {
+    if (!currentUser || !window._fbApp) return false;
+    try {
+      const db = firebase.firestore();
+      const doc = await db.collection(USER_DATA_COLLECTION).doc(currentUser.uid).get();
+      if (doc.exists && doc.data().state) {
+        applyImportedState(doc.data().state);
+        showToast('Data dimuat dari cloud!', 'success');
+        return true;
+      }
+    } catch (e) {
+      console.error('Error loading from cloud:', e);
+    }
+    return false;
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      const parsed = JSON.parse(raw);
+
+      state.viewMode = ['row', 'col', 'grid'].includes(parsed.viewMode) ? parsed.viewMode : 'grid';
+      state.notesVisible = !!parsed.notesVisible;
+      state.bigTitle = String(parsed.bigTitle ?? '');
+      state.topText = String(parsed.topText ?? '');
+      state.theme = ['light', 'dark'].includes(parsed.theme) ? parsed.theme : 'dark';
+      state.soundOn = !!parsed.soundOn;
+      state.fontMode = ['seven', 'modern'].includes(parsed.fontMode) ? parsed.fontMode : 'modern';
+      state.alarmRingSec = clampInt(parsed.alarmRingSec, 10, 30, 15);
+      state.showHiddenCounters = !!parsed.showHiddenCounters;
+
+      state.cards = Array.isArray(parsed.cards) ? parsed.cards.map(c => ({
+        id: String(c.id ?? uid()),
+        title: String(c.title ?? ''),
+        note: String(c.note ?? ''),
+        count: clampInt(c.count, 0, 1e9, 0),
+        step: clampInt(c.step, 1, 1e6, 1),
+        goal: clampInt(c.goal, 0, 1e9, 0),
+        goalReached: !!c.goalReached,
+        addonType: ['stopwatch', 'timer', 'none'].includes(c.addonType) ? c.addonType : 'none',
+        addonCollapsed: !!c.addonCollapsed,
+        swElapsedMs: clampInt(c.swElapsedMs, 0, 2147483647, 0),
+        swRunning: !!c.swRunning,
+        swLastTs: Number(c.swLastTs) || 0,
+        tDurationSec: clampInt(c.tDurationSec, 0, 1e6, 0),
+        tRemainSec: clampInt(c.tRemainSec, 0, 1e6, 0),
+        tRunning: !!c.tRunning,
+        tLastTs: Number(c.tLastTs) || 0,
+        // Customization properties
+        color: c.color || '',
+        icon: c.icon || '',
+        category: c.category || '',
+        locked: !!c.locked,
+        pin: c.pin || '',
+        hidden: !!c.hidden
+      })) : [];
+
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  let saveTimer = null;
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => { hardSave(); pushRemote(); }, 250);
+  }
+
+  // ========== FIREBASE SYNC ==========
+  function getFirebaseConfig() {
+    if (window.__FIREBASE_CONFIG) return window.__FIREBASE_CONFIG;
+    try {
+      const stored = localStorage.getItem(SYNC_CFG_KEY);
+      if (stored) return JSON.parse(stored);
+    } catch (_) {}
+    return DEFAULT_CONFIG;
+  }
+
+  function initFirebase() {
+    if (window._fbApp) return true;
+    try {
+      window._fbApp = firebase.initializeApp(getFirebaseConfig());
+      return true;
+    } catch (e) {
+      console.error('Firebase init error:', e);
+      return false;
+    }
+  }
+
+  async function pushRemote() {
+    if (!syncState.connected || !syncState.docRef) return;
+    try {
+      await syncState.docRef.set({ state, originId: clientId, ts: Date.now() }, { merge: true });
+      lastCloudPushTs = Date.now();
+      updateCloudStatus();
+    } catch (_) {}
+  }
+
+  function handleFirebaseSnapshot(snap) {
+    try {
+      const d = snap.data();
+      if (!d || !d.state) return;
+      if (d.originId !== clientId) {
+        applyImportedState(d.state);
+      }
+      updateCloudStatus();
+    } catch (_) {}
+  }
+
+  function updateCloudStatus() {
+    if (syncState.connected) {
+      cloudStatus.classList.remove('d-none', 'bg-secondary');
+      cloudStatus.classList.add('bg-success');
+      cloudStatus.textContent = 'Sync: ' + syncState.sessionId;
+    } else {
+      cloudStatus.classList.add('d-none');
+    }
+  }
+
+  function applyImportedState(obj, skipSave = false) {
+    try {
+      state.viewMode = ['row', 'col', 'grid'].includes(obj.viewMode) ? obj.viewMode : state.viewMode;
+      state.notesVisible = !!obj.notesVisible;
+      state.bigTitle = String(obj.bigTitle ?? '');
+      state.topText = String(obj.topText ?? '');
+      state.theme = ['light', 'dark'].includes(obj.theme) ? obj.theme : state.theme;
+      state.soundOn = !!obj.soundOn;
+      state.fontMode = ['seven', 'modern'].includes(obj.fontMode) ? obj.fontMode : state.fontMode;
+      state.alarmRingSec = clampInt(obj.alarmRingSec, 10, 30, state.alarmRingSec);
+
+      state.cards = Array.isArray(obj.cards) ? obj.cards.map(c => ({
+        id: String(c.id ?? uid()),
+        title: String(c.title ?? ''),
+        note: String(c.note ?? ''),
+        count: clampInt(c.count, 0, 1e9, 0),
+        step: clampInt(c.step, 1, 1e6, 1),
+        goal: clampInt(c.goal, 0, 1e9, 0),
+        goalReached: !!c.goalReached,
+        addonType: ['stopwatch', 'timer', 'none'].includes(c.addonType) ? c.addonType : 'none',
+        addonCollapsed: !!c.addonCollapsed,
+        swElapsedMs: clampInt(c.swElapsedMs, 0, 2147483647, 0),
+        swRunning: !!c.swRunning,
+        swLastTs: Number(c.swLastTs) || 0,
+        tDurationSec: clampInt(c.tDurationSec, 0, 1e6, 0),
+        tRemainSec: clampInt(c.tRemainSec, 0, 1e6, 0),
+        tRunning: !!c.tRunning,
+        tLastTs: Number(c.tLastTs) || 0,
+        // Customization properties (support both old and new property names)
+        color: c.color || '',
+        icon: c.icon || '',
+        category: c.category || '',
+        locked: !!(c.locked || c.pinProtected),
+        pin: c.pin || c.pinCode || '',
+        hidden: !!c.hidden
+      })) : [];
+
+      bigTitle.value = state.bigTitle;
+      topText.value = state.topText;
+      applyTheme(state.theme);
+      setViewMode(state.viewMode);
+      renderAll();
+      // Only save locally, don't push back to collab to avoid loop
+      if (!skipSave) {
+        saveToLocalStorage();
+      }
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // ========== THEME ==========
+  function applyTheme(theme) {
+    const t = theme || 'dark';
+    document.documentElement.setAttribute('data-bs-theme', t);
+    state.theme = t;
+    toggleThemeBtn.innerHTML = t === 'dark' 
+      ? '<i class="bi bi-sun me-1"></i> Theme' 
+      : '<i class="bi bi-moon-stars me-1"></i> Theme';
+    scheduleSave();
+  }
+
+  // ========== VIEW MODE ==========
+  function setViewMode(mode) {
+    state.viewMode = mode;
+    counterGrid.className = 'counter-grid ' + mode + '-view';
+
+    modeGridBtn.classList.toggle('active', mode === 'grid');
+    modeRowBtn.classList.toggle('active', mode === 'row');
+    modeColBtn.classList.toggle('active', mode === 'col');
+
+    const labels = { grid: 'Grid', row: 'Row', col: 'Column' };
+    viewTag.textContent = 'Mode: ' + labels[mode];
+    scheduleSave();
+  }
+
+  // ========== NOTES VISIBILITY ==========
+  function applyNotesVisibility() {
+    document.querySelectorAll('.counter-note').forEach(el => {
+      el.style.display = state.notesVisible ? 'block' : 'none';
+    });
+    scheduleSave();
+  }
+
+  // ========== CARD OPERATIONS ==========
+  function updateCard(id, patch) {
+    const idx = state.cards.findIndex(c => c.id === id);
+    if (idx === -1) return;
+    state.cards[idx] = { ...state.cards[idx], ...patch };
+    scheduleSave();
+  }
+
+  function deleteCard(id) {
+    state.cards = state.cards.filter(c => c.id !== id);
+    scheduleSave();
+    renderAll();
+    showToast('Dihapus.', 'danger');
+  }
+
+  function addCard() {
+    const newCard = {
+      id: uid(),
+      title: '',
+      note: '',
+      count: 0,
+      step: 1,
+      goal: 0,
+      goalReached: false,
+      addonType: 'none',
+      addonCollapsed: true,
+      swElapsedMs: 0,
+      swRunning: false,
+      swLastTs: 0,
+      tDurationSec: 0,
+      tRemainSec: 0,
+      tRunning: false,
+      tLastTs: 0
+    };
+    state.cards.push(newCard);
+    scheduleSave();
+    renderAll();
+    showToast('Counter ditambahkan.', 'success');
+  }
+
+  function resetAll() {
+    if (!confirm('Reset semua nilai ke 0?')) return;
+    state.cards = state.cards.map(c => ({
+      ...c,
+      count: 0,
+      goalReached: false,
+      swElapsedMs: 0,
+      swRunning: false,
+      tRemainSec: c.tDurationSec,
+      tRunning: false
+    }));
+    scheduleSave();
+    renderAll();
+    showToast('Semua counter direset.', 'warning');
+  }
+
+  // ========== CARD RENDERING ==========
+  function buildCard(card) {
+    const div = document.createElement('div');
+    div.className = 'counter-card p-3';
+    
+    // Apply color
+    if (card.color && card.color !== 'none') {
+      div.setAttribute('data-color', card.color);
+    }
+    
+    // Apply locked/hidden states
+    if (card.locked) div.classList.add('locked');
+    if (card.hidden) div.classList.add('hidden-counter');
+    
+    div.setAttribute('data-card-id', card.id);
+    div.setAttribute('draggable', 'true');
+
+    // Icon prefix for title
+    const iconPrefix = card.icon ? `<span class="me-1">${card.icon}</span>` : '';
+    
+    // Category badge
+    const categoryBadge = card.category ? `<span class="category-badge ms-2">${card.category}</span>` : '';
+
+    const countDisplay = state.fontMode === 'seven'
+      ? `<div class="counter-value seven text-center my-3" data-count-display>${renderSevenDigits(String(card.count))}</div>`
+      : `<div class="counter-value text-center my-3" data-count-display>${new Intl.NumberFormat('id-ID').format(card.count)}</div>`;
+
+    // Goal progress
+    let goalHtml = '';
+    if (card.goal > 0) {
+      const percent = Math.min(100, Math.round((card.count / card.goal) * 100));
+      goalHtml = `
+        <div class="mb-2">
+          <div class="d-flex justify-content-between small text-muted mb-1">
+            <span>Target: ${new Intl.NumberFormat('id-ID').format(card.goal)}</span>
+            <span>${percent}%</span>
+          </div>
+          <div class="progress progress-goal">
+            <div class="progress-bar bg-success" style="width: ${percent}%"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Add-on bar
+    let addonHtml = '';
+    if (card.addonType !== 'none') {
+      const isRunning = card.addonType === 'stopwatch' ? card.swRunning : card.tRunning;
+      const value = card.addonType === 'stopwatch' 
+        ? fmtTimeMs(card.swElapsedMs) 
+        : fmtTimeSec(card.tRemainSec);
+      const label = card.addonType === 'stopwatch' ? 'STOPWATCH' : 'TIMER';
+      addonHtml = `
+        <div class="addon-bar p-2 mb-2 d-flex align-items-center justify-content-between" data-addon-bar="${card.id}">
+          <div class="d-flex align-items-center gap-2">
+            <span class="addon-dot ${isRunning ? 'on' : ''}"></span>
+            <span class="text-muted small text-uppercase">${label}</span>
+            <span class="fw-bold font-monospace">${value}</span>
+          </div>
+          <div class="d-flex gap-1">
+            <button class="btn btn-sm btn-outline-success" data-addon-toggle title="${isRunning ? 'Pause' : 'Start'}">
+              <i class="bi bi-${isRunning ? 'pause' : 'play'}-fill"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-secondary" data-addon-reset title="Reset">
+              <i class="bi bi-stop-fill"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-secondary" data-addon-settings title="Settings">
+              <i class="bi bi-gear"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    div.innerHTML = `
+      <div class="form-check select-toggle">
+        <input class="form-check-input" type="checkbox" data-select-check ${state.selectedIds.includes(card.id) ? 'checked' : ''}>
+      </div>
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div class="d-flex align-items-center flex-grow-1">
+          ${iconPrefix}<input type="text" class="form-control form-control-sm form-control-dark fw-semibold counter-title" 
+               value="${card.title}" placeholder="Nama counter..." data-field="title">${categoryBadge}
+        </div>
+        <div class="d-flex gap-1 ms-2">
+          <button class="btn btn-sm btn-outline-secondary drag-handle" title="Drag">
+            <i class="bi bi-grip-vertical"></i>
+          </button>
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="dropdown">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#" data-action="qr"><i class="bi bi-qr-code me-2"></i>QR Viewer</a></li>
+              <li><a class="dropdown-item" href="#" data-action="shareCard"><i class="bi bi-share me-2"></i>Share Counter</a></li>
+              <li><a class="dropdown-item" href="#" data-action="addon"><i class="bi bi-clock me-2"></i>Add-on</a></li>
+              <li><a class="dropdown-item" href="#" data-action="setGoal"><i class="bi bi-bullseye me-2"></i>Set Target</a></li>
+              <li><a class="dropdown-item" href="#" data-action="setStep"><i class="bi bi-plus-slash-minus me-2"></i>Set Step</a></li>
+              <li><a class="dropdown-item" href="#" data-action="customize"><i class="bi bi-palette me-2"></i>Kustomisasi</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" data-action="delete"><i class="bi bi-trash me-2"></i>Hapus</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      ${addonHtml}
+      ${countDisplay}
+      ${goalHtml}
+      <div class="counter-controls d-flex gap-2 mb-2">
+        <button class="btn btn-counter btn-minus" data-action="minus">−</button>
+        <button class="btn btn-counter btn-reset-card" data-action="reset">↺</button>
+        <button class="btn btn-counter btn-plus" data-action="plus">+</button>
+      </div>
+      <div class="counter-settings d-flex gap-2 flex-wrap small">
+        <div class="input-group input-group-sm" style="width: 120px;">
+          <span class="input-group-text">Step</span>
+          <input type="number" class="form-control form-control-dark text-center" value="${card.step}" min="1" data-field="step">
+        </div>
+      </div>
+      <textarea class="form-control form-control-sm form-control-dark mt-2 counter-note" rows="2" 
+                placeholder="Catatan..." data-field="note" style="display: ${state.notesVisible ? 'block' : 'none'}">${card.note}</textarea>
+    `;
+
+    // Event bindings
+    bindCardEvents(div, card.id);
+    return div;
+  }
+
+  function bindCardEvents(el, cardId) {
+    // Counter value click - edit (with sync for selected cards)
+    el.querySelector('[data-count-display]').addEventListener('click', () => {
+      const card = getCard(cardId);
+      if (!card) return;
+      
+      // Check if this is a synced action for selected cards
+      const isSyncedAction = selectMode && state.selectedIds.includes(cardId) && state.selectedIds.length > 1;
+      
+      openNumberModal({
+        title: isSyncedAction ? `Ubah Nilai (${state.selectedIds.length} counter)` : 'Ubah Nilai',
+        desc: isSyncedAction 
+          ? 'Nilai baru akan diterapkan ke semua counter yang dipilih.' 
+          : 'Masukkan nilai baru untuk counter ini.',
+        value: card.count,
+        min: 0,
+        max: 1e9,
+        onConfirm: (val) => {
+          if (isSyncedAction) {
+            state.selectedIds.forEach(id => {
+              updateCard(id, { count: val });
+              checkGoal(id);
+            });
+            showToast(`Nilai ${val} diterapkan ke ${state.selectedIds.length} counter`, 'success');
+          } else {
+            updateCard(cardId, { count: val });
+            checkGoal(cardId);
+          }
+          renderAll();
+        }
+      });
+    });
+
+    // Plus/Minus/Reset buttons - with sync for selected cards
+    el.querySelector('[data-action="plus"]').addEventListener('click', () => {
+      const card = getCard(cardId);
+      if (!card) return;
+      beep(800, 50);
+      
+      // If select mode is on and this card is selected, apply to all selected
+      if (selectMode && state.selectedIds.includes(cardId) && state.selectedIds.length > 1) {
+        state.selectedIds.forEach(id => {
+          const c = getCard(id);
+          if (c) {
+            const prevCount = c.count;
+            const newCount = clampInt(c.count + c.step, 0, 1e9, c.count);
+            updateCard(id, { count: newCount });
+            logActivity('add', id, newCount, prevCount);
+            checkGoal(id);
+          }
+        });
+        renderAll();
+        showToast(`+${card.step} diterapkan ke ${state.selectedIds.length} counter`, 'success');
+      } else {
+        const prevCount = card.count;
+        const newCount = clampInt(card.count + card.step, 0, 1e9, card.count);
+        updateCard(cardId, { count: newCount });
+        logActivity('add', cardId, newCount, prevCount);
+        checkGoal(cardId);
+        updateCountDisplay(cardId);
+      }
+    });
+
+    el.querySelector('[data-action="minus"]').addEventListener('click', () => {
+      const card = getCard(cardId);
+      if (!card) return;
+      beep(600, 50);
+      
+      // If select mode is on and this card is selected, apply to all selected
+      if (selectMode && state.selectedIds.includes(cardId) && state.selectedIds.length > 1) {
+        state.selectedIds.forEach(id => {
+          const c = getCard(id);
+          if (c) {
+            const prevCount = c.count;
+            const newCount = clampInt(c.count - c.step, 0, 1e9, c.count);
+            updateCard(id, { count: newCount });
+            logActivity('sub', id, newCount, prevCount);
+          }
+        });
+        renderAll();
+        showToast(`-${card.step} diterapkan ke ${state.selectedIds.length} counter`, 'info');
+      } else {
+        const prevCount = card.count;
+        const newCount = clampInt(card.count - card.step, 0, 1e9, card.count);
+        updateCard(cardId, { count: newCount });
+        logActivity('sub', cardId, newCount, prevCount);
+        updateCountDisplay(cardId);
+      }
+    });
+
+    el.querySelector('[data-action="reset"]').addEventListener('click', () => {
+      beep(400, 80);
+      const card = getCard(cardId);
+      if (!card) return;
+      
+      // If select mode is on and this card is selected, apply to all selected
+      if (selectMode && state.selectedIds.includes(cardId) && state.selectedIds.length > 1) {
+        if (!confirm(`Reset ${state.selectedIds.length} counter yang dipilih ke 0?`)) return;
+        state.selectedIds.forEach(id => {
+          const c = getCard(id);
+          if (c) {
+            const prevCount = c.count;
+            updateCard(id, { count: 0, goalReached: false });
+            logActivity('reset', id, 0, prevCount);
+          }
+        });
+        renderAll();
+        showToast(`${state.selectedIds.length} counter direset`, 'warning');
+      } else {
+        const prevCount = card.count;
+        updateCard(cardId, { count: 0, goalReached: false });
+        logActivity('reset', cardId, 0, prevCount);
+        updateCountDisplay(cardId);
+      }
+    });
+
+    // Title input
+    el.querySelector('[data-field="title"]').addEventListener('input', (e) => {
+      updateCard(cardId, { title: e.target.value });
+    });
+
+    // Step input - with sync for selected cards
+    el.querySelector('[data-field="step"]').addEventListener('change', (e) => {
+      const val = clampInt(e.target.value, 1, 1e6, 1);
+      e.target.value = val;
+      
+      // If select mode is on and this card is selected, apply to all selected
+      if (selectMode && state.selectedIds.includes(cardId) && state.selectedIds.length > 1) {
+        state.selectedIds.forEach(id => {
+          updateCard(id, { step: val });
+        });
+        renderAll();
+        showToast(`Step ${val} diterapkan ke ${state.selectedIds.length} counter`, 'info');
+      } else {
+        updateCard(cardId, { step: val });
+      }
+    });
+
+    // Note input
+    el.querySelector('[data-field="note"]').addEventListener('input', (e) => {
+      updateCard(cardId, { note: e.target.value });
+    });
+
+    // Select checkbox
+    const selectCheck = el.querySelector('[data-select-check]');
+    selectCheck.addEventListener('change', () => {
+      toggleSelected(cardId);
+    });
+
+    // Dropdown actions
+    el.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const action = btn.dataset.action;
+        handleCardAction(cardId, action);
+      });
+    });
+
+    // Add-on controls - with sync for selected cards
+    const addonToggle = el.querySelector('[data-addon-toggle]');
+    if (addonToggle) {
+      addonToggle.addEventListener('click', () => {
+        const sourceCard = getCard(cardId);
+        if (!sourceCard) return;
+        
+        // If select mode is on and this card is selected, apply to all selected
+        if (selectMode && state.selectedIds.includes(cardId) && state.selectedIds.length > 1) {
+          // First, ensure all selected cards have the same addon type as source
+          state.selectedIds.forEach(id => {
+            const c = getCard(id);
+            if (c && c.addonType !== sourceCard.addonType) {
+              // Copy addon type and settings from source card
+              updateCard(id, { 
+                addonType: sourceCard.addonType,
+                tDurationSec: sourceCard.tDurationSec,
+                tRemainSec: sourceCard.tRemainSec
+              });
+            }
+          });
+          // Then toggle all
+          state.selectedIds.forEach(id => toggleAddonStartPause(id, sourceCard.addonType));
+          showToast(`Add-on ${sourceCard.addonType} toggle diterapkan ke ${state.selectedIds.length} counter`, 'info');
+        } else {
+          toggleAddonStartPause(cardId);
+        }
+      });
+    }
+
+    const addonResetBtn = el.querySelector('[data-addon-reset]');
+    if (addonResetBtn) {
+      addonResetBtn.addEventListener('click', () => {
+        const sourceCard = getCard(cardId);
+        if (!sourceCard) return;
+        
+        // If select mode is on and this card is selected, apply to all selected
+        if (selectMode && state.selectedIds.includes(cardId) && state.selectedIds.length > 1) {
+          // First, ensure all selected cards have the same addon type as source
+          state.selectedIds.forEach(id => {
+            const c = getCard(id);
+            if (c && c.addonType !== sourceCard.addonType) {
+              updateCard(id, { 
+                addonType: sourceCard.addonType,
+                tDurationSec: sourceCard.tDurationSec,
+                tRemainSec: sourceCard.tDurationSec
+              });
+            }
+          });
+          state.selectedIds.forEach(id => stopResetAddon(id));
+          showToast(`Add-on reset diterapkan ke ${state.selectedIds.length} counter`, 'warning');
+        } else {
+          stopResetAddon(cardId);
+        }
+      });
+    }
+
+    const addonSettingsBtn = el.querySelector('[data-addon-settings]');
+    if (addonSettingsBtn) {
+      addonSettingsBtn.addEventListener('click', () => openAddonModal(cardId));
+    }
+
+    // Drag and drop
+    el.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', cardId);
+      el.classList.add('dragging');
+    });
+
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+    });
+
+    el.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      el.classList.add('dragOver');
+    });
+
+    el.addEventListener('dragleave', () => {
+      el.classList.remove('dragOver');
+    });
+
+    el.addEventListener('drop', (e) => {
+      e.preventDefault();
+      el.classList.remove('dragOver');
+      const dragId = e.dataTransfer.getData('text/plain');
+      reorderCards(dragId, cardId);
+    });
+  }
+
+  function handleCardAction(cardId, action) {
+    const card = getCard(cardId);
+    if (!card) return;
+    
+    // Check if this is a synced action for selected cards
+    const isSyncedAction = selectMode && state.selectedIds.includes(cardId) && state.selectedIds.length > 1;
+    const targetIds = isSyncedAction ? state.selectedIds : [cardId];
+    const targetCount = targetIds.length;
+
+    switch (action) {
+      case 'delete':
+        if (isSyncedAction) {
+          if (confirm(`Hapus ${targetCount} counter yang dipilih?`)) {
+            state.cards = state.cards.filter(c => !targetIds.includes(c.id));
+            state.selectedIds = [];
+            scheduleSave();
+            renderAll();
+            showToast(`${targetCount} counter dihapus.`, 'danger');
+          }
+        } else {
+          if (confirm('Hapus counter ini?')) deleteCard(cardId);
+        }
+        break;
+      case 'qr':
+        openQrModal(cardId);
+        break;
+      case 'shareCard':
+        shareSpecificCounter(cardId);
+        break;
+      case 'addon':
+        openAddonModal(cardId);
+        break;
+      case 'setGoal':
+        openNumberModal({
+          title: isSyncedAction ? `Set Target (${targetCount} counter)` : 'Set Target',
+          desc: isSyncedAction 
+            ? 'Target akan diterapkan ke semua counter yang dipilih.' 
+            : 'Masukkan target nilai (0 untuk tanpa target).',
+          value: card.goal,
+          min: 0,
+          max: 1e9,
+          onConfirm: (val) => {
+            targetIds.forEach(id => {
+              updateCard(id, { goal: val, goalReached: false });
+            });
+            renderAll();
+            if (isSyncedAction) showToast(`Target ${val} diterapkan ke ${targetCount} counter`, 'success');
+          }
+        });
+        break;
+      case 'setStep':
+        openNumberModal({
+          title: isSyncedAction ? `Set Step (${targetCount} counter)` : 'Set Step',
+          desc: isSyncedAction 
+            ? 'Step akan diterapkan ke semua counter yang dipilih.' 
+            : 'Masukkan nilai step (minimal 1).',
+          value: card.step,
+          min: 1,
+          max: 1e6,
+          onConfirm: (val) => {
+            targetIds.forEach(id => {
+              updateCard(id, { step: val });
+            });
+            renderAll();
+            if (isSyncedAction) showToast(`Step ${val} diterapkan ke ${targetCount} counter`, 'success');
+          }
+        });
+        break;
+      case 'customize':
+        openCustomizeModal(cardId);
+        break;
+    }
+  }
+
+  function updateCountDisplay(cardId) {
+    const card = getCard(cardId);
+    if (!card) return;
+
+    document.querySelectorAll(`[data-card-id="${cardId}"] [data-count-display]`).forEach(el => {
+      if (state.fontMode === 'seven') {
+        el.className = 'counter-value seven text-center my-3';
+        el.innerHTML = renderSevenDigits(String(card.count));
+      } else {
+        el.className = 'counter-value text-center my-3';
+        el.textContent = new Intl.NumberFormat('id-ID').format(card.count);
+      }
+    });
+  }
+
+  function checkGoal(cardId) {
+    const card = getCard(cardId);
+    if (!card || card.goal <= 0 || card.goalReached) return;
+
+    if (card.count >= card.goal) {
+      updateCard(cardId, { goalReached: true });
+      celebrateCard(cardId);
+    }
+  }
+
+  function celebrateCard(cardId) {
+    const card = getCard(cardId);
+    beep(1200, 150);
+    if (navigator.vibrate) navigator.vibrate(120);
+    document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+      el.classList.add('celebrate');
+      setTimeout(() => el.classList.remove('celebrate'), 2000);
+    });
+    showToast('🎉 Target tercapai!', 'success');
+    
+    // Notify Android to show interstitial ad
+    notifyAndroidTargetReached(card?.title || 'Counter');
+  }
+
+  function reorderCards(dragId, targetId) {
+    if (!dragId || !targetId || dragId === targetId) return;
+    const fromIdx = state.cards.findIndex(c => c.id === dragId);
+    const toIdx = state.cards.findIndex(c => c.id === targetId);
+    if (fromIdx === -1 || toIdx === -1) return;
+
+    const [item] = state.cards.splice(fromIdx, 1);
+    state.cards.splice(toIdx, 0, item);
+    scheduleSave();
+    renderAll();
+  }
+
+  function renderAll() {
+    counterGrid.innerHTML = '';
+    state.cards.forEach(card => {
+      counterGrid.appendChild(buildCard(card));
+    });
+    applyNotesVisibility();
+    updateSelectUI();
+  }
+
+  // ========== NUMBER MODAL ==========
+  let numberModalCtx = null;
+
+  function openNumberModal({ title, desc, value, min, max, onConfirm }) {
+    numberModalCtx = { onConfirm, min, max };
+    $('modalTitle').textContent = title;
+    $('modalDesc').textContent = desc;
+    $('modalInput').value = value;
+    numberModal.show();
+    setTimeout(() => { $('modalInput').focus(); $('modalInput').select(); }, 100);
+  }
+
+  $('modalConfirm').addEventListener('click', () => {
+    if (!numberModalCtx) return;
+    const val = Number($('modalInput').value);
+    if (!Number.isFinite(val)) { showToast('Nilai tidak valid.', 'danger'); return; }
+    const n = Math.trunc(val);
+    if (numberModalCtx.min !== null && n < numberModalCtx.min) { showToast('Nilai terlalu kecil.', 'danger'); return; }
+    if (numberModalCtx.max !== null && n > numberModalCtx.max) { showToast('Nilai terlalu besar.', 'danger'); return; }
+    numberModalCtx.onConfirm(n);
+    numberModal.hide();
+    numberModalCtx = null;
+  });
+
+  $('modalInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); $('modalConfirm').click(); }
+  });
+
+  // ========== ADD-ON MODAL ==========
+  function openAddonModal(cardId) {
+    const card = getCard(cardId);
+    if (!card) return;
+    activeAddonCardId = cardId;
+    
+    // Check if this is a synced action for selected cards
+    const isSyncedAction = selectMode && state.selectedIds.includes(cardId) && state.selectedIds.length > 1;
+    const targetCount = isSyncedAction ? state.selectedIds.length : 1;
+    
+    $('addonTitle').textContent = isSyncedAction 
+      ? `Add-on (${targetCount} counter)` 
+      : 'Add-on: ' + (card.title || 'Counter');
+    setAddonModeButtons(card.addonType);
+
+    if (card.addonType === 'stopwatch') {
+      $('addonDisplay').textContent = fmtTimeMs(card.swElapsedMs);
+      $('addonStart').textContent = card.swRunning ? 'Pause' : 'Start';
+    } else if (card.addonType === 'timer') {
+      $('addonDisplay').textContent = fmtTimeSec(card.tRemainSec);
+      $('addonStart').textContent = card.tRunning ? 'Pause' : 'Start';
+      const dur = card.tDurationSec || 0;
+      $('addonMin').value = Math.floor(dur / 60);
+      $('addonSec').value = dur % 60;
+    } else {
+      $('addonDisplay').textContent = '—';
+      $('addonStart').textContent = 'Start';
+    }
+
+    addonModal.show();
+  }
+
+  function setAddonModeButtons(mode) {
+    $('addonMode').value = mode;
+    $('addonModeNone').classList.toggle('active', mode === 'none');
+    $('addonModeSw').classList.toggle('active', mode === 'stopwatch');
+    $('addonModeTimer').classList.toggle('active', mode === 'timer');
+    $('addonTimerInputs').classList.toggle('d-none', mode !== 'timer');
+  }
+
+  $('addonModeNone').addEventListener('click', () => setModeForActive('none'));
+  $('addonModeSw').addEventListener('click', () => setModeForActive('stopwatch'));
+  $('addonModeTimer').addEventListener('click', () => setModeForActive('timer'));
+
+  function setModeForActive(mode) {
+    if (!activeAddonCardId) return;
+    
+    // Check if synced action
+    const isSyncedAction = selectMode && state.selectedIds.includes(activeAddonCardId) && state.selectedIds.length > 1;
+    const targetIds = isSyncedAction ? state.selectedIds : [activeAddonCardId];
+    
+    targetIds.forEach(id => {
+      updateCard(id, {
+        addonType: mode,
+        swRunning: false,
+        tRunning: false,
+        addonCollapsed: mode === 'none'
+      });
+    });
+    
+    setAddonModeButtons(mode);
+    renderAll();
+    showToast(isSyncedAction ? `Mode ${mode} diterapkan ke ${targetIds.length} counter` : 'Mode: ' + mode);
+  }
+
+  $('addonStart').addEventListener('click', () => {
+    if (!activeAddonCardId) return;
+    
+    const sourceCard = getCard(activeAddonCardId);
+    if (!sourceCard) return;
+    
+    // Check if synced action
+    const isSyncedAction = selectMode && state.selectedIds.includes(activeAddonCardId) && state.selectedIds.length > 1;
+    const targetIds = isSyncedAction ? state.selectedIds : [activeAddonCardId];
+    
+    if (isSyncedAction) {
+      // First, ensure all selected cards have the same addon type and settings as source
+      targetIds.forEach(id => {
+        const c = getCard(id);
+        if (c && (c.addonType !== sourceCard.addonType || c.tDurationSec !== sourceCard.tDurationSec)) {
+          updateCard(id, { 
+            addonType: sourceCard.addonType,
+            tDurationSec: sourceCard.tDurationSec,
+            tRemainSec: sourceCard.tRemainSec
+          });
+        }
+      });
+    }
+    
+    // Toggle with the source card's addon type
+    targetIds.forEach(id => toggleAddonStartPause(id, sourceCard.addonType));
+    
+    const card = getCard(activeAddonCardId);
+    if (card) {
+      $('addonStart').textContent = (card.addonType === 'stopwatch' ? card.swRunning : card.tRunning) ? 'Pause' : 'Start';
+    }
+    
+    if (isSyncedAction) showToast(`Start/Pause diterapkan ke ${targetIds.length} counter`, 'info');
+  });
+
+  $('addonReset').addEventListener('click', () => {
+    if (!activeAddonCardId) return;
+    
+    // Check if synced action
+    const isSyncedAction = selectMode && state.selectedIds.includes(activeAddonCardId) && state.selectedIds.length > 1;
+    const targetIds = isSyncedAction ? state.selectedIds : [activeAddonCardId];
+    
+    targetIds.forEach(id => stopResetAddon(id));
+    
+    if (isSyncedAction) showToast(`Add-on reset diterapkan ke ${targetIds.length} counter`, 'warning');
+  });
+
+  [$('addonMin'), $('addonSec')].forEach(el => {
+    el.addEventListener('change', () => {
+      if (!activeAddonCardId) return;
+      const mm = clampInt($('addonMin').value, 0, 1e6, 0);
+      const ss = clampInt($('addonSec').value, 0, 59, 0);
+      const dur = mm * 60 + ss;
+      
+      // Check if synced action
+      const isSyncedAction = selectMode && state.selectedIds.includes(activeAddonCardId) && state.selectedIds.length > 1;
+      const targetIds = isSyncedAction ? state.selectedIds : [activeAddonCardId];
+      
+      targetIds.forEach(id => {
+        updateCard(id, {
+          addonType: 'timer',
+          tDurationSec: dur,
+          tRemainSec: dur,
+          tRunning: false
+        });
+      });
+      
+      renderAll();
+      showToast(isSyncedAction 
+        ? `Timer ${fmtTimeSec(dur)} diterapkan ke ${targetIds.length} counter` 
+        : 'Timer diset: ' + fmtTimeSec(dur));
+    });
+  });
+
+  function toggleAddonStartPause(cardId, forceType = null) {
+    const card = getCard(cardId);
+    if (!card) return;
+    const now = Date.now();
+    
+    // Use forceType if provided, otherwise use card's addon type
+    const addonType = forceType || card.addonType;
+
+    if (addonType === 'stopwatch') {
+      if (card.swRunning) {
+        const elapsed = card.swElapsedMs + (now - card.swLastTs);
+        updateCard(cardId, { addonType: 'stopwatch', swElapsedMs: elapsed, swRunning: false, swLastTs: now });
+      } else {
+        updateCard(cardId, { addonType: 'stopwatch', swRunning: true, swLastTs: now });
+      }
+    } else if (addonType === 'timer') {
+      if (card.tRunning) {
+        const elapsedSec = Math.floor((now - card.tLastTs) / 1000);
+        const remain = Math.max(0, card.tRemainSec - elapsedSec);
+        updateCard(cardId, { addonType: 'timer', tRemainSec: remain, tRunning: false, tLastTs: now });
+      } else {
+        let remain = card.tRemainSec;
+        if (remain <= 0 && card.tDurationSec > 0) remain = card.tDurationSec;
+        updateCard(cardId, { addonType: 'timer', tRemainSec: remain, tRunning: true, tLastTs: now });
+      }
+    } else {
+      // Default to stopwatch if no type specified
+      updateCard(cardId, { addonType: 'stopwatch', swRunning: true, swElapsedMs: 0, swLastTs: now });
+    }
+    renderAll();
+  }
+
+  function stopResetAddon(cardId) {
+    const card = getCard(cardId);
+    if (!card) return;
+
+    if (card.addonType === 'stopwatch') {
+      updateCard(cardId, { swElapsedMs: 0, swRunning: false });
+    } else if (card.addonType === 'timer') {
+      updateCard(cardId, { tRemainSec: card.tDurationSec, tRunning: false });
+    }
+    renderAll();
+    showToast('Reset add-on.');
+  }
+
+  // ========== SHARE SPECIFIC COUNTER ==========
+  async function shareSpecificCounter(cardId) {
+    const card = getCard(cardId);
+    if (!card) {
+      showToast('Counter tidak ditemukan.', 'danger');
+      return;
+    }
+
+    // Create a state with only this one counter
+    const singleCardState = {
+      ...state,
+      cards: [card]
+    };
+
+    const json = JSON.stringify(singleCardState);
+    const b64 = btoa(unescape(encodeURIComponent(json)));
+    const baseUrl = location.href.split('#')[0].replace(/index\.html$/i, '');
+    const viewerUrl = `${baseUrl}viewer.html#data=${b64}&id=${encodeURIComponent(cardId)}`;
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(viewerUrl);
+        showToast(`Link "${card.title || 'Counter'}" disalin!`, 'success');
+      } else {
+        // Fallback: create temp input
+        const tempInput = document.createElement('input');
+        tempInput.value = viewerUrl;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        showToast(`Link "${card.title || 'Counter'}" disalin!`, 'success');
+      }
+    } catch (e) {
+      // Open in new tab as fallback
+      window.open(viewerUrl, '_blank');
+      showToast('Link dibuka di tab baru.', 'info');
+    }
+  }
+
+  // ========== QR MODAL ==========
+  let qrCardId = null;
+
+  async function openQrModal(cardId) {
+    const card = getCard(cardId);
+    qrCardId = cardId;
+    
+    // Auto-connect to sync if not connected
+    let session = syncState.sessionId || localStorage.getItem(SYNC_SESSION_KEY);
+    if (!session) {
+      session = 'room_' + Math.random().toString(36).slice(2, 8);
+    }
+    
+    // Ensure sync is connected and data is pushed
+    if (!syncState.connected) {
+      try {
+        if (initFirebase()) {
+          const db = firebase.firestore();
+          const docRef = db.collection('boards').doc(session);
+          syncState = { connected: true, sessionId: session, docRef };
+          localStorage.setItem(SYNC_SESSION_KEY, session);
+          
+          if (window._fbUnsub) window._fbUnsub();
+          window._fbUnsub = docRef.onSnapshot(handleFirebaseSnapshot);
+          
+          updateCloudStatus();
+        }
+      } catch (e) {
+        console.error('Auto-sync error:', e);
+      }
+    }
+    
+    // Push current state to Firebase so viewer can see it
+    await pushRemote();
+    
+    const baseUrl = location.href.split('#')[0].replace(/index\.html$/i, '');
+    const rc = $('qrRcChk').checked ? '&rc=1' : '';
+    const url = `${baseUrl}viewer.html#session=${encodeURIComponent(syncState.sessionId || session)}&id=${encodeURIComponent(cardId)}${rc}`;
+    
+    $('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+    $('qrInput').value = url;
+    $('qrTitle').textContent = 'QR: ' + (card?.title || 'Counter');
+    qrModal.show();
+  }
+
+  // Update QR URL when remote control checkbox changes
+  $('qrRcChk').addEventListener('change', () => {
+    if (qrCardId) {
+      const session = syncState.sessionId || localStorage.getItem(SYNC_SESSION_KEY) || 'room1';
+      const baseUrl = location.href.split('#')[0].replace(/index\.html$/i, '');
+      const rc = $('qrRcChk').checked ? '&rc=1' : '';
+      const url = `${baseUrl}viewer.html#session=${encodeURIComponent(session)}&id=${encodeURIComponent(qrCardId)}${rc}`;
+      $('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+      $('qrInput').value = url;
+    }
+  });
+
+  $('qrCopy').addEventListener('click', async () => {
+    const linkInput = $('qrInput');
+    const linkValue = linkInput.value;
+    
+    if (!linkValue) {
+      showToast('Link tidak tersedia.', 'warning');
+      return;
+    }
+    
+    try {
+      // Try modern clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(linkValue);
+        showToast('Link Viewer disalin!', 'success');
+      } else {
+        // Fallback: select and copy
+        linkInput.select();
+        linkInput.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        showToast('Link Viewer disalin!', 'success');
+      }
+    } catch (e) {
+      // Final fallback
+      linkInput.select();
+      linkInput.setSelectionRange(0, 99999);
+      try {
+        document.execCommand('copy');
+        showToast('Link Viewer disalin!', 'success');
+      } catch (_) {
+        showToast('Gagal menyalin. Silakan copy manual.', 'danger');
+      }
+    }
+  });
+
+  $('qrOpen').addEventListener('click', () => {
+    window.open($('qrInput').value, '_blank');
+  });
+
+  // ========== SYNC MODAL ==========
+  syncBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    $('syncSession').value = localStorage.getItem(SYNC_SESSION_KEY) || 'room1';
+    syncModal.show();
+  });
+
+  $('syncConnect').addEventListener('click', async () => {
+    const sessionId = ($('syncSession').value || '').trim();
+    if (!sessionId) { showToast('Session ID kosong.', 'danger'); return; }
+
+    try {
+      if (!initFirebase()) { showToast('Gagal init Firebase.', 'danger'); return; }
+      const db = firebase.firestore();
+      const docRef = db.collection('boards').doc(sessionId);
+
+      syncState = { connected: true, sessionId, docRef };
+      localStorage.setItem(SYNC_SESSION_KEY, sessionId);
+
+      if (window._fbUnsub) window._fbUnsub();
+      window._fbUnsub = docRef.onSnapshot(handleFirebaseSnapshot);
+
+      await pushRemote();
+      updateCloudStatus();
+      syncModal.hide();
+      showToast('Terhubung ke: ' + sessionId, 'success');
+    } catch (e) {
+      showToast('Gagal connect: ' + e.message, 'danger');
+    }
+  });
+
+  $('syncDisconnect').addEventListener('click', () => {
+    if (window._fbUnsub) window._fbUnsub();
+    syncState = { connected: false, sessionId: '', docRef: null };
+    updateCloudStatus();
+    syncModal.hide();
+    showToast('Sync diputus.');
+  });
+
+  // ========== BATCH MODAL ==========
+  batchActionBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    $('batchType').value = 'add';
+    $('batchValue').value = '1';
+    // Mark that we're doing batch on ALL cards
+    $('batchModal').dataset.selectedOnly = 'false';
+    batchModal.show();
+  });
+
+  $('batchConfirm').addEventListener('click', () => {
+    const type = $('batchType').value;
+    const val = clampInt($('batchValue').value, 0, 1e9, 0);
+    const selectedOnly = $('batchModal').dataset.selectedOnly === 'true';
+    const targetIds = selectedOnly ? state.selectedIds : state.cards.map(c => c.id);
+
+    if (targetIds.length === 0) {
+      showToast('Tidak ada counter untuk diproses.', 'warning');
+      batchModal.hide();
+      return;
+    }
+
+    state.cards = state.cards.map(c => {
+      // Skip if not in target list
+      if (!targetIds.includes(c.id)) return c;
+
+      let count = c.count;
+      let goal = c.goal;
+
+      switch (type) {
+        case 'add': count = clampInt(count + val, 0, 1e9, count); break;
+        case 'sub': count = clampInt(count - val, 0, 1e9, count); break;
+        case 'set': count = val; break;
+        case 'reset': count = 0; break;
+        case 'setGoal': goal = val; break;
+      }
+
+      return { ...c, count, goal, goalReached: type === 'reset' ? false : c.goalReached };
+    });
+
+    // Reset the flag
+    $('batchModal').dataset.selectedOnly = 'false';
+
+    scheduleSave();
+    renderAll();
+    batchModal.hide();
+    const targetText = selectedOnly ? `${targetIds.length} counter terpilih` : 'semua counter';
+    showToast(`Batch diterapkan ke ${targetText}.`, 'success');
+  });
+
+  // ========== SELECT MODE ==========
+  function toggleSelected(id) {
+    const idx = state.selectedIds.indexOf(id);
+    if (idx === -1) state.selectedIds.push(id);
+    else state.selectedIds.splice(idx, 1);
+    updateSelectUI();
+    scheduleSave();
+  }
+
+  function updateSelectUI() {
+    board.classList.toggle('select-mode', selectMode);
+    $('selectTools').classList.toggle('d-none', !selectMode);
+    $('selectTools').classList.toggle('d-flex', selectMode);
+
+    // Update selected count badge
+    const countBadge = $('selectedCount');
+    if (countBadge) {
+      countBadge.textContent = state.selectedIds.length + ' dipilih';
+      countBadge.classList.toggle('bg-primary', state.selectedIds.length > 0);
+      countBadge.classList.toggle('bg-secondary', state.selectedIds.length === 0);
+    }
+
+    // Update checkboxes and card visual state
+    document.querySelectorAll('[data-card-id]').forEach(cardEl => {
+      const cardId = cardEl.dataset.cardId;
+      const isSelected = state.selectedIds.includes(cardId);
+      const checkbox = cardEl.querySelector('[data-select-check]');
+      if (checkbox) checkbox.checked = isSelected;
+      cardEl.classList.toggle('selected', isSelected);
+    });
+  }
+
+  toggleSelectBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    selectMode = !selectMode;
+    if (!selectMode) state.selectedIds = [];
+    updateSelectUI();
+    showToast(selectMode ? 'Select mode ON - Aksi +/-/reset akan sync ke semua yang dipilih!' : 'Select mode OFF');
+  });
+
+  // Collab button
+  $('collabBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    new bootstrap.Modal($('collabModal')).show();
+  });
+
+  // Shortcuts button
+  $('shortcutsBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    new bootstrap.Modal($('shortcutsModal')).show();
+  });
+
+  $('selectAllBtn').addEventListener('click', () => {
+    state.selectedIds = state.cards.map(c => c.id);
+    updateSelectUI();
+    showToast('Semua counter dipilih');
+  });
+
+  $('deselectAllBtn').addEventListener('click', () => {
+    state.selectedIds = [];
+    updateSelectUI();
+    showToast('Semua counter tidak dipilih');
+  });
+
+  // Delete selected cards
+  $('deleteSelectedBtn').addEventListener('click', () => {
+    if (state.selectedIds.length === 0) {
+      showToast('Tidak ada yang dipilih.', 'warning');
+      return;
+    }
+    if (!confirm(`Hapus ${state.selectedIds.length} counter yang dipilih?`)) return;
+    state.cards = state.cards.filter(c => !state.selectedIds.includes(c.id));
+    state.selectedIds = [];
+    scheduleSave();
+    renderAll();
+    showToast('Counter terpilih dihapus.', 'danger');
+  });
+
+  // Select Off button
+  $('selectOffBtn').addEventListener('click', () => {
+    selectMode = false;
+    state.selectedIds = [];
+    updateSelectUI();
+    showToast('Select mode OFF');
+  });
+
+  // Batch for selected cards only
+  $('batchSelectedBtn').addEventListener('click', () => {
+    if (state.selectedIds.length === 0) {
+      showToast('Tidak ada yang dipilih.', 'warning');
+      return;
+    }
+    $('batchType').value = 'add';
+    $('batchValue').value = '1';
+    // Mark that we're doing batch on selected only
+    $('batchModal').dataset.selectedOnly = 'true';
+    $('batchTarget').textContent = state.selectedIds.length + ' counter terpilih';
+    $('batchInfo').classList.remove('alert-secondary');
+    $('batchInfo').classList.add('alert-primary');
+    batchModal.show();
+  });
+
+  // Reset batch info when modal is closed
+  $('batchModal').addEventListener('hidden.bs.modal', () => {
+    $('batchModal').dataset.selectedOnly = 'false';
+    $('batchTarget').textContent = 'semua counter';
+    $('batchInfo').classList.remove('alert-primary');
+    $('batchInfo').classList.add('alert-secondary');
+  });
+
+  // ========== TOOLBAR HANDLERS ==========
+  addBtn.addEventListener('click', addCard);
+  resetAllBtn.addEventListener('click', resetAll);
+
+  toggleNotesBtn.addEventListener('click', () => {
+    state.notesVisible = !state.notesVisible;
+    applyNotesVisibility();
+    showToast(state.notesVisible ? 'Catatan ON' : 'Catatan OFF');
+  });
+
+  toggleThemeBtn.addEventListener('click', () => {
+    applyTheme(state.theme === 'dark' ? 'light' : 'dark');
+    showToast(state.theme === 'dark' ? 'Mode gelap' : 'Mode terang');
+  });
+
+  toggleSoundBtn.addEventListener('click', () => {
+    state.soundOn = !state.soundOn;
+    toggleSoundBtn.innerHTML = state.soundOn 
+      ? '<i class="bi bi-volume-up me-1"></i> Suara'
+      : '<i class="bi bi-volume-mute me-1"></i> Suara';
+    scheduleSave();
+    showToast(state.soundOn ? 'Suara ON' : 'Suara OFF');
+  });
+
+  toggleFontBtn.addEventListener('click', () => {
+    state.fontMode = state.fontMode === 'seven' ? 'modern' : 'seven';
+    scheduleSave();
+    renderAll();
+    showToast('Font: ' + state.fontMode);
+  });
+
+  alarmDurBtn.addEventListener('click', () => {
+    state.alarmRingSec = state.alarmRingSec === 10 ? 20 : state.alarmRingSec === 20 ? 30 : 10;
+    scheduleSave();
+    showToast('Alarm: ' + state.alarmRingSec + 's');
+  });
+
+  exportDataBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    hardSave();
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.download = `counter-board-${new Date().toISOString().slice(0,10)}.json`;
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    showToast('Export berhasil.', 'success');
+  });
+
+  importDataBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = () => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const obj = JSON.parse(reader.result);
+          if (applyImportedState(obj)) {
+            showToast('Import berhasil.', 'success');
+          }
+        } catch (_) {
+          showToast('Format file tidak valid.', 'danger');
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  });
+
+  shareDataBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    hardSave();
+    
+    // Create share options modal or directly copy
+    const json = JSON.stringify(state);
+    const b64 = btoa(unescape(encodeURIComponent(json)));
+    const baseUrl = location.href.split('#')[0].replace('index.html', '');
+    
+    // Option 1: Viewer link with embedded data (works offline)
+    const viewerUrl = `${baseUrl}viewer.html#data=${b64}`;
+    
+    // Option 2: Index link to import data
+    const indexUrl = `${baseUrl}index.html#data=${b64}`;
+    
+    try {
+      await navigator.clipboard.writeText(viewerUrl);
+      showToast('Link Viewer disalin! (Support PiP)', 'success');
+    } catch (_) {
+      window.open(viewerUrl, '_blank');
+    }
+  });
+
+  saveNowBtn.addEventListener('click', () => {
+    hardSave();
+    pushRemote();
+    showToast('Tersimpan.', 'success');
+  });
+
+  copyTitleBtn.addEventListener('click', async () => {
+    const txt = bigTitle.value.trim();
+    if (!txt) { showToast('Judul kosong.'); return; }
+    try {
+      await navigator.clipboard.writeText(txt);
+      showToast('Judul disalin.', 'success');
+    } catch (_) {
+      showToast('Gagal menyalin.');
+    }
+  });
+
+  modeRowBtn.addEventListener('click', () => setViewMode('row'));
+  modeColBtn.addEventListener('click', () => setViewMode('col'));
+  modeGridBtn.addEventListener('click', () => setViewMode('grid'));
+
+  bigTitle.addEventListener('input', scheduleSave);
+  topText.addEventListener('input', scheduleSave);
+
+  accountBtn.addEventListener('click', () => {
+    window.location.href = 'auth.html';
+  });
+
+  // ========== GLOBAL KEYBOARD SHORTCUTS ==========
+  window.addEventListener('keydown', (e) => {
+    const isMac = navigator.platform.toUpperCase().includes('MAC');
+    const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
+    
+    if (ctrlOrCmd && e.key === 'Enter') { e.preventDefault(); addCard(); }
+    if (e.altKey && e.key.toLowerCase() === 'r') { e.preventDefault(); resetAll(); }
+  });
+
+  // ========== TIMER/STOPWATCH TICK ==========
+  setInterval(() => {
+    const now = Date.now();
+    let changed = false;
+
+    state.cards.forEach(card => {
+      if (card.addonType === 'stopwatch' && card.swRunning) {
+        const dt = now - card.swLastTs;
+        card.swElapsedMs = clampInt(card.swElapsedMs + dt, 0, 2147483647, 0);
+        card.swLastTs = now;
+        changed = true;
+      }
+
+      if (card.addonType === 'timer' && card.tRunning) {
+        const elapsedSec = Math.floor((now - card.tLastTs) / 1000);
+        if (elapsedSec > 0) {
+          card.tRemainSec = Math.max(0, card.tRemainSec - elapsedSec);
+          card.tLastTs = now;
+          changed = true;
+
+          if (card.tRemainSec <= 0) {
+            card.tRemainSec = 0;
+            card.tRunning = false;
+            triggerTimerAlarm(card.id);
+          }
+        }
+      }
+    });
+
+    if (changed) {
+      renderAll();
+    }
+  }, 250);
+
+  function triggerTimerAlarm(cardId) {
+    beep(1100, 150);
+    setTimeout(() => beep(900, 150), 200);
+    setTimeout(() => beep(700, 150), 400);
+    if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+    
+    document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+      el.classList.add('alarm');
+      setTimeout(() => el.classList.remove('alarm'), 3000);
+    });
+    showToast('⏰ Timer selesai!', 'warning');
+  }
+
+  // ========== AUTH STATE ==========
+  function updateAccountUI(user) {
+    const accountLabel = $('accountLabel');
+    const accountBtn = $('accountBtn');
+    if (user) {
+      const displayName = user.displayName || user.email?.split('@')[0] || 'User';
+      accountLabel.textContent = displayName;
+      accountBtn.classList.remove('btn-outline-secondary');
+      accountBtn.classList.add('btn-outline-success');
+      accountBtn.title = user.email || 'Logged in';
+    } else {
+      accountLabel.textContent = 'Guest';
+      accountBtn.classList.remove('btn-outline-success');
+      accountBtn.classList.add('btn-outline-secondary');
+      accountBtn.title = 'Login / Akun';
+    }
+  }
+
+  // ========== INIT ==========
+  (async function init() {
+    const loaded = loadState();
+    bigTitle.value = state.bigTitle;
+    topText.value = state.topText;
+    applyTheme(state.theme);
+    setViewMode(state.viewMode);
+    
+    // Update app version display from Android
+    updateAppVersionDisplay();
+    
+    toggleSoundBtn.innerHTML = state.soundOn 
+      ? '<i class="bi bi-volume-up me-1"></i> Suara'
+      : '<i class="bi bi-volume-mute me-1"></i> Suara';
+
+    if (!state.cards.length) {
+      state.cards = [
+        { id: uid(), title: '', note: '', count: 0, step: 1, goal: 0, goalReached: false, addonType: 'none', addonCollapsed: true, swElapsedMs: 0, swRunning: false, swLastTs: 0, tDurationSec: 0, tRemainSec: 0, tRunning: false, tLastTs: 0 },
+        { id: uid(), title: '', note: '', count: 0, step: 1, goal: 0, goalReached: false, addonType: 'none', addonCollapsed: true, swElapsedMs: 0, swRunning: false, swLastTs: 0, tDurationSec: 0, tRemainSec: 0, tRunning: false, tLastTs: 0 },
+        { id: uid(), title: '', note: '', count: 0, step: 1, goal: 0, goalReached: false, addonType: 'none', addonCollapsed: true, swElapsedMs: 0, swRunning: false, swLastTs: 0, tDurationSec: 0, tRemainSec: 0, tRunning: false, tLastTs: 0 },
+        { id: uid(), title: '', note: '', count: 0, step: 1, goal: 0, goalReached: false, addonType: 'none', addonCollapsed: true, swElapsedMs: 0, swRunning: false, swLastTs: 0, tDurationSec: 0, tRemainSec: 0, tRunning: false, tLastTs: 0 }
+      ];
+    }
+
+    // Apply showHiddenCounters state
+    if (state.showHiddenCounters) {
+      document.body.classList.add('show-hidden');
+    }
+
+    renderAll();
+    
+    // Initialize Firebase and auth state listener
+    try {
+      if (initFirebase()) {
+        firebase.auth().onAuthStateChanged(async (user) => {
+          const wasLoggedOut = !currentUser;
+          currentUser = user;
+          updateAccountUI(user);
+          
+          if (user) {
+            // User logged in - try to load their cloud data
+            const hasCloudData = await loadFromUserCloud();
+            if (!hasCloudData && state.cards.length > 0) {
+              // No cloud data but has local data - save it to cloud
+              saveToUserCloud();
+            }
+            
+            // Load activity history from Firestore
+            await loadHistory();
+            console.log('Activity history loaded for user:', user.email);
+            
+            // Notify Android to show reward video after login (only if was logged out before)
+            if (wasLoggedOut) {
+              notifyAndroidUserLogin();
+            }
+          }
+        });
+      }
+    } catch (e) {
+      console.error('Firebase auth init error:', e);
+    }
+
+    // Auto-connect Firebase sync if session exists
+    try {
+      const sessionId = localStorage.getItem(SYNC_SESSION_KEY);
+      if (sessionId && window._fbApp) {
+        const db = firebase.firestore();
+        const docRef = db.collection('boards').doc(sessionId);
+        syncState = { connected: true, sessionId, docRef };
+        window._fbUnsub = docRef.onSnapshot(handleFirebaseSnapshot);
+        updateCloudStatus();
+      }
+    } catch (_) {}
+
+    // Handle share link
+    try {
+      if (location.hash.startsWith('#data=')) {
+        const b64 = location.hash.slice(6);
+        const json = decodeURIComponent(escape(atob(b64)));
+        const obj = JSON.parse(json);
+        if (confirm('Muat data dari link?')) {
+          applyImportedState(obj);
+          showToast('Data dimuat dari link.', 'success');
+        }
+      }
+    } catch (_) {}
+
+    if (loaded) showToast('Data dipulihkan.', 'info');
+    hardSave();
+
+    // Setup suggestion box
+    setupSuggestionBox();
+  })();
+
+  // ========== SUGGESTION BOX (TELEGRAM) ==========
+  const TELEGRAM_BOT_TOKEN = '8549111850:AAGMn7lA0STZMI_-_cJq5ftRu3gVD-UcNjE';
+  const TELEGRAM_CHAT_ID = '6097928813';
+
+  // Face verification state
+  let faceVerified = false;
+  let videoStream = null;
+  let pendingSuggestion = '';
+  const faceVerifyModal = new bootstrap.Modal($('faceVerifyModal'));
+
+  // Words/patterns that indicate NOT a suggestion
+  const SPAM_PATTERNS = [
+    /^(test|testing|tes|coba|cek|check)$/i,
+    /^[a-z]{1,3}$/i, // Too short
+    /^[0-9]+$/,  // Only numbers
+    /^(.)\1+$/,  // Repeated characters like "aaaa"
+    /^(asdf|qwerty|zxcv|1234)/i,
+    /(http|www\.|\.com|\.id|\.net)/i, // URLs
+    /[<>{}\\]/,  // Code/HTML
+    /^\s*$/,  // Empty or whitespace
+  ];
+
+  // Words that indicate it IS a suggestion
+  const SUGGESTION_KEYWORDS = [
+    'tambah', 'kurang', 'hapus', 'ubah', 'ganti', 'perbaiki', 'fix',
+    'fitur', 'feature', 'buat', 'bikin', 'add', 'remove', 'change',
+    'saran', 'ide', 'idea', 'request', 'tolong', 'mohon', 'please',
+    'bisa', 'dapat', 'mungkin', 'bagaimana', 'gimana', 'how',
+    'lebih', 'better', 'improve', 'tingkat', 'kembang', 'develop',
+    'warna', 'tema', 'theme', 'color', 'desain', 'design', 'ui', 'ux',
+    'tombol', 'button', 'menu', 'tampilan', 'display', 'view',
+    'notif', 'suara', 'sound', 'alarm', 'timer', 'stopwatch',
+    'export', 'import', 'share', 'sync', 'cloud', 'backup',
+    'bagus', 'keren', 'mantap', 'good', 'nice', 'great', 'awesome'
+  ];
+
+  function isValidSuggestion(text) {
+    if (!text || text.length < 5) return { valid: false, reason: 'Saran terlalu pendek (minimal 5 karakter).' };
+    if (text.length > 500) return { valid: false, reason: 'Saran terlalu panjang (maksimal 500 karakter).' };
+
+    // Check spam patterns
+    for (const pattern of SPAM_PATTERNS) {
+      if (pattern.test(text)) {
+        return { valid: false, reason: 'Pesan tidak terdeteksi sebagai saran yang valid.' };
+      }
+    }
+
+    // Check if contains suggestion keywords (at least one)
+    const lowerText = text.toLowerCase();
+    const hasSuggestionWord = SUGGESTION_KEYWORDS.some(kw => lowerText.includes(kw));
+    
+    // If no suggestion keywords but text is long enough and has spaces, might still be valid
+    const wordCount = text.trim().split(/\s+/).length;
+    if (wordCount < 2) {
+      return { valid: false, reason: 'Saran harus berupa kalimat yang jelas.' };
+    }
+
+    if (!hasSuggestionWord && wordCount < 4) {
+      return { valid: false, reason: 'Pesan tidak terdeteksi sebagai saran. Coba jelaskan lebih detail.' };
+    }
+
+    return { valid: true };
+  }
+
+  // ========== FACE-API.JS LIVENESS VERIFICATION ==========
+  // Multiple CDN sources for model reliability
+  const FACE_API_MODEL_URLS = [
+    'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model',
+    'https://raw.githubusercontent.com/nicehorse06/face-api.js-cdn/master/dist/models',
+    'https://justadudewhohacks.github.io/face-api.js/models'
+  ];
+  let currentModelUrlIndex = 0;
+  
+  // Challenges using real face landmarks
+  const CHALLENGES = [
+    { id: 'blink', text: '😑 KEDIPKAN MATA', instruction: 'Kedipkan kedua mata Anda 2-3 kali' },
+    { id: 'mouth', text: '😮 BUKA MULUT', instruction: 'Buka mulut Anda lebar lalu tutup kembali' },
+    { id: 'left', text: '👈 TOLEH KIRI', instruction: 'Tolehkan wajah ke KIRI Anda' },
+    { id: 'right', text: '👉 TOLEH KANAN', instruction: 'Tolehkan wajah ke KANAN Anda' }
+  ];
+
+  let verificationState = {
+    active: false,
+    challenge: null,
+    successCount: 0,
+    requiredSuccess: 2,
+    challengeTimeout: null,
+    animFrameId: null,
+    modelsLoaded: false,
+    // For blink detection
+    eyesClosed: false,
+    blinkCount: 0,
+    // For mouth detection  
+    mouthOpen: false,
+    mouthCount: 0,
+    // For head turn
+    baseNoseX: null,
+    turnDetected: false,
+    // History for smoothing
+    landmarkHistory: []
+  };
+
+  async function loadFaceApiModels() {
+    const instruction = $('faceInstruction');
+    const startBtn = $('startVerifyBtn');
+    
+    if (verificationState.modelsLoaded) return true;
+    
+    // Check if faceapi is loaded
+    if (typeof faceapi === 'undefined') {
+      console.error('Face-API.js not loaded');
+      instruction.textContent = 'Library Face-API tidak tersedia. Refresh halaman.';
+      startBtn.innerHTML = '<i class="bi bi-exclamation-triangle me-1"></i>Error';
+      return false;
+    }
+    
+    instruction.textContent = 'Memuat model AI pengenalan wajah...';
+    startBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Memuat AI...';
+    
+    // Try each model URL until one works
+    for (let i = 0; i < FACE_API_MODEL_URLS.length; i++) {
+      const modelUrl = FACE_API_MODEL_URLS[i];
+      console.log(`Trying model URL ${i + 1}/${FACE_API_MODEL_URLS.length}: ${modelUrl}`);
+      instruction.textContent = `Memuat model AI... (sumber ${i + 1}/${FACE_API_MODEL_URLS.length})`;
+      
+      try {
+        // Load with timeout
+        const loadPromise = Promise.all([
+          faceapi.nets.tinyFaceDetector.loadFromUri(modelUrl),
+          faceapi.nets.faceLandmark68TinyNet.loadFromUri(modelUrl)
+        ]);
+        
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout')), 15000)
+        );
+        
+        await Promise.race([loadPromise, timeoutPromise]);
+        
+        verificationState.modelsLoaded = true;
+        console.log('Face-API models loaded successfully from:', modelUrl);
+        return true;
+      } catch (e) {
+        console.warn(`Failed to load from ${modelUrl}:`, e.message);
+        // Continue to next URL
+      }
+    }
+    
+    // All URLs failed
+    console.error('Failed to load face-api models from all sources');
+    instruction.textContent = 'Gagal memuat model AI. Periksa koneksi internet.';
+    startBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i>Coba Lagi';
+    startBtn.disabled = false;
+    return false;
+  }
+
+  async function startFaceVerification() {
+    const video = $('faceVideo');
+    const instruction = $('faceInstruction');
+    const result = $('faceResult');
+    const challengeText = $('challengeText');
+    const startBtn = $('startVerifyBtn');
+    const progressBar = $('challengeProgressBar');
+
+    result.classList.add('d-none');
+    startBtn.disabled = true;
+    challengeText.textContent = 'Bersiap...';
+    progressBar.style.width = '0%';
+
+    // Step 1: Access camera
+    instruction.textContent = 'Mengakses kamera...';
+    startBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Kamera...';
+
+    try {
+      // Stop existing stream if any
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
+      
+      videoStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } 
+      });
+      video.srcObject = videoStream;
+      
+      // Wait for video to be ready
+      await new Promise((resolve, reject) => {
+        video.onloadedmetadata = () => {
+          video.play().then(resolve).catch(reject);
+        };
+        setTimeout(() => reject(new Error('Video timeout')), 5000);
+      });
+      
+      console.log('Camera ready:', video.videoWidth, 'x', video.videoHeight);
+      instruction.textContent = 'Kamera aktif. Memuat AI...';
+      
+    } catch (e) {
+      console.error('Camera error:', e);
+      instruction.textContent = 'Gagal mengakses kamera.';
+      result.classList.remove('d-none');
+      result.className = 'alert alert-danger small py-2';
+      result.textContent = e.name === 'NotAllowedError' 
+        ? 'Izin kamera ditolak. Harap izinkan akses kamera di browser Anda.'
+        : 'Kamera tidak tersedia: ' + e.message;
+      startBtn.disabled = false;
+      startBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i>Coba Lagi';
+      return;
+    }
+
+    // Step 2: Load face-api models
+    const modelsOk = await loadFaceApiModels();
+    if (!modelsOk) {
+      return;
+    }
+    
+    instruction.textContent = 'Kamera & AI siap. Klik "Mulai Verifikasi" untuk memulai.';
+    challengeText.textContent = 'Siap Verifikasi';
+    startBtn.disabled = false;
+    startBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i>Mulai Verifikasi';
+  }
+
+  function stopCamera() {
+    if (videoStream) {
+      videoStream.getTracks().forEach(track => track.stop());
+      videoStream = null;
+    }
+    if (verificationState.animFrameId) {
+      cancelAnimationFrame(verificationState.animFrameId);
+      verificationState.animFrameId = null;
+    }
+    if (verificationState.challengeTimeout) {
+      clearTimeout(verificationState.challengeTimeout);
+      verificationState.challengeTimeout = null;
+    }
+    verificationState.active = false;
+  }
+
+  function resetVerificationState() {
+    if (verificationState.animFrameId) {
+      cancelAnimationFrame(verificationState.animFrameId);
+    }
+    if (verificationState.challengeTimeout) {
+      clearTimeout(verificationState.challengeTimeout);
+    }
+    const modelsLoaded = verificationState.modelsLoaded;
+    verificationState = {
+      active: false,
+      challenge: null,
+      successCount: 0,
+      requiredSuccess: 2,
+      challengeTimeout: null,
+      animFrameId: null,
+      modelsLoaded: modelsLoaded,
+      eyesClosed: false,
+      blinkCount: 0,
+      mouthOpen: false,
+      mouthCount: 0,
+      baseNoseX: null,
+      turnDetected: false,
+      landmarkHistory: []
+    };
+  }
+
+  // Calculate Eye Aspect Ratio (EAR) for blink detection
+  function getEAR(eye) {
+    // eye is array of 6 points
+    const vertical1 = Math.hypot(eye[1].x - eye[5].x, eye[1].y - eye[5].y);
+    const vertical2 = Math.hypot(eye[2].x - eye[4].x, eye[2].y - eye[4].y);
+    const horizontal = Math.hypot(eye[0].x - eye[3].x, eye[0].y - eye[3].y);
+    return (vertical1 + vertical2) / (2 * horizontal);
+  }
+
+  // Calculate Mouth Aspect Ratio (MAR) for mouth open detection
+  function getMAR(mouth) {
+    // Using outer lip points
+    const vertical = Math.hypot(mouth[14].x - mouth[18].x, mouth[14].y - mouth[18].y);
+    const horizontal = Math.hypot(mouth[0].x - mouth[6].x, mouth[0].y - mouth[6].y);
+    return vertical / horizontal;
+  }
+
+  function startChallenge() {
+    const challengeText = $('challengeText');
+    const instruction = $('faceInstruction');
+    const progressBar = $('challengeProgressBar');
+    
+    // Pick random challenge different from last
+    const available = CHALLENGES.filter(c => c.id !== verificationState.lastChallengeId);
+    const challenge = available[Math.floor(Math.random() * available.length)];
+    
+    verificationState.challenge = challenge;
+    verificationState.lastChallengeId = challenge.id;
+    verificationState.blinkCount = 0;
+    verificationState.mouthCount = 0;
+    verificationState.eyesClosed = false;
+    verificationState.mouthOpen = false;
+    verificationState.baseNoseX = null;
+    verificationState.turnDetected = false;
+    verificationState.landmarkHistory = [];
+    
+    challengeText.textContent = challenge.text;
+    challengeText.className = 'text-warning mb-2 fs-4';
+    
+    let statusHtml = '';
+    if (challenge.id === 'blink') {
+      statusHtml = '<br><small class="text-info">Kedipan: <span id="actionCount">0</span>/2</small>';
+    } else if (challenge.id === 'mouth') {
+      statusHtml = '<br><small class="text-info">Buka mulut: <span id="actionCount">0</span>/2</small>';
+    } else {
+      statusHtml = '<br><small class="text-info">Status: <span id="actionCount">Menunggu...</span></small>';
+    }
+    instruction.innerHTML = challenge.instruction + statusHtml;
+    
+    // Update progress bar
+    const progress = (verificationState.successCount / verificationState.requiredSuccess) * 100;
+    progressBar.style.width = progress + '%';
+    
+    // Set timeout (12 seconds)
+    verificationState.challengeTimeout = setTimeout(() => {
+      if (verificationState.active && verificationState.challenge === challenge) {
+        challengeFailed();
+      }
+    }, 12000);
+  }
+
+  function challengeSuccess() {
+    const challengeText = $('challengeText');
+    const instruction = $('faceInstruction');
+    const progressBar = $('challengeProgressBar');
+    const result = $('faceResult');
+    
+    if (verificationState.challengeTimeout) {
+      clearTimeout(verificationState.challengeTimeout);
+      verificationState.challengeTimeout = null;
+    }
+    
+    if (verificationState.animFrameId) {
+      cancelAnimationFrame(verificationState.animFrameId);
+      verificationState.animFrameId = null;
+    }
+    
+    verificationState.successCount++;
+    
+    const progress = (verificationState.successCount / verificationState.requiredSuccess) * 100;
+    progressBar.style.width = progress + '%';
+    
+    challengeText.textContent = '✅ Berhasil!';
+    challengeText.className = 'text-success mb-2 fs-4';
+    
+    if (verificationState.successCount >= verificationState.requiredSuccess) {
+      verificationState.active = false;
+      instruction.textContent = 'Verifikasi wajah berhasil!';
+      result.classList.remove('d-none');
+      result.className = 'alert alert-success small py-2';
+      result.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>Anda terverifikasi sebagai manusia!';
+      
+      faceVerified = true;
+      
+      setTimeout(() => {
+        faceVerifyModal.hide();
+        stopCamera();
+        sendSuggestionToTelegram(pendingSuggestion);
+      }, 1200);
+    } else {
+      instruction.textContent = `Tantangan ${verificationState.successCount}/${verificationState.requiredSuccess} selesai!`;
+      setTimeout(() => {
+        if (verificationState.active) {
+          startChallenge();
+          runFaceDetectionLoop();
+        }
+      }, 1000);
+    }
+  }
+
+  function challengeFailed() {
+    const challengeText = $('challengeText');
+    const instruction = $('faceInstruction');
+    const result = $('faceResult');
+    const startBtn = $('startVerifyBtn');
+    
+    verificationState.active = false;
+    if (verificationState.challengeTimeout) {
+      clearTimeout(verificationState.challengeTimeout);
+      verificationState.challengeTimeout = null;
+    }
+    if (verificationState.animFrameId) {
+      cancelAnimationFrame(verificationState.animFrameId);
+      verificationState.animFrameId = null;
+    }
+    
+    challengeText.textContent = '❌ Waktu Habis';
+    challengeText.className = 'text-danger mb-2 fs-4';
+    instruction.textContent = 'Aksi tidak terdeteksi. Pastikan wajah terlihat jelas.';
+    
+    result.classList.remove('d-none');
+    result.className = 'alert alert-warning small py-2';
+    result.innerHTML = '<i class="bi bi-exclamation-triangle me-1"></i>Pastikan pencahayaan cukup dan wajah berada di tengah kamera.';
+    
+    startBtn.disabled = false;
+    startBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i>Coba Lagi';
+  }
+
+  async function runFaceDetectionLoop() {
+    if (!verificationState.active || !verificationState.challenge) {
+      return;
+    }
+    
+    const video = $('faceVideo');
+    const actionCount = document.getElementById('actionCount');
+    
+    if (video.readyState !== 4) {
+      verificationState.animFrameId = requestAnimationFrame(runFaceDetectionLoop);
+      return;
+    }
+    
+    try {
+      // Detect face with landmarks
+      const detection = await faceapi.detectSingleFace(
+        video, 
+        new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.5 })
+      ).withFaceLandmarks(true);
+      
+      if (detection) {
+        const landmarks = detection.landmarks;
+        const positions = landmarks.positions;
+        
+        // Get facial feature points
+        const leftEye = landmarks.getLeftEye();
+        const rightEye = landmarks.getRightEye();
+        const mouth = landmarks.getMouth();
+        const nose = landmarks.getNose();
+        
+        // Calculate metrics
+        const leftEAR = getEAR(leftEye);
+        const rightEAR = getEAR(rightEye);
+        const avgEAR = (leftEAR + rightEAR) / 2;
+        const mar = getMAR(mouth);
+        const noseX = nose[3].x; // Nose tip X position
+        const faceWidth = detection.detection.box.width;
+        const faceCenterX = detection.detection.box.x + faceWidth / 2;
+        
+        // Store in history for smoothing
+        verificationState.landmarkHistory.push({ avgEAR, mar, noseX, faceCenterX, faceWidth });
+        if (verificationState.landmarkHistory.length > 10) {
+          verificationState.landmarkHistory.shift();
+        }
+        
+        const challenge = verificationState.challenge;
+        
+        // Process based on challenge type
+        if (challenge.id === 'blink') {
+          // Blink detection: EAR drops below threshold then returns
+          // Higher threshold = easier to detect (normal open eye EAR is ~0.25-0.35)
+          const EAR_CLOSED = 0.25;  // Threshold for "eyes closed"
+          const EAR_OPEN = 0.28;    // Threshold for "eyes open" (with hysteresis)
+          
+          // Show current EAR value for debugging
+          if (actionCount) {
+            actionCount.innerHTML = `${verificationState.blinkCount}/2 <small style="opacity:0.6">(EAR: ${avgEAR.toFixed(2)})</small>`;
+          }
+          
+          // Detect blink: eyes close then open
+          if (avgEAR < EAR_CLOSED && !verificationState.eyesClosed) {
+            verificationState.eyesClosed = true;
+            console.log('Eyes CLOSED detected, EAR:', avgEAR.toFixed(3));
+          } else if (avgEAR > EAR_OPEN && verificationState.eyesClosed) {
+            verificationState.eyesClosed = false;
+            verificationState.blinkCount++;
+            console.log('Blink completed!', verificationState.blinkCount, 'EAR:', avgEAR.toFixed(3));
+          }
+          
+          if (verificationState.blinkCount >= 2) {
+            challengeSuccess();
+            return;
+          }
+        }
+        else if (challenge.id === 'mouth') {
+          // Mouth open detection - more sensitive
+          const MAR_OPEN = 0.4;    // Threshold for "mouth open" 
+          const MAR_CLOSED = 0.3;  // Threshold for "mouth closed"
+          
+          // Show current MAR value for debugging
+          if (actionCount) {
+            actionCount.innerHTML = `${verificationState.mouthCount}/2 <small style="opacity:0.6">(MAR: ${mar.toFixed(2)})</small>`;
+          }
+          
+          if (mar > MAR_OPEN && !verificationState.mouthOpen) {
+            verificationState.mouthOpen = true;
+            console.log('Mouth OPEN detected, MAR:', mar.toFixed(3));
+          } else if (mar < MAR_CLOSED && verificationState.mouthOpen) {
+            verificationState.mouthOpen = false;
+            verificationState.mouthCount++;
+            console.log('Mouth close detected!', verificationState.mouthCount, 'MAR:', mar.toFixed(3));
+          }
+          
+          if (verificationState.mouthCount >= 2) {
+            challengeSuccess();
+            return;
+          }
+        }
+        else if (challenge.id === 'left' || challenge.id === 'right') {
+          // Head turn detection based on nose position relative to face center
+          if (verificationState.baseNoseX === null) {
+            verificationState.baseNoseX = noseX - faceCenterX;
+          }
+          
+          const currentOffset = noseX - faceCenterX;
+          const normalizedOffset = currentOffset / faceWidth;
+          const baseOffset = verificationState.baseNoseX / faceWidth;
+          const delta = normalizedOffset - baseOffset;
+          
+          const TURN_THRESHOLD = 0.08;
+          
+          if (challenge.id === 'left') {
+            // Turning left means nose moves to our right (positive delta in mirrored video)
+            if (actionCount) actionCount.textContent = delta > 0 ? 'Menoleh...' : 'Menunggu...';
+            if (delta > TURN_THRESHOLD && !verificationState.turnDetected) {
+              verificationState.turnDetected = true;
+              console.log('Turn LEFT detected!', delta);
+              challengeSuccess();
+              return;
+            }
+          } else {
+            // Turning right means nose moves to our left (negative delta)
+            if (actionCount) actionCount.textContent = delta < 0 ? 'Menoleh...' : 'Menunggu...';
+            if (delta < -TURN_THRESHOLD && !verificationState.turnDetected) {
+              verificationState.turnDetected = true;
+              console.log('Turn RIGHT detected!', delta);
+              challengeSuccess();
+              return;
+            }
+          }
+        }
+        
+        if (actionCount && !['blink', 'mouth'].includes(challenge.id)) {
+          // Already handled above
+        }
+      } else {
+        // No face detected
+        const actionCount = document.getElementById('actionCount');
+        if (actionCount && !['blink', 'mouth'].includes(verificationState.challenge?.id)) {
+          actionCount.textContent = 'Wajah tidak terdeteksi';
+          actionCount.style.color = '#ff6b6b';
+        }
+      }
+    } catch (e) {
+      console.error('Face detection error:', e);
+    }
+    
+    verificationState.animFrameId = requestAnimationFrame(runFaceDetectionLoop);
+  }
+
+  function beginVerification() {
+    const startBtn = $('startVerifyBtn');
+    const result = $('faceResult');
+    const progressBar = $('challengeProgressBar');
+    
+    // Reset state but keep modelsLoaded
+    const modelsLoaded = verificationState.modelsLoaded;
+    verificationState = {
+      active: true,
+      challenge: null,
+      successCount: 0,
+      requiredSuccess: 2,
+      challengeTimeout: null,
+      animFrameId: null,
+      modelsLoaded: modelsLoaded,
+      eyesClosed: false,
+      blinkCount: 0,
+      mouthOpen: false,
+      mouthCount: 0,
+      baseNoseX: null,
+      turnDetected: false,
+      landmarkHistory: []
+    };
+    
+    result.classList.add('d-none');
+    progressBar.style.width = '0%';
+    startBtn.disabled = true;
+    startBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Verifikasi...';
+    
+    // Short delay then start first challenge
+    setTimeout(() => {
+      if (verificationState.active) {
+        startChallenge();
+        runFaceDetectionLoop();
+      }
+    }, 500);
+  }
+
+  async function sendSuggestionToTelegram(text) {
+    const statusEl = $('suggestionStatus');
+    const suggestionInput = $('suggestionInput');
+    const submitBtn = $('submitSuggestion');
+
+    submitBtn.disabled = true;
+    statusEl.innerHTML = '<span class="text-info"><i class="bi bi-hourglass-split me-1"></i>Mengirim ke Telegram...</span>';
+
+    try {
+      const userName = currentUser?.displayName || currentUser?.email || 'Guest';
+      const message = `💡 *Saran Counter Board*\n\n` +
+        `👤 *Dari:* ${userName}\n` +
+        `✅ *Verifikasi:* Liveness Check Passed\n` +
+        `📝 *Saran:*\n${text}\n\n` +
+        `🕐 *Waktu:* ${new Date().toLocaleString('id-ID')}`;
+
+      const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message,
+          parse_mode: 'Markdown'
+        })
+      });
+
+      const data = await response.json();
+      console.log('Telegram response:', data);
+      
+      if (data.ok) {
+        suggestionInput.value = '';
+        pendingSuggestion = '';
+        faceVerified = false;
+        statusEl.innerHTML = '<span class="text-success"><i class="bi bi-check-circle me-1"></i>Terima kasih! Saran Anda telah terkirim.</span>';
+        showToast('Saran berhasil dikirim!', 'success');
+        setTimeout(() => { statusEl.innerHTML = ''; }, 5000);
+      } else {
+        throw new Error(data.description || 'Telegram API error');
+      }
+    } catch (e) {
+      console.error('Error sending to Telegram:', e);
+      statusEl.innerHTML = `<span class="text-danger"><i class="bi bi-exclamation-circle me-1"></i>Gagal mengirim: ${e.message}</span>`;
+    } finally {
+      submitBtn.disabled = false;
+      faceVerified = false;
+    }
+  }
+
+  function setupSuggestionBox() {
+    const suggestionInput = $('suggestionInput');
+    const submitBtn = $('submitSuggestion');
+    const statusEl = $('suggestionStatus');
+    const startVerifyBtn = $('startVerifyBtn');
+
+    if (!submitBtn || !suggestionInput) return;
+
+    submitBtn.addEventListener('click', async () => {
+      const text = suggestionInput.value.trim();
+      
+      // Validate suggestion content
+      const validation = isValidSuggestion(text);
+      if (!validation.valid) {
+        statusEl.innerHTML = `<span class="text-warning"><i class="bi bi-exclamation-triangle me-1"></i>${validation.reason}</span>`;
+        return;
+      }
+
+      // Store for later and start face verification
+      pendingSuggestion = text;
+      statusEl.innerHTML = '';
+      
+      // Reset and show face verification modal
+      resetVerificationState();
+      faceVerifyModal.show();
+      startFaceVerification();
+    });
+
+    // Start verification button handler
+    if (startVerifyBtn) {
+      startVerifyBtn.addEventListener('click', beginVerification);
+    }
+
+    // Clean up camera when modal closes
+    $('faceVerifyModal').addEventListener('hidden.bs.modal', () => {
+      stopCamera();
+      resetVerificationState();
+    });
+
+    // Submit on Enter
+    suggestionInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        submitBtn.click();
+      }
+    });
+  }
+
+  // ========== ACTIVITY HISTORY (Firestore) ==========
+  async function loadHistory() {
+    // Try to load from Firestore first
+    if (currentUser && window._fbApp) {
+      try {
+        const db = firebase.firestore();
+        const snapshot = await db.collection(HISTORY_COLLECTION)
+          .doc(currentUser.uid)
+          .collection('entries')
+          .orderBy('timestamp', 'desc')
+          .limit(500)
+          .get();
+        
+        activityHistory = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log('History loaded from Firestore:', activityHistory.length, 'entries');
+        return;
+      } catch (e) {
+        console.error('Error loading history from Firestore:', e);
+      }
+    }
+    
+    // Fallback to localStorage
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      if (raw) {
+        activityHistory = JSON.parse(raw);
+      }
+    } catch (_) {
+      activityHistory = [];
+    }
+  }
+
+  async function saveHistory() {
+    // Save to localStorage as backup
+    try {
+      if (activityHistory.length > 500) {
+        activityHistory = activityHistory.slice(-500);
+      }
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(activityHistory));
+    } catch (_) {}
+  }
+
+  async function logActivity(action, cardId, value, prevValue) {
+    const card = getCard(cardId);
+    const entry = {
+      id: uid(),
+      timestamp: Date.now(),
+      action: action,
+      cardId: cardId,
+      cardTitle: card?.title || 'Counter',
+      value: value,
+      prevValue: prevValue
+    };
+    
+    // Add to local array
+    activityHistory.push(entry);
+    
+    // Save to localStorage backup
+    saveHistory();
+    
+    // Save to Firestore if logged in
+    if (currentUser && window._fbApp) {
+      try {
+        const db = firebase.firestore();
+        await db.collection(HISTORY_COLLECTION)
+          .doc(currentUser.uid)
+          .collection('entries')
+          .doc(entry.id)
+          .set(entry);
+      } catch (e) {
+        console.error('Error saving history to Firestore:', e);
+      }
+    }
+  }
+
+  function renderHistoryList(filter = 'all') {
+    const listEl = $('historyList');
+    const emptyEl = $('historyEmpty');
+    
+    if (!listEl) return;
+    
+    let filtered = activityHistory;
+    if (filter !== 'all') {
+      filtered = activityHistory.filter(h => h.action === filter);
+    }
+    
+    // Sort by newest first
+    filtered = [...filtered].reverse();
+    
+    if (filtered.length === 0) {
+      listEl.innerHTML = '';
+      emptyEl?.classList.remove('d-none');
+      return;
+    }
+    
+    emptyEl?.classList.add('d-none');
+    
+    const actionIcons = {
+      add: '<i class="bi bi-plus-circle text-success me-2"></i>',
+      sub: '<i class="bi bi-dash-circle text-danger me-2"></i>',
+      reset: '<i class="bi bi-arrow-counterclockwise text-warning me-2"></i>',
+      set: '<i class="bi bi-pencil text-info me-2"></i>',
+      goal: '<i class="bi bi-bullseye text-primary me-2"></i>'
+    };
+    
+    const actionNames = {
+      add: 'Tambah',
+      sub: 'Kurangi',
+      reset: 'Reset',
+      set: 'Set Nilai',
+      goal: 'Set Target'
+    };
+    
+    listEl.innerHTML = filtered.slice(0, 100).map(h => {
+      const date = new Date(h.timestamp);
+      const timeStr = date.toLocaleString('id-ID', { 
+        day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' 
+      });
+      return `
+        <div class="history-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              ${actionIcons[h.action] || ''}
+              <strong>${h.cardTitle || 'Counter'}</strong>
+              <span class="text-muted">- ${actionNames[h.action] || h.action}</span>
+            </div>
+            <span class="time">${timeStr}</span>
+          </div>
+          <div class="small text-muted mt-1">
+            ${h.prevValue !== undefined ? `${h.prevValue} → ` : ''}${h.value}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // History modal handlers
+  $('historyBtn')?.addEventListener('click', async () => {
+    await loadHistory();
+    renderHistoryList('all');
+    new bootstrap.Modal($('historyModal')).show();
+  });
+
+  // History filter buttons
+  document.querySelectorAll('#historyModal [data-filter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#historyModal [data-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderHistoryList(btn.dataset.filter);
+    });
+  });
+
+  $('clearHistoryBtn')?.addEventListener('click', async () => {
+    if (confirm('Hapus semua riwayat aktivitas?')) {
+      activityHistory = [];
+      saveHistory();
+      
+      // Also clear from Firestore
+      if (currentUser && window._fbApp) {
+        try {
+          const db = firebase.firestore();
+          const batch = db.batch();
+          const snapshot = await db.collection(HISTORY_COLLECTION)
+            .doc(currentUser.uid)
+            .collection('entries')
+            .get();
+          
+          snapshot.docs.forEach(doc => {
+            batch.delete(doc.ref);
+          });
+          
+          await batch.commit();
+          console.log('History cleared from Firestore');
+        } catch (e) {
+          console.error('Error clearing history from Firestore:', e);
+        }
+      }
+      
+      renderHistoryList('all');
+      showToast('Riwayat dihapus', 'warning');
+    }
+  });
+
+  // Export history to CSV
+  $('exportHistoryCsv')?.addEventListener('click', () => {
+    if (activityHistory.length === 0) {
+      showToast('Tidak ada riwayat untuk diexport', 'warning');
+      return;
+    }
+    
+    // Helper function to escape CSV values
+    const escapeCSV = (val) => {
+      if (val === null || val === undefined) return '';
+      const str = String(val);
+      if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+        return '"' + str.replace(/"/g, '""') + '"';
+      }
+      return str;
+    };
+    
+    const headers = ['Waktu', 'Counter', 'Aksi', 'Nilai Sebelum', 'Nilai Sesudah'];
+    const rows = activityHistory.map(h => [
+      new Date(h.timestamp).toLocaleString('id-ID'),
+      escapeCSV(h.cardTitle || 'Counter'),
+      h.action,
+      h.prevValue ?? '',
+      h.value
+    ]);
+    
+    const csv = [headers, ...rows].map(r => r.map(escapeCSV).join(',')).join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' }); // BOM for Excel
+    const a = document.createElement('a');
+    a.download = `counter-history-${new Date().toISOString().slice(0,10)}.csv`;
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    showToast('CSV exported!', 'success');
+  });
+
+  // Patch counter operations to log history
+  const originalUpdateCard = updateCard;
+  window._updateCard = updateCard; // Keep reference
+  
+  // ========== STATISTICS ==========
+  let activityChart = null;
+  let counterChart = null;
+
+  function updateStatistics() {
+    // Calculate stats
+    const totalCounters = state.cards.length;
+    const totalValue = state.cards.reduce((sum, c) => sum + c.count, 0);
+    const goalsReached = state.cards.filter(c => c.goal > 0 && c.count >= c.goal).length;
+    
+    // Today's actions
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayActions = activityHistory.filter(h => h.timestamp >= today.getTime()).length;
+    
+    $('statTotalCounters').textContent = totalCounters;
+    $('statTotalValue').textContent = new Intl.NumberFormat('id-ID').format(totalValue);
+    $('statGoalsReached').textContent = goalsReached;
+    $('statTodayActions').textContent = todayActions;
+    
+    // Activity chart (last 7 days)
+    renderActivityChart();
+    
+    // Counter comparison chart
+    renderCounterChart();
+  }
+
+  function renderActivityChart() {
+    const ctx = document.getElementById('activityChart')?.getContext('2d');
+    if (!ctx) return;
+    
+    // Get last 7 days
+    const days = [];
+    const data = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      date.setHours(0, 0, 0, 0);
+      const nextDate = new Date(date);
+      nextDate.setDate(nextDate.getDate() + 1);
+      
+      const dayActions = activityHistory.filter(h => 
+        h.timestamp >= date.getTime() && h.timestamp < nextDate.getTime()
+      ).length;
+      
+      days.push(date.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' }));
+      data.push(dayActions);
+    }
+    
+    if (activityChart) activityChart.destroy();
+    
+    activityChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: days,
+        datasets: [{
+          label: 'Aktivitas',
+          data: data,
+          borderColor: '#7c5cff',
+          backgroundColor: 'rgba(124, 92, 255, 0.1)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+  }
+
+  function renderCounterChart() {
+    const ctx = document.getElementById('counterChart')?.getContext('2d');
+    if (!ctx) return;
+    
+    const labels = state.cards.slice(0, 10).map(c => c.title || 'Counter');
+    const values = state.cards.slice(0, 10).map(c => c.count);
+    const colors = ['#7c5cff', '#22c55e', '#fb7185', '#f97316', '#eab308', '#3b82f6', '#a855f7', '#ec4899', '#06b6d4', '#84cc16'];
+    
+    if (counterChart) counterChart.destroy();
+    
+    counterChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Nilai',
+          data: values,
+          backgroundColor: colors.slice(0, values.length)
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  }
+
+  $('statsBtn')?.addEventListener('click', async () => {
+    await loadHistory();
+    updateStatistics();
+    new bootstrap.Modal($('statsModal')).show();
+  });
+
+  // ========== KEYBOARD SHORTCUTS ==========
+  document.addEventListener('keydown', (e) => {
+    // Ignore if typing in input
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+      return;
+    }
+    
+    const isMac = navigator.platform.toUpperCase().includes('MAC');
+    const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
+    
+    // Show shortcuts modal
+    if (e.key === '?') {
+      e.preventDefault();
+      new bootstrap.Modal($('shortcutsModal')).show();
+      return;
+    }
+    
+    // Ctrl+S to save
+    if (ctrlOrCmd && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      hardSave();
+      pushRemote();
+      showToast('Tersimpan!', 'success');
+      return;
+    }
+    
+    // N for new counter
+    if (e.key.toLowerCase() === 'n' && !ctrlOrCmd) {
+      e.preventDefault();
+      addCard();
+      return;
+    }
+    
+    // Number keys 1-9 to select counter
+    if (/^[1-9]$/.test(e.key) && !ctrlOrCmd && !e.altKey) {
+      const idx = parseInt(e.key) - 1;
+      if (idx < state.cards.length) {
+        state.activeCardIndex = idx;
+        highlightActiveCard();
+        showToast(`Counter ${idx + 1} dipilih`, 'info');
+      }
+      return;
+    }
+    
+    // Arrow keys for navigation and +/-
+    const activeCard = state.cards[state.activeCardIndex];
+    if (!activeCard) return;
+    
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      state.activeCardIndex = Math.max(0, state.activeCardIndex - 1);
+      highlightActiveCard();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      state.activeCardIndex = Math.min(state.cards.length - 1, state.activeCardIndex + 1);
+      highlightActiveCard();
+    } else if (e.key === '+' || e.key === '=' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const card = state.cards[state.activeCardIndex];
+      if (card) {
+        const prev = card.count;
+        const newCount = clampInt(card.count + card.step, 0, 1e9, card.count);
+        updateCard(card.id, { count: newCount });
+        logActivity('add', card.id, newCount, prev);
+        checkGoal(card.id);
+        renderAll();
+        highlightActiveCard();
+        beep(800, 50);
+      }
+    } else if (e.key === '-' || e.key === '_' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const card = state.cards[state.activeCardIndex];
+      if (card) {
+        const prev = card.count;
+        const newCount = clampInt(card.count - card.step, 0, 1e9, card.count);
+        updateCard(card.id, { count: newCount });
+        logActivity('sub', card.id, newCount, prev);
+        renderAll();
+        highlightActiveCard();
+        beep(600, 50);
+      }
+    } else if (e.key.toLowerCase() === 'r' && !ctrlOrCmd) {
+      e.preventDefault();
+      const card = state.cards[state.activeCardIndex];
+      if (card) {
+        const prev = card.count;
+        updateCard(card.id, { count: 0, goalReached: false });
+        logActivity('reset', card.id, 0, prev);
+        renderAll();
+        highlightActiveCard();
+        beep(400, 80);
+        showToast('Counter direset', 'warning');
+      }
+    }
+  });
+
+  function highlightActiveCard() {
+    document.querySelectorAll('.counter-card').forEach((el, idx) => {
+      el.classList.toggle('active-counter', idx === state.activeCardIndex);
+    });
+  }
+
+  // ========== COUNTER CUSTOMIZATION ==========
+  let customizeCardId = null;
+  const customizeModal = new bootstrap.Modal($('customizeModal'));
+
+  function openCustomizeModal(cardId) {
+    const card = getCard(cardId);
+    if (!card) return;
+    
+    customizeCardId = cardId;
+    
+    // Set current values
+    $('categoryInput').value = card.category || '';
+    $('lockCounterChk').checked = !!card.locked;
+    $('hideCounterChk').checked = !!card.hidden;
+    
+    // Highlight current color
+    document.querySelectorAll('#customizeModal [data-color]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.color === (card.color || 'none'));
+      btn.innerHTML = btn.dataset.color === (card.color || 'none') ? '✓' : '';
+    });
+    
+    // Highlight current icon
+    document.querySelectorAll('#iconPicker [data-icon]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.icon === (card.icon || ''));
+    });
+    
+    customizeModal.show();
+  }
+
+  // Color picker
+  document.querySelectorAll('#customizeModal [data-color]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#customizeModal [data-color]').forEach(b => {
+        b.classList.remove('active');
+        b.innerHTML = '';
+      });
+      btn.classList.add('active');
+      btn.innerHTML = '✓';
+    });
+  });
+
+  // Icon picker
+  document.querySelectorAll('#iconPicker [data-icon]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#iconPicker [data-icon]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  $('customizeSaveBtn')?.addEventListener('click', () => {
+    if (!customizeCardId) return;
+    
+    const color = document.querySelector('#customizeModal [data-color].active')?.dataset.color || 'none';
+    const icon = document.querySelector('#iconPicker [data-icon].active')?.dataset.icon || '';
+    const category = $('categoryInput').value.trim();
+    const locked = $('lockCounterChk').checked;
+    const hidden = $('hideCounterChk').checked;
+    
+    // If locking, ask for PIN
+    if (locked) {
+      const card = getCard(customizeCardId);
+      if (!card?.pin) {
+        const pin = prompt('Masukkan PIN 4 digit untuk mengunci counter:');
+        if (pin && /^\d{4}$/.test(pin)) {
+          updateCard(customizeCardId, { color, icon, category, locked, hidden, pin });
+        } else {
+          showToast('PIN harus 4 digit angka', 'warning');
+          return;
+        }
+      } else {
+        updateCard(customizeCardId, { color, icon, category, locked, hidden });
+      }
+    } else {
+      updateCard(customizeCardId, { color, icon, category, locked, hidden });
+    }
+    
+    renderAll();
+    customizeModal.hide();
+    showToast('Kustomisasi disimpan!', 'success');
+  });
+
+  // ========== PIN LOCK ==========
+  let pinModalContext = null;
+  const pinModal = new bootstrap.Modal($('pinModal'));
+
+  function askForPIN(cardId, action) {
+    const card = getCard(cardId);
+    if (!card?.locked || !card?.pin) {
+      action();
+      return;
+    }
+    
+    pinModalContext = { cardId, action };
+    $('pinModalTitle').innerHTML = '<i class="bi bi-lock me-2"></i>Counter Terkunci';
+    $('pinModalDesc').textContent = 'Masukkan PIN untuk membuka counter';
+    $('pinInput').value = '';
+    $('pinError').classList.add('d-none');
+    pinModal.show();
+    setTimeout(() => $('pinInput').focus(), 100);
+  }
+
+  $('pinConfirmBtn')?.addEventListener('click', () => {
+    if (!pinModalContext) return;
+    
+    const card = getCard(pinModalContext.cardId);
+    const enteredPin = $('pinInput').value;
+    
+    if (enteredPin === card?.pin) {
+      pinModal.hide();
+      pinModalContext.action();
+      pinModalContext = null;
+    } else {
+      $('pinError').classList.remove('d-none');
+      $('pinInput').value = '';
+      $('pinInput').focus();
+    }
+  });
+
+  $('pinInput')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') $('pinConfirmBtn').click();
+  });
+
+  // ========== COLLABORATION ==========
+  let collabRoom = null;
+  let collabUnsubscribe = null;
+  let isRoomCreator = false; // Track if current user is room creator
+  const collabModal = new bootstrap.Modal($('collabModal'));
+  const COLLAB_ROOM_KEY = 'counter_collab_room';
+
+  // Restore collab room on load
+  function restoreCollabRoom() {
+    const savedRoom = localStorage.getItem(COLLAB_ROOM_KEY);
+    if (savedRoom) {
+      try {
+        const data = JSON.parse(savedRoom);
+        if (data.roomId && data.clientId === clientId) {
+          // Auto-rejoin the room
+          $('collabRoomId').value = data.roomId;
+          setTimeout(() => $('collabJoinBtn')?.click(), 1000);
+        }
+      } catch (_) {
+        localStorage.removeItem(COLLAB_ROOM_KEY);
+      }
+    }
+  }
+
+  // Get unique user identifier (prefer Firebase UID if logged in)
+  function getUniqueUserId() {
+    return currentUser?.uid || clientId;
+  }
+
+  $('generateRoomBtn')?.addEventListener('click', () => {
+    // Check if already in a room
+    if (collabRoom) {
+      showToast('Anda sudah dalam room! Keluar dulu untuk membuat room baru.', 'warning');
+      return;
+    }
+    const roomId = 'room_' + Math.random().toString(36).slice(2, 8);
+    $('collabRoomId').value = roomId;
+    showToast('Room ID dibuat! Klik Gabung untuk memulai.', 'info');
+  });
+
+  $('collabJoinBtn')?.addEventListener('click', async () => {
+    const roomId = $('collabRoomId').value.trim();
+    if (!roomId) {
+      showToast('Masukkan Room ID', 'warning');
+      return;
+    }
+    
+    // Check if already in a room
+    if (collabRoom) {
+      if (collabRoom === roomId) {
+        showToast('Anda sudah dalam room ini!', 'info');
+        return;
+      }
+      showToast('Anda sudah dalam room lain! Keluar dulu untuk bergabung ke room baru.', 'warning');
+      return;
+    }
+    
+    // Validate room ID format
+    if (!/^[a-zA-Z0-9_-]+$/.test(roomId)) {
+      showToast('Room ID hanya boleh huruf, angka, underscore, dan dash', 'warning');
+      return;
+    }
+    
+    // Show loading state
+    const joinBtn = $('collabJoinBtn');
+    const originalText = joinBtn.innerHTML;
+    joinBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Menghubungkan...';
+    joinBtn.disabled = true;
+    
+    try {
+      if (!initFirebase()) {
+        throw new Error('Firebase tidak tersedia');
+      }
+      
+      const db = firebase.firestore();
+      const roomRef = db.collection(COLLAB_COLLECTION).doc(roomId);
+      
+      // Join room
+      const uniqueUserId = getUniqueUserId();
+      const userName = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'Guest_' + Math.random().toString(36).slice(2, 5);
+      const userInfo = {
+        clientId: clientId, // Client/device ID
+        odg: uniqueUserId, // Unique user ID (Firebase UID or clientId)
+        name: userName,
+        joinedAt: Date.now()
+      };
+      
+      // First, get current room data to check if we need to create or update
+      let roomDoc;
+      try {
+        roomDoc = await roomRef.get();
+      } catch (permError) {
+        console.error('Permission error:', permError);
+        throw new Error('Akses ditolak. Pastikan Firestore Rules sudah diatur dengan benar.');
+      }
+      
+      if (roomDoc.exists) {
+        const roomData = roomDoc.data();
+        const currentUsers = roomData.users || [];
+        
+        // Check if user already in room (by uniqueUserId to prevent duplicate accounts)
+        const existingUser = currentUsers.find(u => u.odg === uniqueUserId);
+        if (existingUser && existingUser.clientId !== clientId) {
+          // Same account but different device - update to new device
+          const updatedUsers = currentUsers.map(u => 
+            u.odg === uniqueUserId ? { ...userInfo } : u
+          );
+          await roomRef.update({
+            users: updatedUsers,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        } else if (!existingUser) {
+          // New user joining
+          currentUsers.push(userInfo);
+          await roomRef.update({
+            users: currentUsers,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+        // If same user same device, just reconnect without updating
+        
+        // Check if current user is the creator
+        isRoomCreator = roomData.creatorId === uniqueUserId;
+        
+        // Apply existing room state to sync with host
+        if (roomData.state) {
+          applyImportedState(roomData.state, true);
+          showToast('Data disinkronkan dari room', 'info');
+        }
+      } else {
+        // Create new room - current user is the creator
+        isRoomCreator = true;
+        const cleanState = JSON.parse(JSON.stringify(state));
+        await roomRef.set({
+          users: [userInfo],
+          creatorId: uniqueUserId, // Track room creator
+          creatorName: userName,
+          state: cleanState,
+          updatedBy: clientId,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+      
+      // Listen for changes
+      if (collabUnsubscribe) collabUnsubscribe();
+      collabUnsubscribe = roomRef.onSnapshot((snap) => {
+        if (!snap.exists) {
+          // Room was deleted (creator left)
+          handleRoomClosed();
+          return;
+        }
+        
+        const data = snap.data();
+        if (!data) return;
+        
+        // Update creator status
+        isRoomCreator = data.creatorId === uniqueUserId;
+        
+        // Update users list with creator badge
+        const usersEl = $('collabUsersList');
+        if (usersEl && data.users) {
+          usersEl.innerHTML = data.users.map(u => {
+            const isMe = u.odg === uniqueUserId;
+            const isCreator = u.odg === data.creatorId;
+            let badgeClass = isMe ? 'bg-primary' : 'bg-secondary';
+            if (isCreator) badgeClass = 'bg-warning text-dark';
+            
+            let label = u.name;
+            if (isCreator) label += ' 👑';
+            if (isMe) label += ' (Anda)';
+            
+            return `<span class="badge ${badgeClass} me-1 mb-1">${label}</span>`;
+          }).join('');
+        }
+        
+        // Update leave button text for creator
+        const leaveBtn = $('collabLeaveBtn');
+        if (leaveBtn) {
+          leaveBtn.innerHTML = isRoomCreator 
+            ? '<i class="bi bi-x-circle me-1"></i>Tutup Room' 
+            : '<i class="bi bi-box-arrow-left me-1"></i>Keluar';
+          leaveBtn.className = isRoomCreator 
+            ? 'btn btn-danger' 
+            : 'btn btn-outline-danger';
+        }
+        
+        // Sync state (only if from another user)
+        if (data.state && data.updatedBy && data.updatedBy !== clientId) {
+          console.log('Syncing state from:', data.updatedBy);
+          applyImportedState(data.state, true);
+          showToast('Data diperbarui dari kolaborator', 'info');
+        }
+      });
+      
+      collabRoom = roomId;
+      
+      // Save to localStorage for persistence
+      localStorage.setItem(COLLAB_ROOM_KEY, JSON.stringify({
+        roomId: roomId,
+        clientId: clientId,
+        odg: uniqueUserId
+      }));
+      
+      $('collabActiveRoom').textContent = roomId;
+      $('collabActiveSection').classList.remove('d-none');
+      $('collabJoinBtn').classList.add('d-none');
+      $('collabLeaveBtn').classList.remove('d-none');
+      
+      renderAll();
+      showToast('Terhubung ke room: ' + roomId, 'success');
+    } catch (e) {
+      console.error('Collab error:', e);
+      showToast('Gagal bergabung: ' + e.message, 'danger');
+    } finally {
+      joinBtn.innerHTML = originalText;
+      joinBtn.disabled = false;
+    }
+  });
+  
+  // Handle room closed by creator
+  function handleRoomClosed() {
+    if (collabUnsubscribe) {
+      collabUnsubscribe();
+      collabUnsubscribe = null;
+    }
+    collabRoom = null;
+    isRoomCreator = false;
+    localStorage.removeItem(COLLAB_ROOM_KEY);
+    
+    $('collabActiveSection').classList.add('d-none');
+    $('collabJoinBtn').classList.remove('d-none');
+    $('collabLeaveBtn').classList.add('d-none');
+    $('collabRoomId').value = '';
+    $('collabUsersList').innerHTML = '';
+    
+    showToast('Room ditutup oleh pembuat', 'warning');
+  }
+
+  // Copy room ID button
+  $('copyRoomIdBtn')?.addEventListener('click', async () => {
+    if (collabRoom) {
+      try {
+        await navigator.clipboard.writeText(collabRoom);
+        showToast('Room ID disalin: ' + collabRoom, 'success');
+      } catch (_) {
+        showToast('Room ID: ' + collabRoom, 'info');
+      }
+    }
+  });
+
+  $('collabLeaveBtn')?.addEventListener('click', async () => {
+    if (collabUnsubscribe) {
+      collabUnsubscribe();
+      collabUnsubscribe = null;
+    }
+    
+    if (collabRoom && window._fbApp) {
+      try {
+        const db = firebase.firestore();
+        const roomRef = db.collection(COLLAB_COLLECTION).doc(collabRoom);
+        
+        if (isRoomCreator) {
+          // Creator leaves - delete the entire room (will trigger handleRoomClosed for all)
+          await roomRef.delete();
+          showToast('Room ditutup', 'info');
+        } else {
+          // Regular user leaves - just remove from users list
+          const roomDoc = await roomRef.get();
+          if (roomDoc.exists) {
+            const uniqueUserId = getUniqueUserId();
+            const currentUsers = roomDoc.data().users || [];
+            const newUsers = currentUsers.filter(u => u.odg !== uniqueUserId);
+            await roomRef.update({ users: newUsers });
+          }
+          showToast('Keluar dari room', 'info');
+        }
+      } catch (e) {
+        console.error('Error leaving room:', e);
+      }
+    }
+    
+    collabRoom = null;
+    isRoomCreator = false;
+    localStorage.removeItem(COLLAB_ROOM_KEY);
+    
+    $('collabActiveSection').classList.add('d-none');
+    $('collabJoinBtn').classList.remove('d-none');
+    $('collabLeaveBtn').classList.add('d-none');
+    $('collabRoomId').value = '';
+  });
+
+  // Push changes to collab room
+  async function pushToCollab() {
+    if (!collabRoom || !window._fbApp) return;
+    try {
+      const db = firebase.firestore();
+      // Create a clean state object (avoid circular references)
+      const cleanState = JSON.parse(JSON.stringify(state));
+      await db.collection(COLLAB_COLLECTION).doc(collabRoom).update({
+        state: cleanState,
+        updatedBy: clientId,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      console.log('Pushed to collab room:', collabRoom, cleanState);
+    } catch (e) {
+      console.error('Error pushing to collab:', e);
+      // If room doesn't exist anymore, reset collab state
+      if (e.code === 'not-found') {
+        collabRoom = null;
+        $('collabActiveSection').classList.add('d-none');
+        $('collabJoinBtn').classList.remove('d-none');
+        $('collabLeaveBtn').classList.add('d-none');
+        showToast('Room tidak ditemukan, koneksi terputus', 'warning');
+      }
+    }
+  }
+
+  // Override scheduleSave to also push to collab
+  const _originalScheduleSave = scheduleSave;
+  let collabSaveTimer = null;
+  
+  // Monkey-patch the save function to include collab sync
+  window._scheduleCollabPush = function() {
+    clearTimeout(collabSaveTimer);
+    collabSaveTimer = setTimeout(() => {
+      pushToCollab();
+    }, 500);
+  };
+
+  // Call collab push after each save
+  const originalHardSave = hardSave;
+  hardSave = function() {
+    const result = originalHardSave();
+    window._scheduleCollabPush();
+    return result;
+  };
+
+  // ========== SHOW HIDDEN COUNTERS TOGGLE ==========
+  document.querySelector('#toggleSelect')?.insertAdjacentHTML('afterend', `
+    <li><a class="dropdown-item" href="#" id="toggleHidden"><i class="bi bi-eye me-2"></i>Tampilkan Hidden</a></li>
+  `);
+
+  $('toggleHidden')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    state.showHiddenCounters = !state.showHiddenCounters;
+    document.body.classList.toggle('show-hidden', state.showHiddenCounters);
+    scheduleSave(); // Persist the state
+    showToast(state.showHiddenCounters ? 'Counter tersembunyi ditampilkan' : 'Counter tersembunyi disembunyikan');
+  });
+
+  // Load history on init (for guest users - logged in users load in auth callback)
+  if (!currentUser) {
+    loadHistory();
+  }
+
+  // Restore collaboration room connection on page load
+  setTimeout(() => restoreCollabRoom(), 1500);
+
+  // Clean up collab room on page unload (only for non-creators)
+  window.addEventListener('beforeunload', () => {
+    // Don't clean up if creator - let them explicitly close the room
+    // For regular users, best effort cleanup
+    if (collabRoom && window._fbApp && !isRoomCreator) {
+      try {
+        const uniqueUserId = getUniqueUserId();
+        const db = firebase.firestore();
+        const roomRef = db.collection(COLLAB_COLLECTION).doc(collabRoom);
+        // Use sendBeacon for more reliable cleanup on unload
+        navigator.sendBeacon && navigator.sendBeacon('/'); // Dummy to keep connection
+        roomRef.get().then(roomDoc => {
+          if (roomDoc.exists) {
+            const currentUsers = roomDoc.data().users || [];
+            const newUsers = currentUsers.filter(u => u.odg !== uniqueUserId);
+            roomRef.update({ users: newUsers });
+          }
+        });
+      } catch (e) {}
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

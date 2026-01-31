@@ -1,0 +1,226 @@
+[
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_play.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_play.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_pause.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_pause.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_bg_circle_button.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/bg_circle_button.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_bg_badge.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/bg_badge.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_phone.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_phone.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_sync.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_sync.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_dialog_otp.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/dialog_otp.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_badge_sync.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/badge_sync.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_progress_bar_custom.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/progress_bar_custom.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_google.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_google.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_activity_main.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/activity_main.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_more_vert.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_more_vert.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_item_counter.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/item_counter.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_account.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_account.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_settings.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_settings.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_activity_main_native.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/activity_main_native.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_dialog_email_login.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/dialog_email_login.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_sound_on.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_sound_on.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_export.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_export.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_add.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_add.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_sound_off.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_sound_off.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_item_counter_native.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/item_counter_native.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_launcher.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_launcher.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_import.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_import.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_lock.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_lock.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_reset.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_reset.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_activity_login.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/activity_login.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_dialog_phone_login.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/dialog_phone_login.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_dialog_statistics.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/dialog_statistics.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_edit_text_bg.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/edit_text_bg.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_progress_bar_green.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/progress_bar_green.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_account_circle.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_account_circle.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_empty.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_empty.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_activity_webview.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/activity_webview.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_email.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_email.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_bg_notes.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/bg_notes.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_font.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_font.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_activity_my.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/activity_my.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_notes.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_notes.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_drag_handle.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_drag_handle.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/xml_file_paths.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/xml/file_paths.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/drawable_ic_theme.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/drawable/ic_theme.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "app.counter.controller.caba.app-merged_res-53:/layout_dialog_add_edit_counter.xml.flat",
+        "source": "app.counter.controller.caba.app-main-55:/layout/dialog_add_edit_counter.xml"
+    }
+]

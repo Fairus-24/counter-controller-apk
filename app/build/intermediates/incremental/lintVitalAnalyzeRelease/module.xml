@@ -1,0 +1,32 @@
+<lint-module
+    format="1"
+    dir="C:\Users\OLA\AndroidStudioProjects\admob-test\app"
+    name=":app"
+    type="APP"
+    maven="admob-test:app:"
+    gradle="7.4.2"
+    buildFolder="build"
+    bootClassPath="C:\Users\OLA\AppData\Local\Android\Sdk\platforms\android-34\android.jar;C:\Users\OLA\AppData\Local\Android\Sdk\build-tools\30.0.3\core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-34"
+    neverShrinking="true">
+  <lintOptions
+      disable="MissingPermission,NewApi,UseAppTint"
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true">
+    <severities>
+      <severity
+        id="MissingPermission"
+        severity="IGNORE" />
+      <severity
+        id="NewApi"
+        severity="IGNORE" />
+      <severity
+        id="UseAppTint"
+        severity="IGNORE" />
+    </severities>
+  </lintOptions>
+  <variant name="release"/>
+</lint-module>

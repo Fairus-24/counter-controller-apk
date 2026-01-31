@@ -1,0 +1,832 @@
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\model\CounterModel.java:208: Warning: Implicitly using the default locale is a common source of bugs: Use String.format(Locale, ...) instead [DefaultLocale]
+        return String.format("%02d:%02d:%02d", hours, mins % 60, secs % 60);
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\model\CounterModel.java:215: Warning: Implicitly using the default locale is a common source of bugs: Use String.format(Locale, ...) instead [DefaultLocale]
+        return String.format("%02d:%02d:%02d", hours, mins % 60, secs % 60);
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\LocalHttpServer.java:225: Warning: Implicitly using the default locale is a common source of bugs: Use toLowerCase(Locale) instead. For strings meant to be internal use Locale.ROOT, otherwise Locale.getDefault(). [DefaultLocale]
+            extension = path.substring(lastDot + 1).toLowerCase();
+                                                    ~~~~~~~~~~~
+
+   Explanation for issues of type "DefaultLocale":
+   Calling String#toLowerCase() or #toUpperCase() without specifying an
+   explicit locale is a common source of bugs. The reason for that is that
+   those methods will use the current locale on the user's device, and even
+   though the code appears to work correctly when you are developing the app,
+   it will fail in some locales. For example, in the Turkish locale, the
+   uppercase replacement for i is not I.
+
+   If you want the methods to just perform ASCII replacement, for example to
+   convert an enum name, call String#toUpperCase(Locale.US) instead. If you
+   really want to use the current locale, call
+   String#toUpperCase(Locale.getDefault()) instead.
+
+   https://developer.android.com/reference/java/util/Locale.html#default_locale
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:495: Warning: Field requires API level 23 (current min is 21): android.app.PendingIntent#FLAG_IMMUTABLE [InlinedApi]
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\com\google\android\gms\example\interstitialexample\MyActivity.java:189: Warning: Field requires API level 23 (current min is 21): android.app.PendingIntent#FLAG_IMMUTABLE [InlinedApi]
+                PendingIntent.FLAG_IMMUTABLE);
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\WebViewActivity.java:365: Warning: Field requires API level 23 (current min is 21): android.app.PendingIntent#FLAG_IMMUTABLE [InlinedApi]
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "InlinedApi":
+   This check scans through all the Android API field references in the
+   application and flags certain constants, such as static final integers and
+   Strings, which were introduced in later versions. These will actually be
+   copied into the class files rather than being referenced, which means that
+   the value is available even when running on older devices. In some cases
+   that's fine, and in other cases it can result in a runtime crash or
+   incorrect behavior. It depends on the context, so consider the code
+   carefully and decide whether it's safe and can be suppressed or whether the
+   code needs to be guarded.
+
+   If you really want to use this API and don't need to support older devices
+   just set the minSdkVersion in your build.gradle or AndroidManifest.xml
+   files.
+
+   If your code is deliberately accessing newer APIs, and you have ensured
+   (e.g. with conditional execution) that this code will only ever be called
+   on a supported platform, then you can annotate your class or method with
+   the @TargetApi annotation specifying the local minimum SDK to apply, such
+   as @TargetApi(11), such that this check considers 11 rather than your
+   manifest file's minimum SDK as the required API level.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:60: Warning: Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details. [OldTargetApi]
+        targetSdkVersion 34
+        ~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "OldTargetApi":
+   When your application runs on a version of Android that is more recent than
+   your targetSdkVersion specifies that it has been tested with, various
+   compatibility modes kick in. This ensures that your application continues
+   to work, but it may look out of place. For example, if the targetSdkVersion
+   is less than 14, your app may get an option button in the UI.
+
+   To fix this issue, set the targetSdkVersion to the highest available value.
+   Then test your app to make sure everything works correctly. You may want to
+   consult the compatibility notes to see what changes apply to each version
+   you are adding support for:
+   https://developer.android.com/reference/android/os/Build.VERSION_CODES.html
+   as well as follow this guide:
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.
+   html
+
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.html
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:15: Warning: Attribute usesCleartextTraffic is only used in API level 23 and higher (current min is 21) [UnusedAttribute]
+        android:usesCleartextTraffic="true"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedAttribute":
+   This check finds attributes set in XML files that were introduced in a
+   version newer than the oldest version targeted by your application (with
+   the minSdkVersion attribute).
+
+   This is not an error; the application will simply ignore the attribute.
+   However, if the attribute is important to the appearance or functionality
+   of your application, you should consider finding an alternative way to
+   achieve the same result with only available attributes, and then you can
+   optionally create a copy of the layout in a layout-vNN folder which will be
+   used on API NN or higher where you can take advantage of the newer
+   attribute.
+
+   Note: This check does not only apply to attributes. For example, some tags
+   can be unused too, such as the new <tag> element in layouts introduced in
+   API 21.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:36: Warning: Redundant label can be removed [RedundantLabel]
+            android:label="@string/app_name"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "RedundantLabel":
+   When an activity does not have a label attribute, it will use the one from
+   the application tag. Since the application has already specified the same
+   label, the label on this activity can be omitted.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:103: Warning: A newer version of androidx.appcompat:appcompat than 1.6.1 is available: 1.7.1 [GradleDependency]
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:104: Warning: A newer version of com.google.android.gms:play-services-ads than 22.6.0 is available: 24.9.0 [GradleDependency]
+    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:105: Warning: A newer version of androidx.constraintlayout:constraintlayout than 2.1.4 is available: 2.2.1 [GradleDependency]
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:108: Warning: A newer version of com.google.android.material:material than 1.9.0 is available: 1.13.0 [GradleDependency]
+    implementation 'com.google.android.material:material:1.9.0'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:111: Warning: A newer version of com.google.firebase:firebase-bom than 32.3.1 is available: 34.8.0 [GradleDependency]
+    implementation platform('com.google.firebase:firebase-bom:32.3.1')
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:120: Warning: A newer version of com.google.android.gms:play-services-auth than 20.7.0 is available: 21.5.0 [GradleDependency]
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:123: Warning: A newer version of androidx.recyclerview:recyclerview than 1.3.1 is available: 1.4.0 [GradleDependency]
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:129: Warning: A newer version of androidx.preference:preference than 1.2.0 is available: 1.2.1 [GradleDependency]
+    implementation 'androidx.preference:preference:1.2.0'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:132: Warning: A newer version of com.google.code.gson:gson than 2.10.1 is available: 2.11.0 [GradleDependency]
+    implementation 'com.google.code.gson:gson:2.10.1'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:135: Warning: A newer version of androidx.activity:activity than 1.7.2 is available: 1.12.3 [GradleDependency]
+    implementation 'androidx.activity:activity:1.7.2'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\build.gradle:138: Warning: A newer version of androidx.browser:browser than 1.7.0 is available: 1.9.0 [GradleDependency]
+    implementation 'androidx.browser:browser:1.7.0'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\adapter\CounterAdapter.java:79: Warning: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort. [NotifyDataSetChanged]
+        notifyDataSetChanged();
+        ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:183: Warning: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort. [NotifyDataSetChanged]
+            adapter.notifyDataSetChanged();
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:198: Warning: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort. [NotifyDataSetChanged]
+            adapter.notifyDataSetChanged();
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:263: Warning: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort. [NotifyDataSetChanged]
+            adapter.notifyDataSetChanged();
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:393: Warning: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort. [NotifyDataSetChanged]
+        adapter.notifyDataSetChanged();
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:442: Warning: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort. [NotifyDataSetChanged]
+        adapter.notifyDataSetChanged();
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:457: Warning: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort. [NotifyDataSetChanged]
+        adapter.notifyDataSetChanged();
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:466: Warning: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort. [NotifyDataSetChanged]
+        adapter.notifyDataSetChanged();
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:486: Warning: It will always be more efficient to use more specific change events if you can. Rely on notifyDataSetChanged as a last resort. [NotifyDataSetChanged]
+            adapter.notifyDataSetChanged();
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "NotifyDataSetChanged":
+   The RecyclerView adapter's onNotifyDataSetChanged method does not specify
+   what about the data set has changed, forcing any observers to assume that
+   all existing items and structure may no longer be valid. `LayoutManager`s
+   will be forced to fully rebind and relayout all visible views.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\LoginActivity.java:65: Warning: Unnecessary; SDK_INT is always >= 21 [ObsoleteSdkInt]
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:119: Warning: Unnecessary; SDK_INT is always >= 21 [ObsoleteSdkInt]
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\com\google\android\gms\example\interstitialexample\MyActivity.java:124: Warning: Unnecessary; SDK_INT is always >= 21 [ObsoleteSdkInt]
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\com\google\android\gms\example\interstitialexample\MyActivity.java:245: Warning: Unnecessary; SDK_INT is always >= 21 [ObsoleteSdkInt]
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\WebViewActivity.java:104: Warning: Unnecessary; SDK_INT is always >= 21 [ObsoleteSdkInt]
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\WebViewActivity.java:180: Warning: Unnecessary; SDK_INT is always >= 21 [ObsoleteSdkInt]
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ObsoleteSdkInt":
+   This check flags version checks that are not necessary, because the
+   minSdkVersion (or surrounding known API level) is already at least as high
+   as the version checked for.
+
+   Similarly, it also looks for resources in -vNN folders, such as values-v14
+   where the version qualifier is less than or equal to the minSdkVersion,
+   where the contents should be merged into the best folder.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\drawable\ic_settings.xml:9: Warning: Very long vector path (905 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector. [VectorPath]
+        android:pathData="M19.14,12.94c0.04,-0.31 0.06,-0.63 0.06,-0.94c0,-0.31 -0.02,-0.63 -0.06,-0.94l2.03,-1.58c0.18,-0.14 0.23,-0.41 0.12,-0.61l-1.92,-3.32c-0.12,-0.22 -0.37,-0.29 -0.59,-0.22l-2.39,0.96c-0.5,-0.38 -1.03,-0.7 -1.62,-0.94L14.4,2.81c-0.04,-0.24 -0.24,-0.41 -0.48,-0.41h-3.84c-0.24,0 -0.43,0.17 -0.47,0.41L9.25,5.35C8.66,5.59 8.12,5.92 7.63,6.29L5.24,5.33c-0.22,-0.08 -0.47,0 -0.59,0.22L2.74,8.87C2.62,9.08 2.66,9.34 2.86,9.48l2.03,1.58C4.84,11.37 4.8,11.69 4.8,12s0.02,0.63 0.06,0.94l-2.03,1.58c-0.18,0.14 -0.23,0.41 -0.12,0.61l1.92,3.32c0.12,0.22 0.37,0.29 0.59,0.22l2.39,-0.96c0.5,0.38 1.03,0.7 1.62,0.94l0.36,2.54c0.05,0.24 0.24,0.41 0.48,0.41h3.84c0.24,0 0.44,-0.17 0.47,-0.41l0.36,-2.54c0.59,-0.24 1.13,-0.56 1.62,-0.94l2.39,0.96c0.22,0.08 0.47,0 0.59,-0.22l1.92,-3.32c0.12,-0.22 0.07,-0.47 -0.12,-0.61L19.14,12.94zM12,15.6c-1.98,0 -3.6,-1.62 -3.6,-3.6s1.62,-3.6 3.6,-3.6s3.6,1.62 3.6,3.6S13.98,15.6 12,15.6z"/>
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "VectorPath":
+   Using long vector paths is bad for performance. There are several ways to
+   make the pathData shorter:
+   * Using less precision
+   * Removing some minor details
+   * Using the Android Studio vector conversion tool
+   * Rasterizing the image (converting to PNG)
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:133: Warning: Set android:baselineAligned="false" on this element for better performance [DisableBaselineAlignment]
+        <LinearLayout
+         ~~~~~~~~~~~~
+
+   Explanation for issues of type "DisableBaselineAlignment":
+   When a LinearLayout is used to distribute the space proportionally between
+   nested layouts, the baseline alignment property should be turned off to
+   make the layout computation faster.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_login.xml:7: Warning: Possible overdraw: Root element paints background #0d1117 with a theme that also paints a background (inferred theme is @style/AppTheme) [Overdraw]
+    android:background="#0d1117"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main.xml:8: Warning: Possible overdraw: Root element paints background #0d1117 with a theme that also paints a background (inferred theme is @style/AppTheme) [Overdraw]
+    android:background="#0d1117"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:9: Warning: Possible overdraw: Root element paints background @color/bg_dark with a theme that also paints a background (inferred theme is @style/AppTheme) [Overdraw]
+    android:background="@color/bg_dark">
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_my.xml:7: Warning: Possible overdraw: Root element paints background #0d1117 with a theme that also paints a background (inferred theme is @style/AppTheme) [Overdraw]
+    android:background="#0d1117"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_webview.xml:5: Warning: Possible overdraw: Root element paints background #0d1117 with a theme that also paints a background (inferred theme is @style/AppTheme) [Overdraw]
+    android:background="#0d1117">
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:7: Warning: Possible overdraw: Root element paints background @color/bg_card_dark with a theme that also paints a background (inferred theme is @style/AppTheme) [Overdraw]
+    android:background="@color/bg_card_dark">
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_statistics.xml:5: Warning: Possible overdraw: Root element paints background @color/bg_card_dark with a theme that also paints a background (inferred theme is @style/AppTheme) [Overdraw]
+    android:background="@color/bg_card_dark">
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "Overdraw":
+   If you set a background drawable on a root view, then you should use a
+   custom theme where the theme background is null. Otherwise, the theme
+   background will be painted first, only to have your custom background
+   completely cover it; this is called "overdraw".
+
+   NOTE: This detector relies on figuring out which layouts are associated
+   with which activities based on scanning the Java code, and it's currently
+   doing that using an inexact pattern matching algorithm. Therefore, it can
+   incorrectly conclude which activity the layout is associated with and then
+   wrongly complain that a background-theme is hidden.
+
+   If you want your custom background on multiple pages, then you should
+   consider making a custom theme with your custom background and just using
+   that theme instead of a root element background.
+
+   Of course it's possible that your custom drawable is translucent and you
+   want it to be mixed with the background. However, you will get better
+   performance if you pre-mix the background with your drawable and use that
+   resulting image or color as a custom theme background instead.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main.xml:2: Warning: The resource R.layout.activity_main appears to be unused [UnusedResources]
+<androidx.coordinatorlayout.widget.CoordinatorLayout 
+^
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:12: Warning: The resource R.color.bg_light appears to be unused [UnusedResources]
+    <color name="bg_light">#f6f8fa</color>
+           ~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:13: Warning: The resource R.color.bg_card_light appears to be unused [UnusedResources]
+    <color name="bg_card_light">#ffffff</color>
+           ~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:14: Warning: The resource R.color.border_light appears to be unused [UnusedResources]
+    <color name="border_light">#d0d7de</color>
+           ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:15: Warning: The resource R.color.text_primary_light appears to be unused [UnusedResources]
+    <color name="text_primary_light">#1f2328</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:16: Warning: The resource R.color.text_secondary_light appears to be unused [UnusedResources]
+    <color name="text_secondary_light">#656d76</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:17: Warning: The resource R.color.text_muted_light appears to be unused [UnusedResources]
+    <color name="text_muted_light">#8c959f</color>
+           ~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:21: Warning: The resource R.color.accent_hover appears to be unused [UnusedResources]
+    <color name="accent_hover">#9171ff</color>
+           ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:23: Warning: The resource R.color.color_good_bg appears to be unused [UnusedResources]
+    <color name="color_good_bg">#1a3a2a</color>
+           ~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:25: Warning: The resource R.color.color_bad_bg appears to be unused [UnusedResources]
+    <color name="color_bad_bg">#3a1a2a</color>
+           ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:39: Warning: The resource R.color.progress_fill appears to be unused [UnusedResources]
+    <color name="progress_fill">#22c55e</color>
+           ~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:48: Warning: The resource R.color.google_bg appears to be unused [UnusedResources]
+    <color name="google_bg">#ffffff</color>
+           ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:49: Warning: The resource R.color.google_text appears to be unused [UnusedResources]
+    <color name="google_text">#3c4043</color>
+           ~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:50: Warning: The resource R.color.github_bg appears to be unused [UnusedResources]
+    <color name="github_bg">#24292f</color>
+           ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\colors.xml:51: Warning: The resource R.color.github_text appears to be unused [UnusedResources]
+    <color name="github_text">#ffffff</color>
+           ~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\dimens.xml:3: Warning: The resource R.dimen.activity_horizontal_margin appears to be unused [UnusedResources]
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\dimens.xml:4: Warning: The resource R.dimen.activity_vertical_margin appears to be unused [UnusedResources]
+    <dimen name="activity_vertical_margin">16dp</dimen>
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\drawable\edit_text_bg.xml:2: Warning: The resource R.drawable.edit_text_bg appears to be unused [UnusedResources]
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+^
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\drawable\ic_account.xml:2: Warning: The resource R.drawable.ic_account appears to be unused [UnusedResources]
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+^
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\drawable\ic_launcher.xml:1: Warning: The resource R.drawable.ic_launcher appears to be unused [UnusedResources]
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+^
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\drawable\ic_settings.xml:2: Warning: The resource R.drawable.ic_settings appears to be unused [UnusedResources]
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+^
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\drawable\ic_sound_off.xml:2: Warning: The resource R.drawable.ic_sound_off appears to be unused [UnusedResources]
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+^
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:2: Warning: The resource R.layout.item_counter appears to be unused [UnusedResources]
+<com.google.android.material.card.MaterialCardView 
+^
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\drawable\progress_bar_green.xml:2: Warning: The resource R.drawable.progress_bar_green appears to be unused [UnusedResources]
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+^
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\strings.xml:5: Warning: The resource R.string.hello_world appears to be unused [UnusedResources]
+    <string name="hello_world">Hello world!</string>
+            ~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\values\strings.xml:6: Warning: The resource R.string.action_settings appears to be unused [UnusedResources]
+    <string name="action_settings">Settings</string>
+            ~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedResources":
+   Unused resources make applications larger and slow down builds.
+
+
+   The unused resource check can ignore tests. If you want to include
+   resources that are only referenced from tests, consider packaging them in a
+   test source set instead.
+
+   You can include test sources in the unused resource check by setting the
+   system property lint.unused-resources.include-tests =true, and to exclude
+   them (usually for performance reasons), use
+   lint.unused-resources.exclude-tests =true.
+   ,
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-hdpi\ic_launcher.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-mdpi\ic_launcher.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xhdpi\ic_launcher.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xxhdpi\ic_launcher.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xxxhdpi\ic_launcher.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-hdpi\ic_launcher_round.png: Warning: Launcher icon used as round icon did not have a circular shape [IconLauncherShape]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-mdpi\ic_launcher_round.png: Warning: Launcher icon used as round icon did not have a circular shape [IconLauncherShape]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xhdpi\ic_launcher_round.png: Warning: Launcher icon used as round icon did not have a circular shape [IconLauncherShape]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xxhdpi\ic_launcher_round.png: Warning: Launcher icon used as round icon did not have a circular shape [IconLauncherShape]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xxxhdpi\ic_launcher_round.png: Warning: Launcher icon used as round icon did not have a circular shape [IconLauncherShape]
+
+   Explanation for issues of type "IconLauncherShape":
+   According to the Android Design Guide
+   (https://material.io/design/iconography/) your launcher icons should "use a
+   distinct silhouette", a "three-dimensional, front view, with a slight
+   perspective as if viewed from above, so that users perceive some depth."
+
+   The unique silhouette implies that your launcher icon should not be a
+   filled square.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-anydpi-v26\ic_launcher.xml:2: Warning: The application adaptive icon is missing a monochrome tag [MonochromeLauncherIcon]
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+^
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-anydpi-v26\ic_launcher_round.xml:2: Warning: The application adaptive roundIcon is missing a monochrome tag [MonochromeLauncherIcon]
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+^
+
+   Explanation for issues of type "MonochromeLauncherIcon":
+   If android:roundIcon and android:icon are both in your manifest, you must
+   either remove the reference to android:roundIcon if it is not needed; or,
+   supply the monochrome icon in the drawable defined by the android:roundIcon
+   and android:icon attribute.
+
+   For example, if android:roundIcon and android:icon are both in the
+   manifest, a launcher might choose to use android:roundIcon over
+   android:icon to display the adaptive app icon. Therefore, your themed
+   application iconwill not show if your monochrome attribute is not also
+   specified in android:roundIcon.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-hdpi\ic_launcher_round.png: Warning: The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png [IconDuplicates]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-mdpi\ic_launcher_round.png: Warning: The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png [IconDuplicates]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xhdpi\ic_launcher_round.png: Warning: The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png [IconDuplicates]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xxhdpi\ic_launcher_round.png: Warning: The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png [IconDuplicates]
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\mipmap-xxxhdpi\ic_launcher_round.png: Warning: The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png [IconDuplicates]
+
+   Explanation for issues of type "IconDuplicates":
+   If an icon is repeated under different names, you can consolidate and just
+   use one of the icons and delete the others to make your application
+   smaller. However, duplicated icons usually are not intentional and can
+   sometimes point to icons that were accidentally overwritten or accidentally
+   not updated.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:68: Warning: Avoid using sizes smaller than 11sp: 10sp [SmallSp]
+                        android:textSize="10sp"
+                        ~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:71: Warning: Avoid using sizes smaller than 11sp: 10sp [SmallSp]
+                android:textSize="10sp"
+                ~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SmallSp":
+   Avoid using sizes smaller than 11sp.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:9: Warning: Missing autofillHints attribute [Autofill]
+    <EditText
+     ~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:18: Warning: Missing autofillHints attribute [Autofill]
+    <EditText
+     ~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:28: Warning: Missing autofillHints attribute [Autofill]
+    <EditText
+     ~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:38: Warning: Missing autofillHints attribute [Autofill]
+    <EditText
+     ~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:48: Warning: Missing autofillHints attribute [Autofill]
+    <EditText
+     ~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:21: Warning: Missing autofillHints attribute [Autofill]
+        <EditText
+         ~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:154: Warning: Missing autofillHints attribute [Autofill]
+                <EditText
+                 ~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:185: Warning: Missing autofillHints attribute [Autofill]
+                <EditText
+                 ~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:204: Warning: Missing autofillHints attribute [Autofill]
+        <EditText
+         ~~~~~~~~
+
+   Explanation for issues of type "Autofill":
+   Specify an autofillHints attribute when targeting SDK version 26 or higher
+   or explicitly specify that the view is not important for autofill. Your app
+   can help an autofill service classify the data correctly by providing the
+   meaning of each view that could be autofillable, such as views representing
+   usernames, passwords, credit card fields, email addresses, etc.
+
+   The hints can have any value, but it is recommended to use predefined
+   values like 'username' for a username or 'creditCardNumber' for a credit
+   card number. For a list of all predefined autofill hint constants, see the
+   AUTOFILL_HINT_ constants in the View reference at
+   https://developer.android.com/reference/android/view/View.html.
+
+   You can mark a view unimportant for autofill by specifying an
+   importantForAutofill attribute on that view or a parent view. See
+   https://developer.android.com/reference/android/view/View.html#setImportant
+   ForAutofill(int).
+
+   https://developer.android.com/guide/topics/text/autofill.html
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\adapter\CounterAdapter.java:147: Warning: Custom view `ImageView` has setOnTouchListener called on it but does not override performClick [ClickableViewAccessibility]
+            ivDragHandle.setOnTouchListener((v, event) -> {
+            ^
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\adapter\CounterAdapter.java:147: Warning: onTouch lambda should call View#performClick when a click is detected [ClickableViewAccessibility]
+            ivDragHandle.setOnTouchListener((v, event) -> {
+                                            ^
+
+   Explanation for issues of type "ClickableViewAccessibility":
+   If a View that overrides onTouchEvent or uses an OnTouchListener does not
+   also implement performClick and call it when clicks are detected, the View
+   may not handle accessibility actions properly. Logic handling the click
+   actions should ideally be placed in View#performClick as some accessibility
+   services invoke performClick when a click action should occur.
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main.xml:89: Warning: Missing contentDescription attribute on image [ContentDescription]
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:363: Warning: Missing contentDescription attribute on image [ContentDescription]
+        <ImageView
+         ~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:51: Warning: Missing contentDescription attribute on image [ContentDescription]
+            <ImageView
+             ~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:203: Warning: Missing contentDescription attribute on image [ContentDescription]
+                <ImageButton
+                 ~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:212: Warning: Missing contentDescription attribute on image [ContentDescription]
+                <ImageButton
+                 ~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:223: Warning: Missing contentDescription attribute on image [ContentDescription]
+                <ImageButton
+                 ~~~~~~~~~~~
+
+   Explanation for issues of type "ContentDescription":
+   Non-textual widgets like ImageViews and ImageButtons should use the
+   contentDescription attribute to specify a textual description of the widget
+   such that screen readers and other accessibility tools can adequately
+   describe the user interface.
+
+   Note that elements in application screens that are purely decorative and do
+   not provide any content or enable a user action should not have
+   accessibility content descriptions. In this case, just suppress the lint
+   warning with a tools:ignore="ContentDescription" attribute.
+
+   Note that for text fields, you should not set both the hint and the
+   contentDescription attributes since the hint will never be shown. Just set
+   the hint.
+
+   https://developer.android.com/guide/topics/ui/accessibility/apps#special-cases
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\adapter\CounterAdapter.java:116: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+            tvStep.setText("Step: " + counter.getStep());
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\adapter\CounterAdapter.java:116: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+            tvStep.setText("Step: " + counter.getStep());
+                           ~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\adapter\CounterAdapter.java:131: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                tvTargetValue.setText(counter.getValue() + "/" + counter.getTarget());
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\adapter\CounterAdapter.java:133: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                tvTargetPercent.setText(percent + "%");
+                                        ~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\dialog\DialogStatistics.java:46: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        tvTotalCounters.setText("Total Counter: " + totalCounters);
+                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\dialog\DialogStatistics.java:46: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        tvTotalCounters.setText("Total Counter: " + totalCounters);
+                                ~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\dialog\DialogStatistics.java:47: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        tvTotalValue.setText("Total Nilai: " + totalValue);
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\dialog\DialogStatistics.java:47: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        tvTotalValue.setText("Total Nilai: " + totalValue);
+                             ~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\dialog\DialogStatistics.java:48: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        tvAverageValue.setText("Rata-rata: " + avgValue);
+                               ~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\dialog\DialogStatistics.java:48: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        tvAverageValue.setText("Rata-rata: " + avgValue);
+                               ~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\dialog\DialogStatistics.java:49: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        tvTotalIncrements.setText("Total Increment: " + totalIncrements);
+                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\dialog\DialogStatistics.java:49: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        tvTotalIncrements.setText("Total Increment: " + totalIncrements);
+                                  ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\dialog\DialogStatistics.java:50: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        tvTotalDecrements.setText("Total Decrement: " + totalDecrements);
+                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\dialog\DialogStatistics.java:50: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        tvTotalDecrements.setText("Total Decrement: " + totalDecrements);
+                                  ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:436: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        tvTotalValue.setText("Total: " + total);
+                             ~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\java\app\counter\controller\caba\MainActivity.java:436: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        tvTotalValue.setText("Total: " + total);
+                             ~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_login.xml:17: Warning: Hardcoded string "App Logo", should use @string resource [HardcodedText]
+        android:contentDescription="App Logo"/>
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_login.xml:23: Warning: Hardcoded string "Counter Board", should use @string resource [HardcodedText]
+        android:text="Counter Board"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_login.xml:32: Warning: Hardcoded string "Digital Counter App", should use @string resource [HardcodedText]
+        android:text="Digital Counter App"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_login.xml:48: Warning: Hardcoded string "Masuk dengan Google", should use @string resource [HardcodedText]
+            android:text="Masuk dengan Google"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_login.xml:66: Warning: Hardcoded string "Masuk dengan Email", should use @string resource [HardcodedText]
+            android:text="Masuk dengan Email"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_login.xml:84: Warning: Hardcoded string "Masuk dengan Nomor HP", should use @string resource [HardcodedText]
+            android:text="Masuk dengan Nomor HP"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_login.xml:103: Warning: Hardcoded string "Lewati, Gunakan Tanpa Login", should use @string resource [HardcodedText]
+            android:text="Lewati, Gunakan Tanpa Login"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_login.xml:116: Warning: Hardcoded string "versi 1.00.0001", should use @string resource [HardcodedText]
+        android:text="versi 1.00.0001"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main.xml:36: Warning: Hardcoded string "Counter Board", should use @string resource [HardcodedText]
+                    android:text="Counter Board"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main.xml:47: Warning: Hardcoded string "Account", should use @string resource [HardcodedText]
+                    android:contentDescription="Account"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main.xml:56: Warning: Hardcoded string "Settings", should use @string resource [HardcodedText]
+                    android:contentDescription="Settings"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:45: Warning: Hardcoded string "Logo", should use @string resource [HardcodedText]
+                        android:contentDescription="Logo" />
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:52: Warning: Hardcoded string "Counter Board", should use @string resource [HardcodedText]
+                        android:text="Counter Board"
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:66: Warning: Hardcoded string "Sync", should use @string resource [HardcodedText]
+                        android:text="Sync"
+                        ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:80: Warning: Hardcoded string "Account", should use @string resource [HardcodedText]
+                    android:contentDescription="Account" />
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:106: Warning: Hardcoded string "Tambah", should use @string resource [HardcodedText]
+                    android:text="Tambah"
+                    ~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:122: Warning: Hardcoded string "Catatan", should use @string resource [HardcodedText]
+                    android:text="Catatan"
+                    ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:138: Warning: Hardcoded string "Tema", should use @string resource [HardcodedText]
+                    android:text="Tema"
+                    ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:154: Warning: Hardcoded string "Suara", should use @string resource [HardcodedText]
+                    android:text="Suara"
+                    ~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:170: Warning: Hardcoded string "Font", should use @string resource [HardcodedText]
+                    android:text="Font"
+                    ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:186: Warning: Hardcoded string "Export", should use @string resource [HardcodedText]
+                    android:text="Export"
+                    ~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:202: Warning: Hardcoded string "Import", should use @string resource [HardcodedText]
+                    android:text="Import"
+                    ~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:218: Warning: Hardcoded string "Sync", should use @string resource [HardcodedText]
+                    android:text="Sync"
+                    ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:234: Warning: Hardcoded string "Reset", should use @string resource [HardcodedText]
+                    android:text="Reset"
+                    ~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:260: Warning: Hardcoded string "Judul Board", should use @string resource [HardcodedText]
+                android:hint="Judul Board"
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:285: Warning: Hardcoded string "Tampilan:", should use @string resource [HardcodedText]
+                    android:text="Tampilan:"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:302: Warning: Hardcoded string "Baris", should use @string resource [HardcodedText]
+                        android:text="Baris"
+                        ~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:310: Warning: Hardcoded string "Kolom", should use @string resource [HardcodedText]
+                        android:text="Kolom"
+                        ~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:318: Warning: Hardcoded string "Grid", should use @string resource [HardcodedText]
+                        android:text="Grid"
+                        ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:333: Warning: Hardcoded string "Total: 0", should use @string resource [HardcodedText]
+                    android:text="Total: 0"
+                    ~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:373: Warning: Hardcoded string "Belum ada counter", should use @string resource [HardcodedText]
+            android:text="Belum ada counter"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:381: Warning: Hardcoded string "Tap tombol + untuk menambah counter baru", should use @string resource [HardcodedText]
+            android:text="Tap tombol + untuk menambah counter baru"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:390: Warning: Hardcoded string "Tambah Counter", should use @string resource [HardcodedText]
+            android:text="Tambah Counter"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\activity_main_native.xml:404: Warning: Hardcoded string "Add Counter", should use @string resource [HardcodedText]
+        android:contentDescription="Add Counter"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:13: Warning: Hardcoded string "Nama Counter", should use @string resource [HardcodedText]
+        android:hint="Nama Counter"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:22: Warning: Hardcoded string "Nilai Awal", should use @string resource [HardcodedText]
+        android:hint="Nilai Awal"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:32: Warning: Hardcoded string "Step", should use @string resource [HardcodedText]
+        android:hint="Step"
+        ~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:42: Warning: Hardcoded string "Target (opsional)", should use @string resource [HardcodedText]
+        android:hint="Target (opsional)"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_add_edit_counter.xml:52: Warning: Hardcoded string "Catatan (opsional)", should use @string resource [HardcodedText]
+        android:hint="Catatan (opsional)"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_email_login.xml:12: Warning: Hardcoded string "Email", should use @string resource [HardcodedText]
+        android:hint="Email"
+        ~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_email_login.xml:26: Warning: Hardcoded string "Password", should use @string resource [HardcodedText]
+        android:hint="Password"
+        ~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_otp.xml:12: Warning: Hardcoded string "Kode OTP telah dikirim ke nomor HP Anda", should use @string resource [HardcodedText]
+        android:text="Kode OTP telah dikirim ke nomor HP Anda"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_otp.xml:20: Warning: Hardcoded string "Kode OTP (6 digit)", should use @string resource [HardcodedText]
+        android:hint="Kode OTP (6 digit)"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_phone_login.xml:12: Warning: Hardcoded string "Nomor HP (contoh: 08123456789)", should use @string resource [HardcodedText]
+        android:hint="Nomor HP (contoh: 08123456789)"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_statistics.xml:16: Warning: Hardcoded string "Statistik", should use @string resource [HardcodedText]
+            android:text="Statistik"
+            ~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_statistics.xml:26: Warning: Hardcoded string "Total Counter: 0", should use @string resource [HardcodedText]
+            android:text="Total Counter: 0"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_statistics.xml:35: Warning: Hardcoded string "Total Nilai: 0", should use @string resource [HardcodedText]
+            android:text="Total Nilai: 0"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_statistics.xml:44: Warning: Hardcoded string "Rata-rata: 0", should use @string resource [HardcodedText]
+            android:text="Rata-rata: 0"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_statistics.xml:53: Warning: Hardcoded string "Total Increment: 0", should use @string resource [HardcodedText]
+            android:text="Total Increment: 0"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\dialog_statistics.xml:62: Warning: Hardcoded string "Total Decrement: 0", should use @string resource [HardcodedText]
+            android:text="Total Decrement: 0"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:26: Warning: Hardcoded string "Nama Counter", should use @string resource [HardcodedText]
+            android:hint="Nama Counter"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:41: Warning: Hardcoded string "0", should use @string resource [HardcodedText]
+            android:text="0"
+            ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:71: Warning: Hardcoded string "0 / 100", should use @string resource [HardcodedText]
+                android:text="0 / 100"
+                ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:92: Warning: Hardcoded string "-", should use @string resource [HardcodedText]
+                android:text="-"
+                ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:123: Warning: Hardcoded string "+", should use @string resource [HardcodedText]
+                android:text="+"
+                ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:150: Warning: Hardcoded string "Step: ", should use @string resource [HardcodedText]
+                    android:text="Step: "
+                    ~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:160: Warning: Hardcoded string "1", should use @string resource [HardcodedText]
+                    android:hint="1"
+                    ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:163: Warning: Hardcoded string "1", should use @string resource [HardcodedText]
+                    android:text="1"
+                    ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:181: Warning: Hardcoded string "Target: ", should use @string resource [HardcodedText]
+                    android:text="Target: "
+                    ~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:191: Warning: Hardcoded string "0", should use @string resource [HardcodedText]
+                    android:hint="0"
+                    ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:194: Warning: Hardcoded string "0", should use @string resource [HardcodedText]
+                    android:text="0"
+                    ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter.xml:210: Warning: Hardcoded string "Catatan...", should use @string resource [HardcodedText]
+            android:hint="Catatan..."
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:43: Warning: Hardcoded string "Counter", should use @string resource [HardcodedText]
+                android:text="Counter"
+                ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:69: Warning: Hardcoded string "Category", should use @string resource [HardcodedText]
+                android:text="Category"
+                ~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:81: Warning: Hardcoded string "Drag", should use @string resource [HardcodedText]
+                android:contentDescription="Drag" />
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:92: Warning: Hardcoded string "Menu", should use @string resource [HardcodedText]
+                android:contentDescription="Menu" />
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:113: Warning: Hardcoded string "Target:", should use @string resource [HardcodedText]
+                    android:text="Target:"
+                    ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:122: Warning: Hardcoded string "0/100", should use @string resource [HardcodedText]
+                    android:text="0/100"
+                    ~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:136: Warning: Hardcoded string "0%", should use @string resource [HardcodedText]
+                    android:text="0%"
+                    ~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:160: Warning: Hardcoded string "0", should use @string resource [HardcodedText]
+            android:text="0"
+            ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:173: Warning: Hardcoded string "Step: 1", should use @string resource [HardcodedText]
+            android:text="Step: 1"
+            ~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:192: Warning: Hardcoded string "00:00:00", should use @string resource [HardcodedText]
+                android:text="00:00:00"
+                ~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:243: Warning: Hardcoded string "Notes here...", should use @string resource [HardcodedText]
+            android:text="Notes here..."
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:263: Warning: Hardcoded string "−", should use @string resource [HardcodedText]
+                android:text="−"
+                ~~~~~~~~~~~~~~~~
+C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\res\layout\item_counter_native.xml:293: Warning: Hardcoded string "+", should use @string resource [HardcodedText]
+                android:text="+"
+                ~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "HardcodedText":
+   Hardcoding text attributes directly in layout files is bad for several
+   reasons:
+
+   * When creating configuration variations (for example for landscape or
+   portrait) you have to repeat the actual text (and keep it up to date when
+   making changes)
+
+   * The application cannot be translated to other languages by just adding
+   new translations for existing string resources.
+
+   There are quickfixes to automatically extract this hardcoded string into a
+   resource lookup.
+
+0 errors, 197 warnings

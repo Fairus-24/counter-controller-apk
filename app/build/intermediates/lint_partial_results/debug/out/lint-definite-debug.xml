@@ -1,0 +1,2506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 7.4.2" type="incidents">
+
+    <incident
+        id="RedundantLabel"
+        severity="warning"
+        message="Redundant label can be removed">
+        <fix-attribute
+            description="Delete label"
+            namespace="http://schemas.android.com/apk/res/android"
+            attribute="label"/>
+        <location
+            file="${:app*debug*sourceProvider*0*manifest*0}"
+            line="36"
+            column="13"
+            startOffset="1419"
+            endLine="36"
+            endColumn="45"
+            endOffset="1451"/>
+    </incident>
+
+    <incident
+        id="VectorPath"
+        severity="warning"
+        message="Very long vector path (905 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/drawable/ic_settings.xml"
+            line="9"
+            column="27"
+            startOffset="301"
+            endLine="9"
+            endColumn="932"
+            endOffset="1206"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;App Logo&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_login.xml"
+            line="17"
+            column="9"
+            startOffset="559"
+            endLine="17"
+            endColumn="46"
+            endOffset="596"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Counter Board&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_login.xml"
+            line="23"
+            column="9"
+            startOffset="757"
+            endLine="23"
+            endColumn="37"
+            endOffset="785"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Digital Counter App&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_login.xml"
+            line="32"
+            column="9"
+            startOffset="1049"
+            endLine="32"
+            endColumn="43"
+            endOffset="1083"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Masuk dengan Google&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_login.xml"
+            line="48"
+            column="13"
+            startOffset="1624"
+            endLine="48"
+            endColumn="47"
+            endOffset="1658"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Masuk dengan Email&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_login.xml"
+            line="66"
+            column="13"
+            startOffset="2336"
+            endLine="66"
+            endColumn="46"
+            endOffset="2369"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Masuk dengan Nomor HP&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_login.xml"
+            line="84"
+            column="13"
+            startOffset="3048"
+            endLine="84"
+            endColumn="49"
+            endOffset="3084"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Lewati, Gunakan Tanpa Login&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_login.xml"
+            line="103"
+            column="13"
+            startOffset="3825"
+            endLine="103"
+            endColumn="55"
+            endOffset="3867"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;versi 1.00.0001&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_login.xml"
+            line="116"
+            column="9"
+            startOffset="4229"
+            endLine="116"
+            endColumn="39"
+            endOffset="4259"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Counter Board&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main.xml"
+            line="36"
+            column="21"
+            startOffset="1435"
+            endLine="36"
+            endColumn="49"
+            endOffset="1463"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Account&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main.xml"
+            line="47"
+            column="21"
+            startOffset="1947"
+            endLine="47"
+            endColumn="57"
+            endOffset="1983"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Settings&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main.xml"
+            line="56"
+            column="21"
+            startOffset="2369"
+            endLine="56"
+            endColumn="58"
+            endOffset="2406"/>
+    </incident>
+
+    <incident
+        id="ContentDescription"
+        severity="warning"
+        message="Missing `contentDescription` attribute on image">
+        <fix-attribute
+            description="Set contentDescription"
+            namespace="http://schemas.android.com/apk/res/android"
+            attribute="contentDescription"
+            value="TODO"
+            dot="4"
+            mark="0"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main.xml"
+            line="89"
+            column="6"
+            startOffset="3483"
+            endLine="89"
+            endColumn="75"
+            endOffset="3552"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Logo&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="45"
+            column="25"
+            startOffset="1848"
+            endLine="45"
+            endColumn="58"
+            endOffset="1881"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Counter Board&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="52"
+            column="25"
+            startOffset="2178"
+            endLine="52"
+            endColumn="53"
+            endOffset="2206"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Sync&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="66"
+            column="25"
+            startOffset="2901"
+            endLine="66"
+            endColumn="44"
+            endOffset="2920"/>
+    </incident>
+
+    <incident
+        id="SmallSp"
+        severity="warning"
+        message="Avoid using sizes smaller than `11sp`: `10sp`">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="68"
+            column="25"
+            startOffset="2999"
+            endLine="68"
+            endColumn="48"
+            endOffset="3022"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Account&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="80"
+            column="21"
+            startOffset="3562"
+            endLine="80"
+            endColumn="57"
+            endOffset="3598"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Tambah&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="106"
+            column="21"
+            startOffset="4666"
+            endLine="106"
+            endColumn="42"
+            endOffset="4687"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Catatan&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="122"
+            column="21"
+            startOffset="5451"
+            endLine="122"
+            endColumn="43"
+            endOffset="5473"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Tema&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="138"
+            column="21"
+            startOffset="6270"
+            endLine="138"
+            endColumn="40"
+            endOffset="6289"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Suara&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="154"
+            column="21"
+            startOffset="7086"
+            endLine="154"
+            endColumn="41"
+            endOffset="7106"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Font&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="170"
+            column="21"
+            startOffset="7902"
+            endLine="170"
+            endColumn="40"
+            endOffset="7921"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Export&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="186"
+            column="21"
+            startOffset="8712"
+            endLine="186"
+            endColumn="42"
+            endOffset="8733"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Import&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="202"
+            column="21"
+            startOffset="9526"
+            endLine="202"
+            endColumn="42"
+            endOffset="9547"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Sync&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="218"
+            column="21"
+            startOffset="10336"
+            endLine="218"
+            endColumn="40"
+            endOffset="10355"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Reset&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="234"
+            column="21"
+            startOffset="11151"
+            endLine="234"
+            endColumn="41"
+            endOffset="11171"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Judul Board&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="260"
+            column="17"
+            startOffset="12257"
+            endLine="260"
+            endColumn="43"
+            endOffset="12283"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Tampilan:&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="285"
+            column="21"
+            startOffset="13405"
+            endLine="285"
+            endColumn="45"
+            endOffset="13429"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Baris&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="302"
+            column="25"
+            startOffset="14306"
+            endLine="302"
+            endColumn="45"
+            endOffset="14326"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Kolom&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="310"
+            column="25"
+            startOffset="14735"
+            endLine="310"
+            endColumn="45"
+            endOffset="14755"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Grid&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="318"
+            column="25"
+            startOffset="15165"
+            endLine="318"
+            endColumn="44"
+            endOffset="15184"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Total: 0&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="333"
+            column="21"
+            startOffset="15749"
+            endLine="333"
+            endColumn="44"
+            endOffset="15772"/>
+    </incident>
+
+    <incident
+        id="ContentDescription"
+        severity="warning"
+        message="Missing `contentDescription` attribute on image">
+        <fix-attribute
+            description="Set contentDescription"
+            namespace="http://schemas.android.com/apk/res/android"
+            attribute="contentDescription"
+            value="TODO"
+            dot="4"
+            mark="0"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="363"
+            column="10"
+            startOffset="16846"
+            endLine="363"
+            endColumn="19"
+            endOffset="16855"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Belum ada counter&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="373"
+            column="13"
+            startOffset="17201"
+            endLine="373"
+            endColumn="45"
+            endOffset="17233"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Tap tombol + untuk menambah counter baru&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="381"
+            column="13"
+            startOffset="17511"
+            endLine="381"
+            endColumn="68"
+            endOffset="17566"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Tambah Counter&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="390"
+            column="13"
+            startOffset="17925"
+            endLine="390"
+            endColumn="42"
+            endOffset="17954"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Add Counter&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="404"
+            column="9"
+            startOffset="18454"
+            endLine="404"
+            endColumn="49"
+            endOffset="18494"/>
+    </incident>
+
+    <incident
+        id="Autofill"
+        severity="warning"
+        message="Missing `autofillHints` attribute">
+        <fix-alternatives>
+            <fix-attribute
+                description="Set autofillHints"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="autofillHints"
+                value=""
+                dot="0"
+                mark="0"/>
+            <fix-attribute
+                description="Set importantForAutofill=&quot;no&quot;"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="importantForAutofill"
+                value="no"/>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="9"
+            column="6"
+            startOffset="315"
+            endLine="9"
+            endColumn="14"
+            endOffset="323"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Nama Counter&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="13"
+            column="9"
+            startOffset="459"
+            endLine="13"
+            endColumn="36"
+            endOffset="486"/>
+    </incident>
+
+    <incident
+        id="Autofill"
+        severity="warning"
+        message="Missing `autofillHints` attribute">
+        <fix-alternatives>
+            <fix-attribute
+                description="Set autofillHints"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="autofillHints"
+                value=""
+                dot="0"
+                mark="0"/>
+            <fix-attribute
+                description="Set importantForAutofill=&quot;no&quot;"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="importantForAutofill"
+                value="no"/>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="18"
+            column="6"
+            startOffset="656"
+            endLine="18"
+            endColumn="14"
+            endOffset="664"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Nilai Awal&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="22"
+            column="9"
+            startOffset="800"
+            endLine="22"
+            endColumn="34"
+            endOffset="825"/>
+    </incident>
+
+    <incident
+        id="Autofill"
+        severity="warning"
+        message="Missing `autofillHints` attribute">
+        <fix-alternatives>
+            <fix-attribute
+                description="Set autofillHints"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="autofillHints"
+                value=""
+                dot="0"
+                mark="0"/>
+            <fix-attribute
+                description="Set importantForAutofill=&quot;no&quot;"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="importantForAutofill"
+                value="no"/>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="28"
+            column="6"
+            startOffset="1028"
+            endLine="28"
+            endColumn="14"
+            endOffset="1036"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Step&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="32"
+            column="9"
+            startOffset="1171"
+            endLine="32"
+            endColumn="28"
+            endOffset="1190"/>
+    </incident>
+
+    <incident
+        id="Autofill"
+        severity="warning"
+        message="Missing `autofillHints` attribute">
+        <fix-alternatives>
+            <fix-attribute
+                description="Set autofillHints"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="autofillHints"
+                value=""
+                dot="0"
+                mark="0"/>
+            <fix-attribute
+                description="Set importantForAutofill=&quot;no&quot;"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="importantForAutofill"
+                value="no"/>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="38"
+            column="6"
+            startOffset="1393"
+            endLine="38"
+            endColumn="14"
+            endOffset="1401"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Target (opsional)&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="42"
+            column="9"
+            startOffset="1538"
+            endLine="42"
+            endColumn="41"
+            endOffset="1570"/>
+    </incident>
+
+    <incident
+        id="Autofill"
+        severity="warning"
+        message="Missing `autofillHints` attribute">
+        <fix-alternatives>
+            <fix-attribute
+                description="Set autofillHints"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="autofillHints"
+                value=""
+                dot="0"
+                mark="0"/>
+            <fix-attribute
+                description="Set importantForAutofill=&quot;no&quot;"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="importantForAutofill"
+                value="no"/>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="48"
+            column="6"
+            startOffset="1773"
+            endLine="48"
+            endColumn="14"
+            endOffset="1781"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Catatan (opsional)&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="52"
+            column="9"
+            startOffset="1917"
+            endLine="52"
+            endColumn="42"
+            endOffset="1950"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Email&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_email_login.xml"
+            line="12"
+            column="9"
+            startOffset="429"
+            endLine="12"
+            endColumn="29"
+            endOffset="449"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Password&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_email_login.xml"
+            line="26"
+            column="9"
+            startOffset="1052"
+            endLine="26"
+            endColumn="32"
+            endOffset="1075"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Kode OTP telah dikirim ke nomor HP Anda&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_otp.xml"
+            line="12"
+            column="9"
+            startOffset="384"
+            endLine="12"
+            endColumn="63"
+            endOffset="438"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Kode OTP (6 digit)&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_otp.xml"
+            line="20"
+            column="9"
+            startOffset="714"
+            endLine="20"
+            endColumn="42"
+            endOffset="747"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Nomor HP (contoh: 08123456789)&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_phone_login.xml"
+            line="12"
+            column="9"
+            startOffset="429"
+            endLine="12"
+            endColumn="54"
+            endOffset="474"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Statistik&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_statistics.xml"
+            line="16"
+            column="13"
+            startOffset="601"
+            endLine="16"
+            endColumn="37"
+            endOffset="625"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Total Counter: 0&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_statistics.xml"
+            line="26"
+            column="13"
+            startOffset="998"
+            endLine="26"
+            endColumn="44"
+            endOffset="1029"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Total Nilai: 0&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_statistics.xml"
+            line="35"
+            column="13"
+            startOffset="1352"
+            endLine="35"
+            endColumn="42"
+            endOffset="1381"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Rata-rata: 0&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_statistics.xml"
+            line="44"
+            column="13"
+            startOffset="1705"
+            endLine="44"
+            endColumn="40"
+            endOffset="1732"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Total Increment: 0&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_statistics.xml"
+            line="53"
+            column="13"
+            startOffset="2059"
+            endLine="53"
+            endColumn="46"
+            endOffset="2092"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Total Decrement: 0&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_statistics.xml"
+            line="62"
+            column="13"
+            startOffset="2419"
+            endLine="62"
+            endColumn="46"
+            endOffset="2452"/>
+    </incident>
+
+    <incident
+        id="Autofill"
+        severity="warning"
+        message="Missing `autofillHints` attribute">
+        <fix-alternatives>
+            <fix-attribute
+                description="Set autofillHints"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="autofillHints"
+                value=""
+                dot="0"
+                mark="0"/>
+            <fix-attribute
+                description="Set importantForAutofill=&quot;no&quot;"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="importantForAutofill"
+                value="no"/>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="21"
+            column="10"
+            startOffset="710"
+            endLine="21"
+            endColumn="18"
+            endOffset="718"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Nama Counter&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="26"
+            column="13"
+            startOffset="931"
+            endLine="26"
+            endColumn="40"
+            endOffset="958"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="41"
+            column="13"
+            startOffset="1483"
+            endLine="41"
+            endColumn="29"
+            endOffset="1499"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;0 / 100&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="71"
+            column="17"
+            startOffset="2677"
+            endLine="71"
+            endColumn="39"
+            endOffset="2699"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;-&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="92"
+            column="17"
+            startOffset="3445"
+            endLine="92"
+            endColumn="33"
+            endOffset="3461"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;+&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="123"
+            column="17"
+            startOffset="4738"
+            endLine="123"
+            endColumn="33"
+            endOffset="4754"/>
+    </incident>
+
+    <incident
+        id="DisableBaselineAlignment"
+        severity="warning"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance">
+        <fix-attribute
+            description="Set baselineAligned=&quot;false&quot;"
+            robot="true"
+            independent="true"
+            namespace="http://schemas.android.com/apk/res/android"
+            attribute="baselineAligned"
+            value="false"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="133"
+            column="10"
+            startOffset="5048"
+            endLine="133"
+            endColumn="22"
+            endOffset="5060"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Step: &quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="150"
+            column="21"
+            startOffset="5716"
+            endLine="150"
+            endColumn="42"
+            endOffset="5737"/>
+    </incident>
+
+    <incident
+        id="Autofill"
+        severity="warning"
+        message="Missing `autofillHints` attribute">
+        <fix-alternatives>
+            <fix-attribute
+                description="Set autofillHints"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="autofillHints"
+                value=""
+                dot="0"
+                mark="0"/>
+            <fix-attribute
+                description="Set importantForAutofill=&quot;no&quot;"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="importantForAutofill"
+                value="no"/>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="154"
+            column="18"
+            startOffset="5854"
+            endLine="154"
+            endColumn="26"
+            endOffset="5862"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;1&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="160"
+            column="21"
+            startOffset="6148"
+            endLine="160"
+            endColumn="37"
+            endOffset="6164"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;1&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="163"
+            column="21"
+            startOffset="6277"
+            endLine="163"
+            endColumn="37"
+            endOffset="6293"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Target: &quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="181"
+            column="21"
+            startOffset="6944"
+            endLine="181"
+            endColumn="44"
+            endOffset="6967"/>
+    </incident>
+
+    <incident
+        id="Autofill"
+        severity="warning"
+        message="Missing `autofillHints` attribute">
+        <fix-alternatives>
+            <fix-attribute
+                description="Set autofillHints"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="autofillHints"
+                value=""
+                dot="0"
+                mark="0"/>
+            <fix-attribute
+                description="Set importantForAutofill=&quot;no&quot;"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="importantForAutofill"
+                value="no"/>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="185"
+            column="18"
+            startOffset="7084"
+            endLine="185"
+            endColumn="26"
+            endOffset="7092"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="191"
+            column="21"
+            startOffset="7380"
+            endLine="191"
+            endColumn="37"
+            endOffset="7396"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="194"
+            column="21"
+            startOffset="7509"
+            endLine="194"
+            endColumn="37"
+            endOffset="7525"/>
+    </incident>
+
+    <incident
+        id="Autofill"
+        severity="warning"
+        message="Missing `autofillHints` attribute">
+        <fix-alternatives>
+            <fix-attribute
+                description="Set autofillHints"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="autofillHints"
+                value=""
+                dot="0"
+                mark="0"/>
+            <fix-attribute
+                description="Set importantForAutofill=&quot;no&quot;"
+                namespace="http://schemas.android.com/apk/res/android"
+                attribute="importantForAutofill"
+                value="no"/>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="204"
+            column="10"
+            startOffset="7768"
+            endLine="204"
+            endColumn="18"
+            endOffset="7776"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Catatan...&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter.xml"
+            line="210"
+            column="13"
+            startOffset="8028"
+            endLine="210"
+            endColumn="38"
+            endOffset="8053"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Counter&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="43"
+            column="17"
+            startOffset="1620"
+            endLine="43"
+            endColumn="39"
+            endOffset="1642"/>
+    </incident>
+
+    <incident
+        id="ContentDescription"
+        severity="warning"
+        message="Missing `contentDescription` attribute on image">
+        <fix-attribute
+            description="Set contentDescription"
+            namespace="http://schemas.android.com/apk/res/android"
+            attribute="contentDescription"
+            value="TODO"
+            dot="4"
+            mark="0"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="51"
+            column="14"
+            startOffset="1918"
+            endLine="51"
+            endColumn="23"
+            endOffset="1927"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Category&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="69"
+            column="17"
+            startOffset="2694"
+            endLine="69"
+            endColumn="40"
+            endOffset="2717"/>
+    </incident>
+
+    <incident
+        id="SmallSp"
+        severity="warning"
+        message="Avoid using sizes smaller than `11sp`: `10sp`">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="71"
+            column="17"
+            startOffset="2799"
+            endLine="71"
+            endColumn="40"
+            endOffset="2822"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Drag&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="81"
+            column="17"
+            startOffset="3196"
+            endLine="81"
+            endColumn="50"
+            endOffset="3229"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Menu&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="92"
+            column="17"
+            startOffset="3686"
+            endLine="92"
+            endColumn="50"
+            endOffset="3719"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Target:&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="113"
+            column="21"
+            startOffset="4520"
+            endLine="113"
+            endColumn="43"
+            endOffset="4542"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;0/100&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="122"
+            column="21"
+            startOffset="4927"
+            endLine="122"
+            endColumn="41"
+            endOffset="4947"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;0%&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="136"
+            column="21"
+            startOffset="5502"
+            endLine="136"
+            endColumn="38"
+            endOffset="5519"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="160"
+            column="13"
+            startOffset="6460"
+            endLine="160"
+            endColumn="29"
+            endOffset="6476"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Step: 1&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="173"
+            column="13"
+            startOffset="6925"
+            endLine="173"
+            endColumn="35"
+            endOffset="6947"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;00:00:00&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="192"
+            column="17"
+            startOffset="7657"
+            endLine="192"
+            endColumn="40"
+            endOffset="7680"/>
+    </incident>
+
+    <incident
+        id="ContentDescription"
+        severity="warning"
+        message="Missing `contentDescription` attribute on image">
+        <fix-attribute
+            description="Set contentDescription"
+            namespace="http://schemas.android.com/apk/res/android"
+            attribute="contentDescription"
+            value="TODO"
+            dot="4"
+            mark="0"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="203"
+            column="18"
+            startOffset="8079"
+            endLine="203"
+            endColumn="29"
+            endOffset="8090"/>
+    </incident>
+
+    <incident
+        id="ContentDescription"
+        severity="warning"
+        message="Missing `contentDescription` attribute on image">
+        <fix-attribute
+            description="Set contentDescription"
+            namespace="http://schemas.android.com/apk/res/android"
+            attribute="contentDescription"
+            value="TODO"
+            dot="4"
+            mark="0"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="212"
+            column="18"
+            startOffset="8484"
+            endLine="212"
+            endColumn="29"
+            endOffset="8495"/>
+    </incident>
+
+    <incident
+        id="ContentDescription"
+        severity="warning"
+        message="Missing `contentDescription` attribute on image">
+        <fix-attribute
+            description="Set contentDescription"
+            namespace="http://schemas.android.com/apk/res/android"
+            attribute="contentDescription"
+            value="TODO"
+            dot="4"
+            mark="0"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="223"
+            column="18"
+            startOffset="8992"
+            endLine="223"
+            endColumn="29"
+            endOffset="9003"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Notes here...&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="243"
+            column="13"
+            startOffset="9832"
+            endLine="243"
+            endColumn="41"
+            endOffset="9860"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;−&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="263"
+            column="17"
+            startOffset="10671"
+            endLine="263"
+            endColumn="33"
+            endOffset="10687"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;+&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/item_counter_native.xml"
+            line="293"
+            column="17"
+            startOffset="12037"
+            endLine="293"
+            endColumn="33"
+            endOffset="12053"/>
+    </incident>
+
+    <incident
+        id="MonochromeLauncherIcon"
+        severity="warning"
+        message="The application adaptive icon is missing a monochrome tag">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-anydpi-v26/ic_launcher.xml"
+            line="2"
+            column="1"
+            startOffset="40"
+            endLine="5"
+            endColumn="17"
+            endOffset="271"/>
+    </incident>
+
+    <incident
+        id="MonochromeLauncherIcon"
+        severity="warning"
+        message="The application adaptive roundIcon is missing a monochrome tag">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-anydpi-v26/ic_launcher_round.xml"
+            line="2"
+            column="1"
+            startOffset="40"
+            endLine="5"
+            endColumn="17"
+            endOffset="271"/>
+    </incident>
+
+    <incident
+        id="ClickableViewAccessibility"
+        severity="warning"
+        message="`onTouch` lambda should call `View#performClick` when a click is detected">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/adapter/CounterAdapter.java"
+            line="147"
+            column="45"
+            startOffset="6261"
+            endLine="152"
+            endColumn="14"
+            endOffset="6454"/>
+    </incident>
+
+    <incident
+        id="NotifyDataSetChanged"
+        severity="warning"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/adapter/CounterAdapter.java"
+            line="79"
+            column="9"
+            startOffset="2605"
+            endLine="79"
+            endColumn="31"
+            endOffset="2627"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/adapter/CounterAdapter.java"
+            line="116"
+            column="28"
+            startOffset="4533"
+            endLine="116"
+            endColumn="56"
+            endOffset="4561"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="String literal in `setText` can not be translated. Use Android resources instead.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/adapter/CounterAdapter.java"
+            line="116"
+            column="28"
+            startOffset="4533"
+            endLine="116"
+            endColumn="36"
+            endOffset="4541"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/adapter/CounterAdapter.java"
+            line="131"
+            column="39"
+            startOffset="5454"
+            endLine="131"
+            endColumn="85"
+            endOffset="5500"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/adapter/CounterAdapter.java"
+            line="133"
+            column="41"
+            startOffset="5603"
+            endLine="133"
+            endColumn="54"
+            endOffset="5616"/>
+    </incident>
+
+    <incident
+        id="ClickableViewAccessibility"
+        severity="warning"
+        message="Custom view ``ImageView`` has `setOnTouchListener` called on it but does not override `performClick`">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/adapter/CounterAdapter.java"
+            line="147"
+            column="13"
+            startOffset="6229"
+            endLine="152"
+            endColumn="15"
+            endOffset="6455"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/dialog/DialogStatistics.java"
+            line="46"
+            column="33"
+            startOffset="1735"
+            endLine="46"
+            endColumn="66"
+            endOffset="1768"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="String literal in `setText` can not be translated. Use Android resources instead.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/dialog/DialogStatistics.java"
+            line="46"
+            column="33"
+            startOffset="1735"
+            endLine="46"
+            endColumn="50"
+            endOffset="1752"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/dialog/DialogStatistics.java"
+            line="47"
+            column="30"
+            startOffset="1800"
+            endLine="47"
+            endColumn="58"
+            endOffset="1828"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="String literal in `setText` can not be translated. Use Android resources instead.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/dialog/DialogStatistics.java"
+            line="47"
+            column="30"
+            startOffset="1800"
+            endLine="47"
+            endColumn="45"
+            endOffset="1815"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/dialog/DialogStatistics.java"
+            line="48"
+            column="32"
+            startOffset="1862"
+            endLine="48"
+            endColumn="56"
+            endOffset="1886"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="String literal in `setText` can not be translated. Use Android resources instead.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/dialog/DialogStatistics.java"
+            line="48"
+            column="32"
+            startOffset="1862"
+            endLine="48"
+            endColumn="45"
+            endOffset="1875"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/dialog/DialogStatistics.java"
+            line="49"
+            column="35"
+            startOffset="1923"
+            endLine="49"
+            endColumn="72"
+            endOffset="1960"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="String literal in `setText` can not be translated. Use Android resources instead.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/dialog/DialogStatistics.java"
+            line="49"
+            column="35"
+            startOffset="1923"
+            endLine="49"
+            endColumn="54"
+            endOffset="1942"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/dialog/DialogStatistics.java"
+            line="50"
+            column="35"
+            startOffset="1997"
+            endLine="50"
+            endColumn="72"
+            endOffset="2034"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="String literal in `setText` can not be translated. Use Android resources instead.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/dialog/DialogStatistics.java"
+            line="50"
+            column="35"
+            startOffset="1997"
+            endLine="50"
+            endColumn="54"
+            endOffset="2016"/>
+    </incident>
+
+    <incident
+        id="DefaultLocale"
+        severity="warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/LocalHttpServer.java"
+            line="225"
+            column="53"
+            startOffset="8085"
+            endLine="225"
+            endColumn="64"
+            endOffset="8096"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; SDK_INT is always >= 21">
+        <fix-data conditional="true"/>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/LoginActivity.java"
+            line="65"
+            column="13"
+            startOffset="2366"
+            endLine="65"
+            endColumn="66"
+            endOffset="2419"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; SDK_INT is always >= 21">
+        <fix-data conditional="true"/>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="119"
+            column="13"
+            startOffset="4756"
+            endLine="119"
+            endColumn="66"
+            endOffset="4809"/>
+    </incident>
+
+    <incident
+        id="NotifyDataSetChanged"
+        severity="warning"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="183"
+            column="13"
+            startOffset="7676"
+            endLine="183"
+            endColumn="43"
+            endOffset="7706"/>
+    </incident>
+
+    <incident
+        id="NotifyDataSetChanged"
+        severity="warning"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="198"
+            column="13"
+            startOffset="8269"
+            endLine="198"
+            endColumn="43"
+            endOffset="8299"/>
+    </incident>
+
+    <incident
+        id="NotifyDataSetChanged"
+        severity="warning"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="263"
+            column="13"
+            startOffset="11599"
+            endLine="263"
+            endColumn="43"
+            endOffset="11629"/>
+    </incident>
+
+    <incident
+        id="NotifyDataSetChanged"
+        severity="warning"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="393"
+            column="9"
+            startOffset="16951"
+            endLine="393"
+            endColumn="39"
+            endOffset="16981"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="436"
+            column="30"
+            startOffset="18687"
+            endLine="436"
+            endColumn="47"
+            endOffset="18704"/>
+    </incident>
+
+    <incident
+        id="SetTextI18n"
+        severity="warning"
+        message="String literal in `setText` can not be translated. Use Android resources instead.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="436"
+            column="30"
+            startOffset="18687"
+            endLine="436"
+            endColumn="39"
+            endOffset="18696"/>
+    </incident>
+
+    <incident
+        id="NotifyDataSetChanged"
+        severity="warning"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="442"
+            column="9"
+            startOffset="18835"
+            endLine="442"
+            endColumn="39"
+            endOffset="18865"/>
+    </incident>
+
+    <incident
+        id="NotifyDataSetChanged"
+        severity="warning"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="457"
+            column="9"
+            startOffset="19348"
+            endLine="457"
+            endColumn="39"
+            endOffset="19378"/>
+    </incident>
+
+    <incident
+        id="NotifyDataSetChanged"
+        severity="warning"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="466"
+            column="9"
+            startOffset="19552"
+            endLine="466"
+            endColumn="39"
+            endOffset="19582"/>
+    </incident>
+
+    <incident
+        id="NotifyDataSetChanged"
+        severity="warning"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/MainActivity.java"
+            line="486"
+            column="13"
+            startOffset="20232"
+            endLine="486"
+            endColumn="43"
+            endOffset="20262"/>
+    </incident>
+
+    <incident
+        id="DefaultLocale"
+        severity="warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/model/CounterModel.java"
+            line="208"
+            column="16"
+            startOffset="6841"
+            endLine="208"
+            endColumn="76"
+            endOffset="6901"/>
+    </incident>
+
+    <incident
+        id="DefaultLocale"
+        severity="warning"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/model/CounterModel.java"
+            line="215"
+            column="16"
+            startOffset="7057"
+            endLine="215"
+            endColumn="76"
+            endOffset="7117"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; SDK_INT is always >= 21">
+        <fix-data conditional="true"/>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/WebViewActivity.java"
+            line="104"
+            column="13"
+            startOffset="3644"
+            endLine="104"
+            endColumn="66"
+            endOffset="3697"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; SDK_INT is always >= 21">
+        <fix-data conditional="true"/>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/app/counter/controller/caba/WebViewActivity.java"
+            line="180"
+            column="13"
+            startOffset="6722"
+            endLine="180"
+            endColumn="66"
+            endOffset="6775"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; SDK_INT is always >= 21">
+        <fix-data conditional="true"/>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/google/android/gms/example/interstitialexample/MyActivity.java"
+            line="124"
+            column="13"
+            startOffset="4773"
+            endLine="124"
+            endColumn="66"
+            endOffset="4826"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; SDK_INT is always >= 21">
+        <fix-data conditional="true"/>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/google/android/gms/example/interstitialexample/MyActivity.java"
+            line="245"
+            column="13"
+            startOffset="9869"
+            endLine="245"
+            endColumn="66"
+            endOffset="9922"/>
+    </incident>
+
+    <incident
+        id="OldTargetApi"
+        severity="warning"
+        message="Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details.">
+        <fix-replace
+            description="Update targetSdkVersion to 36"
+            oldString="34"
+            replacement="36"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="60"
+            column="9"
+            startOffset="2274"
+            endLine="60"
+            endColumn="28"
+            endOffset="2293"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.appcompat:appcompat than 1.6.1 is available: 1.7.1">
+        <fix-replace
+            description="Change to 1.7.1"
+            family="Update versions"
+            oldString="1.6.1"
+            replacement="1.7.1"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="103"
+            column="20"
+            startOffset="3512"
+            endLine="103"
+            endColumn="56"
+            endOffset="3548"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of com.google.android.gms:play-services-ads than 22.6.0 is available: 24.9.0">
+        <fix-replace
+            description="Change to 24.9.0"
+            family="Update versions"
+            oldString="22.6.0"
+            replacement="24.9.0"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="104"
+            column="20"
+            startOffset="3569"
+            endLine="104"
+            endColumn="69"
+            endOffset="3618"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.constraintlayout:constraintlayout than 2.1.4 is available: 2.2.1">
+        <fix-replace
+            description="Change to 2.2.1"
+            family="Update versions"
+            oldString="2.1.4"
+            replacement="2.2.1"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="105"
+            column="20"
+            startOffset="3639"
+            endLine="105"
+            endColumn="70"
+            endOffset="3689"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of com.google.android.material:material than 1.9.0 is available: 1.13.0">
+        <fix-replace
+            description="Change to 1.13.0"
+            family="Update versions"
+            oldString="1.9.0"
+            replacement="1.13.0"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="108"
+            column="20"
+            startOffset="3740"
+            endLine="108"
+            endColumn="64"
+            endOffset="3784"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of com.google.firebase:firebase-bom than 32.3.1 is available: 34.8.0">
+        <fix-replace
+            description="Change to 34.8.0"
+            family="Update versions"
+            oldString="32.3.1"
+            replacement="34.8.0"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="111"
+            column="29"
+            startOffset="3899"
+            endLine="111"
+            endColumn="70"
+            endOffset="3940"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of com.google.android.gms:play-services-auth than 20.7.0 is available: 21.5.0">
+        <fix-replace
+            description="Change to 21.5.0"
+            family="Update versions"
+            oldString="20.7.0"
+            replacement="21.5.0"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="120"
+            column="20"
+            startOffset="4169"
+            endLine="120"
+            endColumn="70"
+            endOffset="4219"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.recyclerview:recyclerview than 1.3.1 is available: 1.4.0">
+        <fix-replace
+            description="Change to 1.4.0"
+            family="Update versions"
+            oldString="1.3.1"
+            replacement="1.4.0"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="123"
+            column="20"
+            startOffset="4286"
+            endLine="123"
+            endColumn="62"
+            endOffset="4328"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.preference:preference than 1.2.0 is available: 1.2.1">
+        <fix-replace
+            description="Change to 1.2.1"
+            family="Update versions"
+            oldString="1.2.0"
+            replacement="1.2.1"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="129"
+            column="20"
+            startOffset="4499"
+            endLine="129"
+            endColumn="58"
+            endOffset="4537"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of com.google.code.gson:gson than 2.10.1 is available: 2.11.0">
+        <fix-replace
+            description="Change to 2.11.0"
+            family="Update versions"
+            oldString="2.10.1"
+            replacement="2.11.0"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="132"
+            column="20"
+            startOffset="4602"
+            endLine="132"
+            endColumn="54"
+            endOffset="4636"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.activity:activity than 1.7.2 is available: 1.12.3">
+        <fix-replace
+            description="Change to 1.12.3"
+            family="Update versions"
+            oldString="1.7.2"
+            replacement="1.12.3"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="135"
+            column="20"
+            startOffset="4691"
+            endLine="135"
+            endColumn="54"
+            endOffset="4725"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.browser:browser than 1.7.0 is available: 1.9.0">
+        <fix-replace
+            description="Change to 1.9.0"
+            family="Update versions"
+            oldString="1.7.0"
+            replacement="1.9.0"/>
+        <location
+            file="${:app*projectDir}/build.gradle"
+            line="138"
+            column="20"
+            startOffset="4811"
+            endLine="138"
+            endColumn="52"
+            endOffset="4843"/>
+    </incident>
+
+    <incident
+        id="Overdraw"
+        severity="warning"
+        message="Possible overdraw: Root element paints background `#0d1117` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_login.xml"
+            line="7"
+            column="5"
+            startOffset="264"
+            endLine="7"
+            endColumn="33"
+            endOffset="292"/>
+    </incident>
+
+    <incident
+        id="Overdraw"
+        severity="warning"
+        message="Possible overdraw: Root element paints background `#0d1117` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main.xml"
+            line="8"
+            column="5"
+            startOffset="355"
+            endLine="8"
+            endColumn="33"
+            endOffset="383"/>
+    </incident>
+
+    <incident
+        id="Overdraw"
+        severity="warning"
+        message="Possible overdraw: Root element paints background `@color/bg_dark` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_main_native.xml"
+            line="9"
+            column="5"
+            startOffset="396"
+            endLine="9"
+            endColumn="40"
+            endOffset="431"/>
+    </incident>
+
+    <incident
+        id="Overdraw"
+        severity="warning"
+        message="Possible overdraw: Root element paints background `#0d1117` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_my.xml"
+            line="7"
+            column="5"
+            startOffset="288"
+            endLine="7"
+            endColumn="33"
+            endOffset="316"/>
+    </incident>
+
+    <incident
+        id="Overdraw"
+        severity="warning"
+        message="Possible overdraw: Root element paints background `#0d1117` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/activity_webview.xml"
+            line="5"
+            column="5"
+            startOffset="203"
+            endLine="5"
+            endColumn="33"
+            endOffset="231"/>
+    </incident>
+
+    <incident
+        id="Overdraw"
+        severity="warning"
+        message="Possible overdraw: Root element paints background `@color/bg_card_dark` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_add_edit_counter.xml"
+            line="7"
+            column="5"
+            startOffset="265"
+            endLine="7"
+            endColumn="45"
+            endOffset="305"/>
+    </incident>
+
+    <incident
+        id="Overdraw"
+        severity="warning"
+        message="Possible overdraw: Root element paints background `@color/bg_card_dark` with a theme that also paints a background (inferred theme is `@style/AppTheme`)">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/layout/dialog_statistics.xml"
+            line="5"
+            column="5"
+            startOffset="199"
+            endLine="5"
+            endColumn="45"
+            endOffset="239"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-hdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icon used as round icon did not have a circular shape">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-hdpi/ic_launcher_round.png"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-mdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icon used as round icon did not have a circular shape">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-mdpi/ic_launcher_round.png"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xhdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icon used as round icon did not have a circular shape">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xhdpi/ic_launcher_round.png"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxhdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icon used as round icon did not have a circular shape">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxhdpi/ic_launcher_round.png"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxxhdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icon used as round icon did not have a circular shape">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxxhdpi/ic_launcher_round.png"/>
+    </incident>
+
+    <incident
+        id="IconDuplicates"
+        severity="warning"
+        message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xhdpi/ic_launcher_round.png"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xhdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconDuplicates"
+        severity="warning"
+        message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxxhdpi/ic_launcher_round.png"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxxhdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconDuplicates"
+        severity="warning"
+        message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-hdpi/ic_launcher_round.png"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-hdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconDuplicates"
+        severity="warning"
+        message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxhdpi/ic_launcher_round.png"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-xxhdpi/ic_launcher.png"/>
+    </incident>
+
+    <incident
+        id="IconDuplicates"
+        severity="warning"
+        message="The following unrelated icon files have identical contents: ic_launcher.png, ic_launcher_round.png">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-mdpi/ic_launcher_round.png"/>
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/mipmap-mdpi/ic_launcher.png"/>
+    </incident>
+
+</incidents>

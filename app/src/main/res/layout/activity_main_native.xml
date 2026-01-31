@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark">
+
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_dark"
+        app:elevation="0dp">
+
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/bg_card_dark"
+            app:titleTextColor="@color/text_primary_dark">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- App Logo/Title -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@mipmap/ic_launcher"
+                        android:contentDescription="Logo" />
+
+                    <TextView
+                        android:id="@+id/tvAppTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Counter Board"
+                        android:textColor="@color/text_primary_dark"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <!-- Sync Status Badge -->
+                    <TextView
+                        android:id="@+id/tvSyncStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/badge_sync"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp"
+                        android:text="Sync"
+                        android:textColor="#FFFFFF"
+                        android:textSize="10sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <!-- Account Button -->
+                <ImageButton
+                    android:id="@+id/btnAccount"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_account_circle"
+                    android:tint="@color/text_secondary_dark"
+                    android:contentDescription="Account" />
+
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <!-- Second Toolbar Row with Actions -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:background="@color/bg_card_dark"
+            android:paddingVertical="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:gravity="center_vertical">
+
+                <!-- Add Counter Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAddCounter"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Tambah"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_add"
+                    app:iconSize="16dp"
+                    app:strokeColor="@color/accent"
+                    android:textColor="@color/accent"
+                    app:iconTint="@color/accent"
+                    app:cornerRadius="8dp" />
+
+                <!-- Notes Toggle -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnNotes"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Catatan"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_notes"
+                    app:iconSize="16dp"
+                    app:strokeColor="@color/border_dark"
+                    android:textColor="@color/text_secondary_dark"
+                    app:iconTint="@color/text_secondary_dark"
+                    app:cornerRadius="8dp" />
+
+                <!-- Theme Toggle -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTheme"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Tema"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_theme"
+                    app:iconSize="16dp"
+                    app:strokeColor="@color/border_dark"
+                    android:textColor="@color/text_secondary_dark"
+                    app:iconTint="@color/text_secondary_dark"
+                    app:cornerRadius="8dp" />
+
+                <!-- Sound Toggle -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSound"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Suara"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_sound_on"
+                    app:iconSize="16dp"
+                    app:strokeColor="@color/border_dark"
+                    android:textColor="@color/text_secondary_dark"
+                    app:iconTint="@color/text_secondary_dark"
+                    app:cornerRadius="8dp" />
+
+                <!-- Font Mode -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFont"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Font"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_font"
+                    app:iconSize="16dp"
+                    app:strokeColor="@color/border_dark"
+                    android:textColor="@color/text_secondary_dark"
+                    app:iconTint="@color/text_secondary_dark"
+                    app:cornerRadius="8dp" />
+
+                <!-- Export -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExport"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Export"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_export"
+                    app:iconSize="16dp"
+                    app:strokeColor="@color/border_dark"
+                    android:textColor="@color/text_secondary_dark"
+                    app:iconTint="@color/text_secondary_dark"
+                    app:cornerRadius="8dp" />
+
+                <!-- Import -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnImport"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Import"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_import"
+                    app:iconSize="16dp"
+                    app:strokeColor="@color/border_dark"
+                    android:textColor="@color/text_secondary_dark"
+                    app:iconTint="@color/text_secondary_dark"
+                    app:cornerRadius="8dp" />
+
+                <!-- Sync -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSync"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Sync"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_sync"
+                    app:iconSize="16dp"
+                    app:strokeColor="@color/border_dark"
+                    android:textColor="@color/text_secondary_dark"
+                    app:iconTint="@color/text_secondary_dark"
+                    app:cornerRadius="8dp" />
+
+                <!-- Reset All -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnResetAll"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Reset"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_reset"
+                    app:iconSize="16dp"
+                    app:strokeColor="@color/color_bad"
+                    android:textColor="@color/color_bad"
+                    app:iconTint="@color/color_bad"
+                    app:cornerRadius="8dp" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- View Mode Selector & Title Input -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:background="@color/bg_dark">
+
+            <!-- Big Title Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilBigTitle"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Judul Board"
+                app:boxStrokeColor="@color/accent"
+                app:hintTextColor="@color/text_secondary_dark">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etBigTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary_dark"
+                    android:textSize="16sp"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- View Mode Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tampilan:"
+                    android:textColor="@color/text_secondary_dark"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleViewMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewRow"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Baris"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewCol"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Kolom"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewGrid"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Grid"
+                        android:textSize="12sp" />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <!-- Total Counter -->
+                <TextView
+                    android:id="@+id/tvTotalValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total: 0"
+                    android:textColor="@color/accent"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        android:paddingBottom="120dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/item_counter_native" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/emptyState"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_empty"
+            android:alpha="0.5" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Belum ada counter"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Tap tombol + untuk menambah counter baru"
+            android:textColor="@color/text_muted_dark"
+            android:textSize="14sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddFirst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Tambah Counter"
+            app:icon="@drawable/ic_add"
+            app:cornerRadius="12dp" />
+    </LinearLayout>
+
+    <!-- FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="80dp"
+        android:src="@drawable/ic_add"
+        android:contentDescription="Add Counter"
+        app:backgroundTint="@color/accent"
+        app:tint="@android:color/white" />
+
+    <!-- Bottom Ad Container -->
+    <FrameLayout
+        android:id="@+id/adContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/bg_card_dark" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

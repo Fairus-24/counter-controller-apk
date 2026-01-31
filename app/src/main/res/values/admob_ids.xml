@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 
+    ===========================================
+    ADMOB CONFIGURATION - GANTI ID ANDA DI SINI
+    ===========================================
+    
+    Untuk mengubah Ad Unit ID:
+    1. Buka file ini
+    2. Ganti value dengan ID AdMob Anda
+    3. Build ulang APK
+    
+    CATATAN: 
+    - ID yang ada saat ini adalah TEST ID dari Google
+    - Ganti dengan ID produksi Anda sebelum publish ke Play Store
+    - Format: ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
+    -->
+    
+    <!-- AdMob Application ID - WAJIB DIGANTI untuk produksi -->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    
+    <!-- Banner Ad Unit ID -->
+    <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
+    
+    <!-- Banner Medium Rectangle Ad Unit ID -->
+    <string name="admob_banner_medium_rect_id">ca-app-pub-3940256099942544/9214589741</string>
+    
+    <!-- Interstitial Ad Unit ID -->
+    <string name="admob_interstitial_id">ca-app-pub-3940256099942544/1033173712</string>
+    
+    <!-- App Open Ad Unit ID -->
+    <string name="admob_app_open_id">ca-app-pub-3940256099942544/9257395921</string>
+    
+    <!-- Rewarded Video Ad Unit ID -->
+    <string name="admob_rewarded_id">ca-app-pub-3940256099942544/5224354917</string>
+</resources>

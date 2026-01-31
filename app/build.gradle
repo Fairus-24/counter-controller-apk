@@ -1,25 +1,139 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
+// Auto-increment version on every build
+def versionPropsFile = file('version.properties')
+def versionMajor = 1
+def versionMinor = 0
+def versionBuild = 1
+
+if (versionPropsFile.canRead()) {
+    def Properties versionProps = new Properties()
+    versionProps.load(new FileInputStream(versionPropsFile))
+    versionMajor = versionProps['VERSION_MAJOR'].toInteger()
+    versionMinor = versionProps['VERSION_MINOR'].toInteger()
+    versionBuild = versionProps['VERSION_BUILD'].toInteger()
+}
+
+// Auto increment build number on assembleDebug or assembleRelease
+ext.autoIncrementVersion = {
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
+        
+        // Auto increment minor version every 100 builds
+        if (versionBuild > 9999) {
+            versionBuild = 1
+            versionMinor++
+        }
+        // Auto increment major version every 100 minor
+        if (versionMinor > 99) {
+            versionMinor = 0
+            versionMajor++
+        }
+        
+        versionProps['VERSION_MAJOR'] = versionMajor.toString()
+        versionProps['VERSION_MINOR'] = versionMinor.toString()
+        versionProps['VERSION_BUILD'] = versionBuild.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+    } else {
+        def Properties versionProps = new Properties()
+        versionProps['VERSION_MAJOR'] = versionMajor.toString()
+        versionProps['VERSION_MINOR'] = versionMinor.toString()
+        versionProps['VERSION_BUILD'] = versionBuild.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+    }
+}
+
+// Format: "0.00.0000"
+def versionNameFormatted = String.format("%d.%02d.%04d", versionMajor, versionMinor, versionBuild)
+def versionCodeComputed = versionMajor * 1000000 + versionMinor * 10000 + versionBuild
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 34
+    namespace "app.counter.controller.caba"
+    
     defaultConfig {
-        applicationId "com.google.android.gms.example.interstitialexample"
-        minSdkVersion 14
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        applicationId "app.counter.controller.caba"
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode versionCodeComputed
+        versionName versionNameFormatted
+        
+        // Add version to BuildConfig for use in app
+        buildConfigField "String", "VERSION_DISPLAY", "\"versi ${versionNameFormatted}\""
     }
+    
+    signingConfigs {
+        release {
+            storeFile file('counters-keystore.jks')
+            storePassword 'counterboard@123'
+            keyAlias 'counterboard'
+            keyPassword 'counterboard@123'
+        }
+    }
+    
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lint {
+        disable 'MissingPermission', 'NewApi', 'UseAppTint'
+    }
+}
+
+// Auto increment version before build
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(':app:assembleDebug') || taskGraph.hasTask(':app:assembleRelease')) {
+        autoIncrementVersion()
     }
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.google.android.gms:play-services-ads:15.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    
+    // Material Design
+    implementation 'com.google.android.material:material:1.9.0'
+    
+    // Firebase BOM (Bill of Materials) - versi yang compatible dengan SDK 33
+    implementation platform('com.google.firebase:firebase-bom:32.3.1')
+    
+    // Firebase Auth
+    implementation 'com.google.firebase:firebase-auth'
+    
+    // Firebase Firestore
+    implementation 'com.google.firebase:firebase-firestore'
+    
+    // Google Sign-In
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    
+    // RecyclerView untuk list counter
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
+    
+    // CardView untuk counter cards
+    implementation 'androidx.cardview:cardview:1.0.0'
+    
+    // SharedPreferences untuk local storage
+    implementation 'androidx.preference:preference:1.2.0'
+    
+    // Gson untuk JSON serialization
+    implementation 'com.google.code.gson:gson:2.10.1'
+    
+    // Activity Result API
+    implementation 'androidx.activity:activity:1.7.2'
+    
+    // Chrome Custom Tabs for secure OAuth/Google Sign-In
+    implementation 'androidx.browser:browser:1.7.0'
 }

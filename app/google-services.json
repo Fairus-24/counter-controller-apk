@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "98155640507",
+    "project_id": "counter-controller",
+    "storage_bucket": "counter-controller.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98155640507:android:590260357ce3dc31691b9e",
+        "android_client_info": {
+          "package_name": "app.counter.controller.caba"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "98155640507-8mj09gso25lc8qr8peujqegbe0b35bbf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_dwTKyawF6GQ-Jz6Um1M8wViunKy3WYo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "98155640507-8mj09gso25lc8qr8peujqegbe0b35bbf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

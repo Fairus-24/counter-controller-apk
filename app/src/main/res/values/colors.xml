@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Theme Colors (Default) -->
+    <color name="bg_dark">#0d1117</color>
+    <color name="bg_card_dark">#161b22</color>
+    <color name="border_dark">#30363d</color>
+    <color name="text_primary_dark">#e6edf3</color>
+    <color name="text_secondary_dark">#8b949e</color>
+    <color name="text_muted_dark">#6e7681</color>
+    
+    <!-- Light Theme Colors -->
+    <color name="bg_light">#f6f8fa</color>
+    <color name="bg_card_light">#ffffff</color>
+    <color name="border_light">#d0d7de</color>
+    <color name="text_primary_light">#1f2328</color>
+    <color name="text_secondary_light">#656d76</color>
+    <color name="text_muted_light">#8c959f</color>
+    
+    <!-- Accent Colors -->
+    <color name="accent">#7c5cff</color>
+    <color name="accent_hover">#9171ff</color>
+    <color name="color_good">#22c55e</color>
+    <color name="color_good_bg">#1a3a2a</color>
+    <color name="color_bad">#fb7185</color>
+    <color name="color_bad_bg">#3a1a2a</color>
+    
+    <!-- Counter Color Tags -->
+    <color name="tag_red">#ef4444</color>
+    <color name="tag_orange">#f97316</color>
+    <color name="tag_yellow">#eab308</color>
+    <color name="tag_green">#22c55e</color>
+    <color name="tag_blue">#3b82f6</color>
+    <color name="tag_purple">#a855f7</color>
+    <color name="tag_pink">#ec4899</color>
+    <color name="tag_gray">#6b7280</color>
+    
+    <!-- Progress Colors -->
+    <color name="progress_bg">#1e293b</color>
+    <color name="progress_fill">#22c55e</color>
+    
+    <!-- Button Colors -->
+    <color name="btn_plus_bg">#1a3a2a</color>
+    <color name="btn_plus_border">#22c55e66</color>
+    <color name="btn_minus_bg">#3a1a2a</color>
+    <color name="btn_minus_border">#fb718566</color>
+    
+    <!-- OAuth Provider Colors -->
+    <color name="google_bg">#ffffff</color>
+    <color name="google_text">#3c4043</color>
+    <color name="github_bg">#24292f</color>
+    <color name="github_text">#ffffff</color>
+</resources>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_card_dark">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvStatsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Statistik"
+            android:textColor="@color/text_primary_dark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/tvTotalCounters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Counter: 0"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/tvTotalValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Nilai: 0"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/tvAverageValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rata-rata: 0"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/tvTotalIncrements"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Increment: 0"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/tvTotalDecrements"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Decrement: 0"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp" />
+
+        <!-- History, dsb bisa ditambah di sini -->
+
+    </LinearLayout>
+</ScrollView>

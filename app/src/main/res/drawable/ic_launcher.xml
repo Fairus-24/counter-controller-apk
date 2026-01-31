@@ -1,0 +1,50 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    
+    <!-- Background -->
+    <path
+        android:pathData="M4,4h40v40h-40z"
+        android:fillColor="#0d1117"/>
+    
+    <!-- Round corners simulation -->
+    <path
+        android:pathData="M8,4h32a4,4 0,0 1,4 4v32a4,4 0,0 1,-4 4h-32a4,4 0,0 1,-4 -4v-32a4,4 0,0 1,4 -4z"
+        android:fillColor="#0d1117"/>
+    
+    <!-- Grid pattern (3x3) -->
+    <!-- Row 1 -->
+    <path
+        android:pathData="M9,9h8v8h-8z"
+        android:fillColor="#7c5cff"/>
+    <path
+        android:pathData="M20,9h8v8h-8z"
+        android:fillColor="#7c5cff"/>
+    <path
+        android:pathData="M31,9h8v8h-8z"
+        android:fillColor="#7c5cff"/>
+    
+    <!-- Row 2 -->
+    <path
+        android:pathData="M9,20h8v8h-8z"
+        android:fillColor="#7c5cff"/>
+    <path
+        android:pathData="M20,20h8v8h-8z"
+        android:fillColor="#7c5cff"/>
+    <path
+        android:pathData="M31,20h8v8h-8z"
+        android:fillColor="#7c5cff"/>
+    
+    <!-- Row 3 -->
+    <path
+        android:pathData="M9,31h8v8h-8z"
+        android:fillColor="#7c5cff"/>
+    <path
+        android:pathData="M20,31h8v8h-8z"
+        android:fillColor="#7c5cff"/>
+    <path
+        android:pathData="M31,31h8v8h-8z"
+        android:fillColor="#7c5cff"/>
+</vector>

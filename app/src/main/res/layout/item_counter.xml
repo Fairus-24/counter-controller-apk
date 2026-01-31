@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardBackgroundColor="#161b22"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:strokeColor="#30363d"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <EditText
+            android:id="@+id/etTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="Nama Counter"
+            android:textColor="#ffffff"
+            android:textColorHint="#8b949e"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:inputType="text"
+            android:maxLines="1"/>
+
+        <!-- Counter Display -->
+        <TextView
+            android:id="@+id/tvCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#58a6ff"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"/>
+
+        <!-- Target Progress -->
+        <LinearLayout
+            android:id="@+id/layoutTarget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/progressTarget"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/progress_bar_green"/>
+
+            <TextView
+                android:id="@+id/tvTargetStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="0 / 100"
+                android:textColor="#8b949e"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+        <!-- Control Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- Decrease Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDecrease"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="-"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                app:backgroundTint="#da3633"
+                app:cornerRadius="28dp"
+                app:rippleColor="#ffffff"/>
+
+            <!-- Reset Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReset"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:icon="@drawable/ic_reset"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="20dp"
+                app:iconTint="#ffffff"
+                app:backgroundTint="#30363d"
+                app:cornerRadius="20dp"/>
+
+            <!-- Increase Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnIncrease"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="+"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                app:backgroundTint="#238636"
+                app:cornerRadius="28dp"
+                app:rippleColor="#ffffff"/>
+
+        </LinearLayout>
+
+        <!-- Step & Target Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <!-- Step -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Step: "
+                    android:textColor="#8b949e"
+                    android:textSize="12sp"/>
+
+                <EditText
+                    android:id="@+id/etStep"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_bg"
+                    android:gravity="center"
+                    android:hint="1"
+                    android:inputType="number"
+                    android:padding="4dp"
+                    android:text="1"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#8b949e"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+
+            <!-- Target -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical|end">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Target: "
+                    android:textColor="#8b949e"
+                    android:textSize="12sp"/>
+
+                <EditText
+                    android:id="@+id/etTarget"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_bg"
+                    android:gravity="center"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:padding="4dp"
+                    android:text="0"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#8b949e"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Note -->
+        <EditText
+            android:id="@+id/etNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edit_text_bg"
+            android:hint="Catatan..."
+            android:inputType="textMultiLine"
+            android:maxLines="2"
+            android:padding="8dp"
+            android:textColor="#c9d1d9"
+            android:textColorHint="#6e7681"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
