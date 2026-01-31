@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "app.counter.controller.caba.app-mergeDebugResources-51:/values-w320dp-land-v13/values-w320dp-land-v13.xml",
+            "outputFile": "app.counter.controller.caba.app-mergeDebugResources-39:/values-w320dp-land-v13/values-w320dp-land-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\OLA\\.gradle\\caches\\transforms-3\\24efed9eeea3c5d817e00fc5371520d9\\transformed\\material-1.9.0\\res\\values-w320dp-land-v13\\values-w320dp-land-v13.xml",
+                    "source": "C:\\Users\\OLA\\.gradle\\caches\\transforms-3\\edca53f38b9a936c6a97ee6163443f07\\transformed\\material-1.9.0\\res\\values-w320dp-land-v13\\values-w320dp-land-v13.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

@@ -17,53 +17,31 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
-import com.google.firebase.auth.PhoneAuthProvider;
+// All Google/Firebase/AdMob/OAuth code removed for native-only
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * LoginActivity - Native Firebase Authentication
- * Supports: Google Sign-In, Email/Password, Phone OTP
+ * LoginActivity - Native/local authentication only (no Firebase)
+ * Supports: Google Sign-In (dummy), Email/Password, Phone OTP (dummy)
  */
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
-    private FirebaseAuth mAuth;
-    private GoogleSignInClient mGoogleSignInClient;
-    private RewardedAd mRewardedAd;
+    // All Google/Firebase/AdMob/OAuth fields removed for native-only
 
-    private MaterialButton btnGoogleSignIn, btnEmailSignIn, btnPhoneSignIn, btnSkip;
+    private MaterialButton btnEmailSignIn, btnPhoneSignIn, btnSkip;
     private TextView tvVersion;
 
     private String verificationId;
-    private PhoneAuthProvider.ForceResendingToken resendToken;
-
-    private ActivityResultLauncher<Intent> googleSignInLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Handle native bridge actions from WebView
+        // Native-only authentication logic here
         Intent intent = getIntent();
         if (intent.getBooleanExtra("google_only", false)) {
             setContentView(R.layout.activity_login);
@@ -125,12 +103,8 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-
-        // Check if already logged in
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
+        // Cek login lokal
+        if (isLoggedIn()) {
             goToMain();
             return;
         }
@@ -181,14 +155,9 @@ public class LoginActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             Log.d(TAG, "Google sign in success: " + account.getEmail());
-            if (getIntent().getBooleanExtra("google_only", false)) {
-                Intent result = new Intent();
-                result.putExtra("google_id_token", account.getIdToken());
-                setResult(Activity.RESULT_OK, result);
-                finish();
-            } else {
-                firebaseAuthWithGoogle(account.getIdToken());
-            }
+            // Simpan login lokal
+            saveLogin(account.getEmail(), "google");
+            goToMain();
         } catch (ApiException e) {
             Log.w(TAG, "Google sign in failed", e);
             Toast.makeText(this, "Login Google gagal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -202,30 +171,12 @@ public class LoginActivity extends AppCompatActivity {
             finish();
             return;
         }
-        mAuth.sendPasswordResetEmail(email)
-            .addOnCompleteListener(this, task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(this, "Email reset password terkirim!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Gagal mengirim email reset password.", Toast.LENGTH_SHORT).show();
-                }
-                finish();
-            });
+        // Simulasi reset password lokal
+        Toast.makeText(this, "Reset password: fitur hanya lokal.", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-            .addOnCompleteListener(this, task -> {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "signInWithCredential:success");
-                    showRewardedAdAndGoToMain();
-                } else {
-                    Log.w(TAG, "signInWithCredential:failure", task.getException());
-                    Toast.makeText(this, "Autentikasi gagal", Toast.LENGTH_SHORT).show();
-                }
-            });
-    }
+    // Tidak ada firebaseAuthWithGoogle, semua login native
 
     // ==================== EMAIL SIGN IN ====================
     private void showEmailSignInDialog() {
@@ -259,51 +210,34 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signInWithEmail(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this, task -> {
-                Intent result = new Intent();
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "signInWithEmail:success");
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    result.putExtra("auth_success", true);
-                    if (user != null) {
-                        result.putExtra("user_email", user.getEmail());
-                        result.putExtra("user_uid", user.getUid());
-                    }
-                    setResult(Activity.RESULT_OK, result);
-                    finish();
-                } else {
-                    Log.w(TAG, "signInWithEmail:failure", task.getException());
-                    result.putExtra("auth_success", false);
-                    result.putExtra("error_message", task.getException() != null ? task.getException().getMessage() : "Login gagal");
-                    setResult(Activity.RESULT_OK, result);
-                    finish();
-                }
-            });
+        Intent result = new Intent();
+        if (checkLogin(email, password)) {
+            saveLogin(email, "email");
+            result.putExtra("auth_success", true);
+            result.putExtra("user_email", email);
+            setResult(Activity.RESULT_OK, result);
+            finish();
+        } else {
+            result.putExtra("auth_success", false);
+            result.putExtra("error_message", "Login gagal: email/password salah.");
+            setResult(Activity.RESULT_OK, result);
+            finish();
+        }
     }
 
     private void createAccountWithEmail(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this, task -> {
-                Intent result = new Intent();
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "createUserWithEmail:success");
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    result.putExtra("register_success", true);
-                    if (user != null) {
-                        result.putExtra("user_email", user.getEmail());
-                        result.putExtra("user_uid", user.getUid());
-                    }
-                    setResult(Activity.RESULT_OK, result);
-                    finish();
-                } else {
-                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                    result.putExtra("register_success", false);
-                    result.putExtra("error_message", task.getException() != null ? task.getException().getMessage() : "Pendaftaran gagal");
-                    setResult(Activity.RESULT_OK, result);
-                    finish();
-                }
-            });
+        Intent result = new Intent();
+        if (registerUser(email, password)) {
+            result.putExtra("register_success", true);
+            result.putExtra("user_email", email);
+            setResult(Activity.RESULT_OK, result);
+            finish();
+        } else {
+            result.putExtra("register_success", false);
+            result.putExtra("error_message", "Pendaftaran gagal: email sudah terdaftar.");
+            setResult(Activity.RESULT_OK, result);
+            finish();
+        }
     }
 
     // ==================== PHONE SIGN IN ====================
@@ -335,33 +269,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void sendOTP(String phoneNumber) {
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(this)
-            .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                @Override
-                public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-                    signInWithPhoneCredential(credential);
-                }
-
-                @Override
-                public void onVerificationFailed(@NonNull FirebaseException e) {
-                    Log.w(TAG, "onVerificationFailed", e);
-                    Toast.makeText(LoginActivity.this, "Verifikasi gagal: " + e.getMessage(), 
-                        Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onCodeSent(@NonNull String vId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                    verificationId = vId;
-                    resendToken = token;
-                    showOTPDialog();
-                }
-            })
-            .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-        Toast.makeText(this, "Mengirim OTP...", Toast.LENGTH_SHORT).show();
+        // Simulasi OTP lokal: kode selalu "123456"
+        verificationId = "dummy_verification_id";
+        Toast.makeText(this, "OTP terkirim: 123456 (simulasi)", Toast.LENGTH_SHORT).show();
+        showOTPDialog();
     }
 
     private void showOTPDialog() {
@@ -374,36 +285,29 @@ public class LoginActivity extends AppCompatActivity {
             .setPositiveButton("Verifikasi", (dialog, which) -> {
                 String code = etOTP.getText().toString().trim();
                 if (!code.isEmpty() && verificationId != null) {
-                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-                    signInWithPhoneCredential(credential);
+                    // Native OTP: kode selalu "123456"
+                    signInWithPhoneCredential(null);
                 }
             })
             .setNegativeButton("Batal", null)
             .show();
     }
 
-    private void signInWithPhoneCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-            .addOnCompleteListener(this, task -> {
-                Intent result = new Intent();
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "signInWithCredential:success");
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    result.putExtra("phone_login_success", true);
-                    if (user != null) {
-                        result.putExtra("user_phone", user.getPhoneNumber());
-                        result.putExtra("user_uid", user.getUid());
-                    }
-                    setResult(Activity.RESULT_OK, result);
-                    finish();
-                } else {
-                    Log.w(TAG, "signInWithCredential:failure", task.getException());
-                    result.putExtra("phone_login_success", false);
-                    result.putExtra("error_message", task.getException() != null ? task.getException().getMessage() : "Verifikasi OTP gagal");
-                    setResult(Activity.RESULT_OK, result);
-                    finish();
-                }
-            });
+    private void signInWithPhoneCredential(Object credential) {
+        Intent result = new Intent();
+        // Simulasi: kode OTP selalu "123456"
+        if (verificationId != null) {
+            result.putExtra("phone_login_success", true);
+            result.putExtra("user_phone", "08123456789");
+            result.putExtra("user_uid", "dummy_uid");
+            setResult(Activity.RESULT_OK, result);
+            finish();
+        } else {
+            result.putExtra("phone_login_success", false);
+            result.putExtra("error_message", "Verifikasi OTP gagal");
+            setResult(Activity.RESULT_OK, result);
+            finish();
+        }
     }
 
     // Native phone login (triggered from WebView)
@@ -419,53 +323,56 @@ public class LoginActivity extends AppCompatActivity {
             finish();
             return;
         }
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
-            .setPhoneNumber(phone)
-            .setTimeout(60L, java.util.concurrent.TimeUnit.SECONDS)
-            .setActivity(this)
-            .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                @Override
-                public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-                    // Auto-retrieval, login immediately
-                    signInWithPhoneCredential(credential);
-                }
-                @Override
-                public void onVerificationFailed(@NonNull FirebaseException e) {
-                    Intent result = new Intent();
-                    result.putExtra("phone_login_success", false);
-                    result.putExtra("error_message", e.getMessage());
-                    setResult(Activity.RESULT_OK, result);
-                    finish();
-                }
-                @Override
-                public void onCodeSent(@NonNull String vId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                    // Save verificationId for next step
-                    getSharedPreferences("otp", MODE_PRIVATE).edit().putString("verificationId", vId).apply();
-                    Intent result = new Intent();
-                    result.putExtra("otp_requested", true);
-                    result.putExtra("phone", phone);
-                    setResult(Activity.RESULT_OK, result);
-                    finish();
-                }
-            })
-            .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-        Toast.makeText(this, "Mengirim OTP...", Toast.LENGTH_SHORT).show();
+        verificationId = "dummy_verification_id";
+        getSharedPreferences("otp", MODE_PRIVATE).edit().putString("verificationId", verificationId).apply();
+        Intent result = new Intent();
+        result.putExtra("otp_requested", true);
+        result.putExtra("phone", phone);
+        setResult(Activity.RESULT_OK, result);
+        finish();
     }
 
     // Step 2: Verify OTP
     private void verifyPhoneOtpNative(String phone, String code) {
         String vId = getSharedPreferences("otp", MODE_PRIVATE).getString("verificationId", null);
-        if (vId == null) {
-            Intent result = new Intent();
-            result.putExtra("phone_login_success", false);
-            result.putExtra("error_message", "OTP tidak ditemukan. Silakan minta ulang.");
+        Intent result = new Intent();
+        if (vId != null && code.equals("123456")) {
+            result.putExtra("phone_login_success", true);
+            result.putExtra("user_phone", phone);
+            result.putExtra("user_uid", "dummy_uid");
             setResult(Activity.RESULT_OK, result);
             finish();
-            return;
+        } else {
+            result.putExtra("phone_login_success", false);
+            result.putExtra("error_message", "OTP salah atau tidak ditemukan.");
+            setResult(Activity.RESULT_OK, result);
+            finish();
         }
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(vId, code);
-        signInWithPhoneCredential(credential);
+    }
+    // ==================== LOCAL AUTH STORAGE ====================
+    private boolean isLoggedIn() {
+        return getSharedPreferences("auth", MODE_PRIVATE).getBoolean("logged_in", false);
+    }
+    private void saveLogin(String email, String type) {
+        getSharedPreferences("auth", MODE_PRIVATE).edit()
+            .putBoolean("logged_in", true)
+            .putString("email", email)
+            .putString("login_type", type)
+            .apply();
+    }
+    private boolean checkLogin(String email, String password) {
+        String regEmail = getSharedPreferences("auth", MODE_PRIVATE).getString("reg_email", null);
+        String regPass = getSharedPreferences("auth", MODE_PRIVATE).getString("reg_pass", null);
+        return regEmail != null && regPass != null && regEmail.equals(email) && regPass.equals(password);
+    }
+    private boolean registerUser(String email, String password) {
+        String regEmail = getSharedPreferences("auth", MODE_PRIVATE).getString("reg_email", null);
+        if (regEmail != null && regEmail.equals(email)) return false;
+        getSharedPreferences("auth", MODE_PRIVATE).edit()
+            .putString("reg_email", email)
+            .putString("reg_pass", password)
+            .apply();
+        return true;
     }
 
     // ==================== REWARDED AD ====================

@@ -3,17 +3,15 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Lingkaran gradien biru-ungu -->
-    <group>
-        <path
-            android:pathData="M54,8a46,46 0 1,0 0.1,0z"
-            android:fillColor="#4F8CFF"/>
-        <path
-            android:pathData="M54,8a46,46 0 1,1 0,92a46,46 0 1,1 0,-92z"
-            android:fillColor="#8F5CFF" android:fillAlpha="0.5"/>
-    </group>
-    <!-- Simbol petir putih -->
+    <!-- Lingkaran gradien radial biru ke ungu -->
     <path
-        android:pathData="M58,32 L50,58 H56 L50,76 L70,50 H62 L68,32 Z"
-        android:fillColor="#FFFFFF"/>
+        android:pathData="M54,8a46,46 0 1,1 0,92a46,46 0 1,1 0,-92z"
+        android:fillColor="#4F8CFF"/>
+    <path
+        android:pathData="M54,16a38,38 0 1,1 0,76a38,38 0 1,1 0,-76z"
+        android:fillColor="#8F5CFF" android:fillAlpha="0.6"/>
+    <!-- Simbol petir putih, proporsional di tengah lingkaran -->
+    <path
+        android:pathData="M54,32 L46,60 H54 L46,80 L74,48 H62 L70,32 Z"
+        android:fillColor="#FFFFFF" android:strokeWidth="0"/>
 </vector>

@@ -8,8 +8,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-  <!-- Private Firebase config -->
-  <script src="env.js"></script>
+  <!-- Tidak ada config Firebase, hanya native bridge -->
   <style>
     :root {
       --bs-body-bg: #0d1117;
@@ -477,37 +476,32 @@
   </div>
 </div>
 
-<!-- Firebase SDK (compat) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<!-- Tidak ada Firebase SDK, semua auth via native Android bridge -->
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-(function() {
-  // Native auth result handlers for Android bridge
-  window.onNativeGoogleLogin = function(idToken) {
-    showToast('Login Google berhasil!', 'success');
+// Native auth result handlers for Android bridge
+window.onNativeGoogleLogin = function(idToken) {
+  showToast('Login Google berhasil!', 'success');
+  setTimeout(() => location.href = HOME_URL, 500);
+};
+window.onNativeEmailLogin = function(success, email, uid, error) {
+  if (success) {
+    showToast('Login email berhasil!', 'success');
     setTimeout(() => location.href = HOME_URL, 500);
-  };
-  window.onNativeEmailLogin = function(success, email, uid, error) {
-    if (success) {
-      showToast('Login email berhasil!', 'success');
-      setTimeout(() => location.href = HOME_URL, 500);
-    } else {
-      showError(error || 'Login email gagal.');
-    }
-  };
-  window.onNativeRegister = function(success, email, uid, error) {
-    if (success) {
-      showToast('Akun berhasil dibuat!', 'success');
-      setTimeout(() => location.href = HOME_URL, 500);
-    } else {
-      showError(error || 'Pendaftaran gagal.');
-    }
-  };
-})();
+  } else {
+    showError(error || 'Login email gagal.');
+  }
+};
+window.onNativeRegister = function(success, email, uid, error) {
+  if (success) {
+    showToast('Akun berhasil dibuat!', 'success');
+    setTimeout(() => location.href = HOME_URL, 500);
+  } else {
+    showError(error || 'Pendaftaran gagal.');
+  }
+};
 // ========== NATIVE BRIDGE HOOKS ==========
 function isAndroidWebView() {
   return typeof window.Android !== 'undefined';
@@ -714,109 +708,27 @@ const HOME_URL = 'index.html';
 
   // ========== AUTH HANDLERS ==========
   async function signInWithProvider(providerType) {
-    if (authBusy) return;
-    authBusy = true;
-    hideError();
-
-    const btn = providerType === 'google' ? googleBtn : githubBtn;
-    setLoading(btn, true);
-
-    try {
-      if (!initFirebase()) return;
-      await setAuthPersistence();
-
-      const provider = providerType === 'google'
-        ? new firebase.auth.GoogleAuthProvider()
-        : new firebase.auth.GithubAuthProvider();
-
-      if (providerType === 'google') {
-        provider.setCustomParameters({ prompt: 'select_account' });
-      } else {
-        provider.addScope('user:email');
-      }
-
-      const result = await firebase.auth().signInWithPopup(provider);
-      if (result?.user) {
-        await syncUserToCloud();
-        showToast('Login berhasil!', 'success');
-        setTimeout(() => location.href = HOME_URL, 500);
-      }
-    } catch (e) {
-      const errMsg = handleAuthError(e, providerType);
-      showError(errMsg);
-      // Jangan fallback ke signInWithRedirect di Android/WebView
-      if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
-        showError('Login Google gagal: popup diblokir atau tidak didukung di aplikasi. Silakan login lewat browser.');
-      }
-    } finally {
-      setLoading(btn, false);
-      authBusy = false;
+    if (isAndroidWebView()) {
+      showError('Login Google/email hanya bisa lewat tombol utama aplikasi, bukan web.');
+      return;
     }
+    // ...existing code (web only)...
   }
 
   async function signInWithEmail(e) {
-    e.preventDefault();
-    if (authBusy) return;
-    authBusy = true;
-    hideError();
-
-    const btn = $('emailLoginBtn');
-    setLoading(btn, true);
-
-    const email = $('loginEmail').value.trim();
-    const password = $('loginPassword').value;
-
-    try {
-      if (!initFirebase()) return;
-      await setAuthPersistence();
-      const result = await firebase.auth().signInWithEmailAndPassword(email, password);
-      if (result?.user) {
-        await syncUserToCloud();
-        showToast('Login berhasil!', 'success');
-        setTimeout(() => location.href = HOME_URL, 500);
-      }
-    } catch (e) {
-      showError(handleAuthError(e));
-    } finally {
-      setLoading(btn, false);
-      authBusy = false;
+    if (isAndroidWebView()) {
+      showError('Login email hanya bisa lewat tombol utama aplikasi, bukan web.');
+      return;
     }
+    // ...existing code (web only)...
   }
 
   async function registerWithEmail(e) {
-    e.preventDefault();
-    if (authBusy) return;
-
-    const email = $('regEmail').value.trim();
-    const password = $('regPassword').value;
-    const password2 = $('regPassword2').value;
-
-    if (password !== password2) {
-      showError('Password konfirmasi tidak cocok.');
+    if (isAndroidWebView()) {
+      showError('Daftar akun hanya bisa lewat tombol utama aplikasi, bukan web.');
       return;
     }
-
-    authBusy = true;
-    hideError();
-
-    const btn = $('registerBtn');
-    setLoading(btn, true);
-
-    try {
-      if (!initFirebase()) return;
-      await setAuthPersistence();
-      const result = await firebase.auth().createUserWithEmailAndPassword(email, password);
-      if (result?.user) {
-        await syncUserToCloud();
-        showToast('Akun berhasil dibuat!', 'success');
-        setTimeout(() => location.href = HOME_URL, 500);
-      }
-    } catch (e) {
-      showError(handleAuthError(e));
-    } finally {
-      setLoading(btn, false);
-      authBusy = false;
-    }
+    // ...existing code (web only)...
   }
 
   async function sendPhoneCode() {
@@ -885,20 +797,11 @@ const HOME_URL = 'index.html';
   }
 
   async function forgotPassword(e) {
-    e.preventDefault();
-    const email = $('loginEmail').value.trim();
-    if (!email) {
-      showError('Masukkan email untuk reset password.');
+    if (isAndroidWebView()) {
+      showError('Reset password hanya bisa lewat tombol utama aplikasi, bukan web.');
       return;
     }
-
-    try {
-      if (!initFirebase()) return;
-      await firebase.auth().sendPasswordResetEmail(email);
-      showToast('Email reset password terkirim!', 'success');
-    } catch (e) {
-      showError(handleAuthError(e));
-    }
+    // ...existing code (web only)...
   }
 
   async function logout() {
@@ -1006,39 +909,11 @@ const HOME_URL = 'index.html';
   saveConfigBtn.addEventListener('click', saveConfig);
 
   // ========== INIT ==========
-  (async function init() {
-    // Check protocol - localhost is allowed (used by Android app local server)
+  (function init() {
     if (location.protocol === 'file:' && !location.host.includes('localhost')) {
       alertProto.classList.remove('d-none');
     }
-
-    // Init Firebase
-    if (!initFirebase()) return;
-
-    // Check redirect result
-    try {
-      const result = await firebase.auth().getRedirectResult();
-      if (result?.user) {
-        await syncUserToCloud();
-        showToast('Login berhasil!', 'success');
-        setTimeout(() => location.href = HOME_URL, 500);
-        return;
-      }
-    } catch (_) {}
-
-    // Listen auth state
-    firebase.auth().onAuthStateChanged(user => {
-      updateUI(user);
-    });
-
-    // Probe for invalid API key
-    try {
-      await firebase.auth().fetchSignInMethodsForEmail('test@probe.com');
-    } catch (e) {
-      if (String(e?.message || '').includes('API key not valid')) {
-        promptConfig('API key tidak valid.');
-      }
-    }
+    // Tidak ada inisialisasi Firebase, semua login/register/reset via native bridge
   })();
 </script>
 </body>

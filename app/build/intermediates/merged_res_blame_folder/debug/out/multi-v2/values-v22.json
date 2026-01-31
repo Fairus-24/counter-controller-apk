@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "app.counter.controller.caba.app-mergeDebugResources-51:/values-v22/values-v22.xml",
+            "outputFile": "app.counter.controller.caba.app-mergeDebugResources-39:/values-v22/values-v22.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\OLA\\.gradle\\caches\\transforms-3\\e44c6979181e83ea75b5ed5154cb9141\\transformed\\appcompat-1.6.1\\res\\values-v22\\values-v22.xml",
+                    "source": "C:\\Users\\OLA\\.gradle\\caches\\transforms-3\\67f7ae416d6d3511438af3b1befcad6d\\transformed\\appcompat-1.6.1\\res\\values-v22\\values-v22.xml",
                     "from": {
                         "startLines": "2,3,4,9",
                         "startColumns": "4,4,4,4",

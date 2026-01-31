@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import androidx.browser.customtabs.CustomTabsIntent;
+// All Google/Firebase/AdMob/OAuth code removed for native-only
 import androidx.core.content.ContextCompat;
 
 /**

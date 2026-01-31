@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 // Auto-increment version on every build
 def versionPropsFile = file('version.properties')
@@ -101,39 +100,26 @@ gradle.taskGraph.whenReady { taskGraph ->
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    
     // Material Design
     implementation 'com.google.android.material:material:1.9.0'
-    
-    // Firebase BOM (Bill of Materials) - versi yang compatible dengan SDK 33
-    implementation platform('com.google.firebase:firebase-bom:32.3.1')
-    
-    // Firebase Auth
-    implementation 'com.google.firebase:firebase-auth'
-    
-    // Firebase Firestore
-    implementation 'com.google.firebase:firebase-firestore'
-    
-    // Google Sign-In
-    implementation 'com.google.android.gms:play-services-auth:20.7.0'
-    
     // RecyclerView untuk list counter
     implementation 'androidx.recyclerview:recyclerview:1.3.1'
-    
     // CardView untuk counter cards
     implementation 'androidx.cardview:cardview:1.0.0'
-    
     // SharedPreferences untuk local storage
     implementation 'androidx.preference:preference:1.2.0'
-    
     // Gson untuk JSON serialization
     implementation 'com.google.code.gson:gson:2.10.1'
-    
     // Activity Result API
     implementation 'androidx.activity:activity:1.7.2'
-    
-    // Chrome Custom Tabs for secure OAuth/Google Sign-In
-    implementation 'androidx.browser:browser:1.7.0'
+    // (Removed all Google/Firebase/AdMob/OAuth dependencies for native-only)
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.10'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10'
+    }
 }
