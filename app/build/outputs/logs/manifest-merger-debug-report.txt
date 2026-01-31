@@ -280,11 +280,11 @@ ADDED from C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidMan
 	android:scheme
 		ADDED from C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:49:23-45
 activity#app.counter.controller.caba.LoginActivity
-ADDED from C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:53:9-56:72
+ADDED from C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:53:9-56:47
 	android:exported
 		ADDED from C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:55:13-37
 	android:theme
-		ADDED from C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:56:13-69
+		ADDED from C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:56:13-44
 	android:name
 		ADDED from C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:54:13-42
 uses-sdk

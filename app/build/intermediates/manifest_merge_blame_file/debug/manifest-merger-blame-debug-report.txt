@@ -1,8 +1,8 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="app.counter.controller.caba"
-4    android:versionCode="1000094"
-5    android:versionName="1.00.0094" >
+4    android:versionCode="1000095"
+5    android:versionName="1.00.0095" >
 6
 7    <uses-sdk
 8        android:minSdkVersion="21"
@@ -172,13 +172,13 @@
 94        </activity>
 95        <!-- Tambahkan deklarasi LoginActivity agar tidak force close -->
 96        <activity
-96-->C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:53:9-56:72
+96-->C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:53:9-56:47
 97            android:name="app.counter.controller.caba.LoginActivity"
 97-->C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:54:13-42
 98            android:exported="false"
 98-->C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:55:13-37
-99            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-99-->C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:56:13-69
+99            android:theme="@style/AppTheme" />
+99-->C:\Users\OLA\AndroidStudioProjects\admob-test\app\src\main\AndroidManifest.xml:56:13-44
 100        <activity
 100-->[com.google.firebase:firebase-auth:22.1.2] C:\Users\OLA\.gradle\caches\transforms-3\f5af7f47a34385c3ae70b6607a8185ce\transformed\jetified-firebase-auth-22.1.2\AndroidManifest.xml:29:9-46:20
 101            android:name="com.google.firebase.auth.internal.GenericIdpActivity"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="app.counter.controller.caba"
-    android:versionCode="1000094"
-    android:versionName="1.00.0094" >
+    android:versionCode="1000095"
+    android:versionName="1.00.0095" >
 
     <uses-sdk
         android:minSdkVersion="21"
@@ -96,7 +96,7 @@
         <activity
             android:name="app.counter.controller.caba.LoginActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name="com.google.firebase.auth.internal.GenericIdpActivity"
             android:excludeFromRecents="true"
